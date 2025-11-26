@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="../SocialNetwork.API/SocialNetwork.API.csproj" />
+  <Project Path="../SocialNetwork.EntityFramework/SocialNetwork.EntityFramework.csproj" />
+  <Project Path="../SocialNetwork.Repository/SocialNetwork.Repository.csproj" />
+  <Project Path="../SocialNetwork.Test/SocialNetwork.Test.csproj" />
+  <Project Path="SocialNetwork.Entity.csproj" />
+</Solution>
