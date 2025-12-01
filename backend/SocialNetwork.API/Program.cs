@@ -16,6 +16,7 @@ namespace SocialNetwork.API
 
       builder.Services.AddScoped<IPostService, PostService>();
       builder.Services.AddScoped<IPostRepository, InMemoryPostRepository>();
+      builder.Services.AddScoped<IAuthService, AuthService>();
 
       builder.Services.AddCors(options =>
      {
