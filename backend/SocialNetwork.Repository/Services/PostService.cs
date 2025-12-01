@@ -17,7 +17,7 @@ namespace SocialNetwork.Repository.Services
             => new PostResult { Success = true };
     }
 
-    public class PostService
+    public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
         private const int MaxMessageLength = 280;
