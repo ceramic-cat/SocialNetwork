@@ -9,7 +9,7 @@ namespace SocialNetwork.Repository.Services;
 
 public interface IFollowService
 {
-    public Task<Result> FollowUserAsync(Guid follower, Guid followee);
+    Task<Result> FollowUserAsync(Guid follower, Guid followee);
 }
 
 public class FollowService : IFollowService
@@ -21,5 +21,17 @@ public class FollowService : IFollowService
         _repository = repository;
     }
 
-    public Task<Result> FollowUserAsync(Guid follower, Guid followee) => throw new NotImplementedException();
+     public async Task<Result> FollowUserAsync(Guid follower, Guid followee)
+    {
+        if(await _repository.IsFollowingAsync(follower, followee))
+        {
+            return Result.Failure("Already following this user");
+        }
+
+        return Result.Success();
+
+    }
+        
+        
+        
 }

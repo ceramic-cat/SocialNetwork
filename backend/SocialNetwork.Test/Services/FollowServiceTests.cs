@@ -13,12 +13,9 @@ public class FollowServiceTests
     {
         // Arrange
         var mockRepo = new Mock<IFollowRepository>();
-        var mockUserRepo = new Mock<IUserRepository>();
 
         mockRepo.Setup(r => r.IsFollowingAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(false);
-        mockUserRepo.Setup(r => r.IsValidUser(It.IsAny<Guid>()))
-            .ReturnsAsync(true);
 
 
         var service = new FollowService(mockRepo.Object);
@@ -29,6 +26,25 @@ public class FollowServiceTests
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task FollowUserAsync_WhenAlreadyFollowing_ReturnsFailure()
+    {
+        // Arrange
+        var mockRepo = new Mock<IFollowRepository>();
+
+        mockRepo.Setup(r => r.IsFollowingAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+
+        var service = new FollowService(mockRepo.Object);
+
+        // Act
+        var result = await service.FollowUserAsync(Guid.NewGuid(), Guid.NewGuid());
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Contains(expectedSubstring: result.ErrorMessage.ToString(), "Already following this user");
     }
 
 }
