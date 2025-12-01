@@ -23,6 +23,11 @@ public class FollowService : IFollowService
 
      public async Task<Result> FollowUserAsync(Guid follower, Guid followee)
     {
+        if (follower == followee)
+        {
+            return Result.Failure("You can't follow yourself");
+        }
+
         if(await _repository.IsFollowingAsync(follower, followee))
         {
             return Result.Failure("Already following this user");
