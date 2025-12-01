@@ -1,28 +1,37 @@
 using SocialNetwork.Entity.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SocialNetwork.Repository.Services
 {
     public class AuthService : IAuthService
     {
-        private static readonly List<User> _users = new();
+        private readonly SocialNetworkDbContext _db;
+
+        public AuthService(SocialNetworkDbContext db)
+        {
+            _db = db;
+        }
 
         public async Task<bool> RegisterAsync(RegisterRequest request)
         {
-            if (_users.Any(u => u.Username == request.Username))
+            if (await _db.Users.AnyAsync(u => u.Username == request.Username || u.Email == request.Email))
                 return false;
 
             var user = new User
             {
                 Username = request.Username,
-                Password = request.Password 
+                Password = request.Password,
+                Email = request.Email,
+                Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
             };
-            _users.Add(user);
+            _db.Users.Add(user);
+            await _db.SaveChangesAsync();
             return true;
         }
 
         public async Task<string?> LoginAsync(LoginRequest request)
         {
-            var user = _users.FirstOrDefault(u => u.Username == request.Username && u.Password == request.Password);
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == request.Username && u.Password == request.Password);
             if (user == null)
                 return null;
 
