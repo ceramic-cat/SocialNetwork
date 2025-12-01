@@ -44,8 +44,26 @@ public class FollowServiceTests
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Contains(expectedSubstring: result.ErrorMessage.ToString(), "Already following this user");
+        Assert.Contains(result.ErrorMessage, "Already following this user");
     }
 
+
+    [Fact]
+    public async Task FollowUserAsync_WhenTryingToFollowYourself_ReturnsFailure()
+    {
+        // Arrange
+        var mockRepo = new Mock<IFollowRepository>();
+        var userId = Guid.NewGuid();
+
+
+        var service = new FollowService(mockRepo.Object);
+
+        // Act
+        var result = await service.FollowUserAsync(userId, userId);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Contains(result.ErrorMessage, "You can't follow yourself");
+    }
 }
 
