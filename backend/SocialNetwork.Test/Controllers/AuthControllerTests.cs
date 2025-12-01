@@ -16,7 +16,7 @@ namespace SocialNetwork.Test.Controllers
         [Fact]
         public async Task Register_ReturnsOk_OnSuccess()
         {
-            var request = new RegisterRequest { Username = "user", Password = "Pass123!" };
+            var request = new RegisterRequest { Username = "user", Password = "Pass123!", Email = "user@example.com" };
             _authServiceMock.Setup(s => s.RegisterAsync(request)).ReturnsAsync(true);
 
             var result = await _authController.Register(request);
@@ -28,7 +28,7 @@ namespace SocialNetwork.Test.Controllers
         [Fact]
         public async Task Register_ReturnsBadRequest_OnFailure()
         {
-            var request = new RegisterRequest { Username = "user", Password = "Pass123!" };
+            var request = new RegisterRequest { Username = "user", Password = "Pass123!", Email = "user@example.com" };
             _authServiceMock.Setup(s => s.RegisterAsync(request)).ReturnsAsync(false);
 
             var result = await _authController.Register(request);
