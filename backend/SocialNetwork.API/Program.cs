@@ -17,6 +17,17 @@ namespace SocialNetwork.API
       builder.Services.AddScoped<IPostService, PostService>();
       builder.Services.AddScoped<IPostRepository, InMemoryPostRepository>();
 
+      builder.Services.AddCors(options =>
+     {
+       options.AddPolicy("AllowFrontend",
+           policy =>
+           {
+             policy.WithOrigins("http://localhost:5173")
+                     .AllowAnyHeader()
+                     .AllowAnyMethod();
+           });
+     });
+
       var app = builder.Build();
 
       if (app.Environment.IsDevelopment())
@@ -26,6 +37,8 @@ namespace SocialNetwork.API
       }
 
       app.UseHttpsRedirection();
+      app.UseCors("AllowFrontend");
+
       app.UseAuthorization();
       app.MapControllers();
       app.Run();
