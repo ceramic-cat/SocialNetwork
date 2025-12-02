@@ -10,6 +10,7 @@ namespace SocialNetwork.Repository.Services;
 public interface IFollowService
 {
     Task<Result> FollowUserAsync(Guid follower, Guid followee);
+    Task<Result> UnfollowUserAsync(Guid follower, Guid followee);
 }
 
 public class FollowService : IFollowService
@@ -36,7 +37,6 @@ public class FollowService : IFollowService
         return Result.Success();
 
     }
-        
-        
-        
+
+    public Task<Result> UnfollowUserAsync(Guid follower, Guid followee) => throw new NotImplementedException();
 }

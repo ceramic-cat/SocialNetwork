@@ -65,5 +65,22 @@ public class FollowServiceTests
         Assert.False(result.IsSuccess);
         Assert.Contains(result.ErrorMessage, "You can't follow yourself");
     }
+
+    [Fact]
+    public async Task RemoveFollowerAsync_FollowerRelationshipDontExist_ReturnsFailure()
+    {
+        // Arrange
+        var mockRepo = new Mock<IFollowRepository>();
+        mockRepo.Setup(r=> r.IsFollowingAsync(Guid.NewGuid(), It.IsAny<Guid>())).ReturnsAsync(false);
+
+        var service = new FollowService(mockRepo.Object);
+
+        // Act
+        var result = await service.UnfollowUserAsync(Guid.NewGuid(), Guid.NewGuid());
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Contains(result.ErrorMessage, "Unable to unfollow that user");
+    }
 }
 
