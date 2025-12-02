@@ -1,6 +1,8 @@
 using SocialNetwork.Repository.Interfaces;
 using SocialNetwork.Repository.Services;
 using SocialNetwork.Repository.Repositories;
+using SocialNetwork.Entity.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SocialNetwork.API
 {
@@ -16,6 +18,10 @@ namespace SocialNetwork.API
 
       builder.Services.AddScoped<IPostService, PostService>();
       builder.Services.AddScoped<IPostRepository, InMemoryPostRepository>();
+      builder.Services.AddScoped<IAuthService, AuthService>();
+
+      builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
       builder.Services.AddCors(options =>
      {
