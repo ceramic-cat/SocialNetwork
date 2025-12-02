@@ -1,6 +1,8 @@
 using SocialNetwork.Repository.Interfaces;
 using SocialNetwork.Repository.Services;
 using SocialNetwork.Repository.Repositories;
+using SocialNetwork.Entity.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SocialNetwork.API
 {
@@ -16,6 +18,21 @@ namespace SocialNetwork.API
 
       builder.Services.AddScoped<IPostService, PostService>();
       builder.Services.AddScoped<IPostRepository, InMemoryPostRepository>();
+      builder.Services.AddScoped<IAuthService, AuthService>();
+
+      builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+      builder.Services.AddCors(options =>
+     {
+       options.AddPolicy("AllowFrontend",
+           policy =>
+           {
+             policy.WithOrigins("http://localhost:5173")
+                     .AllowAnyHeader()
+                     .AllowAnyMethod();
+           });
+     });
 
       var app = builder.Build();
 
@@ -26,6 +43,8 @@ namespace SocialNetwork.API
       }
 
       app.UseHttpsRedirection();
+      app.UseCors("AllowFrontend");
+
       app.UseAuthorization();
       app.MapControllers();
       app.Run();
