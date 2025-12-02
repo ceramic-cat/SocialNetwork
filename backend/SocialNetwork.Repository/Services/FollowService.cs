@@ -38,5 +38,13 @@ public class FollowService : IFollowService
 
     }
 
-    public Task<Result> UnfollowUserAsync(Guid follower, Guid followee) => throw new NotImplementedException();
+    public async Task<Result> UnfollowUserAsync(Guid follower, Guid followee)
+    {
+        if (false == await _repository.IsFollowingAsync(follower, followee))
+        {
+            return Result.Failure("Unable to unfollow that user");
+        }
+
+        return Result.Success();
+    }
 }

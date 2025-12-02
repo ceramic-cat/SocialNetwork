@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Moq;
+using SocialNetwork.Entity;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using SocialNetwork.Entity;
 namespace SocialNetwork.Test.Services;
 
 public class FollowServiceTests
@@ -71,7 +72,7 @@ public class FollowServiceTests
     {
         // Arrange
         var mockRepo = new Mock<IFollowRepository>();
-        mockRepo.Setup(r=> r.IsFollowingAsync(Guid.NewGuid(), It.IsAny<Guid>())).ReturnsAsync(false);
+        mockRepo.Setup(r=> r.IsFollowingAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(false);
 
         var service = new FollowService(mockRepo.Object);
 
