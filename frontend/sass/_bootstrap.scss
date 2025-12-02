@@ -1,0 +1,15 @@
+// Override bootstrap variables
+$font-family-sans-serif: "Noto Sans";
+$font-size-base: 1.1rem;
+$line-height-base: 1.4;
+$navbar-dark-color: rgba(white, 0.8) !default;
+$navbar-dark-hover-color: rgba(white, 0.9) !default;
+$primary: #f2eee9;
+$secondary: #3a2b28;
+$enable-negative-margins: true;
+
+// Import bootstrap
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+//import icon
+//@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
