@@ -28,7 +28,6 @@ public class FollowControllerTests
         var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
 
         //Act
-
         var reply = await _sut.Follow(request);
 
         // Assert

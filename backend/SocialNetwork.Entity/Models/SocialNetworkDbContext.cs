@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using SocialNetwork.Entity.Models.Follow;
 
 namespace SocialNetwork.Entity.Models
 {
@@ -10,6 +9,6 @@ namespace SocialNetwork.Entity.Models
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<UserFollows> UserFollows { get; set; }
+        public DbSet<Follow> UserFollows { get; set; }
     }
 }

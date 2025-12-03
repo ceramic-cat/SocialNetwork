@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SocialNetwork.Entity.Models.Follow;
+namespace SocialNetwork.Entity.Models;
 
 public class FollowRequest
 {

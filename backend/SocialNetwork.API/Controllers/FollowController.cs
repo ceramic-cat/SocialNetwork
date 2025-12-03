@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SocialNetwork.Entity.Models.Follow;
+using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Services;
+using System.Reflection.Metadata.Ecma335;
 
 namespace SocialNetwork.API.Controllers;
 
@@ -9,17 +10,23 @@ namespace SocialNetwork.API.Controllers;
 [ApiController]
 public class FollowController : ControllerBase
 {
-    private readonly IFollowsService _userFollowsService;
+    private readonly IFollowsService _followService;
 
-    public FollowController(IFollowsService userFollowsService)
+    public FollowController(IFollowsService followsService)
     {
-        _userFollowsService = userFollowsService;
+        _followService = followsService;
     }
 
     [HttpPost("follow")]
     public async Task<IActionResult> Follow(FollowRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _followService.FollowAsync(request.FollowerId, request.FolloweeId);
+
+        if (result.IsSuccess == true) 
+        { return Ok(); }
+
+        return BadRequest(result.ErrorMessage);
+
     }
 
 

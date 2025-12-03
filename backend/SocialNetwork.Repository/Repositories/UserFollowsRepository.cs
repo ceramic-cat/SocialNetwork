@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialNetwork.API.Models;
 using SocialNetwork.Entity.Models;
-using SocialNetwork.Entity.Models.Follow;
 using SocialNetwork.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,7 @@ public class UserFollowsRepository : IFollowRepository
 
     public async Task AddAsync(Guid followerId, Guid followeeId)
     {
-        var userFollow = new UserFollows 
+        var userFollow = new Follow 
         {
             FollowerId = followerId , 
             FolloweeId = followeeId
