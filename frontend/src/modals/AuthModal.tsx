@@ -56,7 +56,10 @@ export default function AuthModal({
         </Modal.Header>
         <Modal.Body>
           {mode === "login" ? (
-            <LoginForm onSuccess={handleLoginSuccess} />
+            <LoginForm
+              onSuccess={handleLoginSuccess}
+              showRegistrationSuccess={registrationSuccess}
+            />
           ) : (
             <RegisterForm
               onSuccess={handleLoginSuccess}

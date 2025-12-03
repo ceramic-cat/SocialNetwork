@@ -4,9 +4,13 @@ import { useAuth } from "../hooks/useAuth";
 
 interface LoginFormProps {
   onSuccess: () => void;
+  showRegistrationSuccess?: boolean;
 }
 
-export default function LoginForm({ onSuccess }: LoginFormProps) {
+export default function LoginForm({
+  onSuccess,
+  showRegistrationSuccess,
+}: LoginFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login, loading, error, resetError } = useAuth();
@@ -24,6 +28,9 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   return (
     <Form onSubmit={handleSubmit}>
       <h4>Login</h4>
+      {showRegistrationSuccess && (
+        <div className="text-success mb-3">Registration successful!</div>
+      )}
       {error && <Alert variant="danger">{error}</Alert>}
 
       <Form.Group className="mb-3">
