@@ -32,5 +32,11 @@ namespace SocialNetwork.API.Controllers
                 return Unauthorized("Invalid credentials.");
             return Ok(new LoginResponse { Token = token });
         }
+
+        [HttpDelete("logout")]
+        public IActionResult Logout()
+        {
+            return Ok("Logout successful.");
+        }
     }
 }
