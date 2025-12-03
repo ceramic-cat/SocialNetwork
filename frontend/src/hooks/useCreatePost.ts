@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { CreatePostRequest } from "../types/Post";
+import type { CreatePostRequest } from "../types/post";
 
 export interface UseCreatePostResult {
   createPost: (payload: CreatePostRequest) => Promise<boolean>;
@@ -8,6 +8,8 @@ export interface UseCreatePostResult {
   success: string | null;
   resetStatus: () => void;
 }
+const BASE_URL = "http://localhost:5148";
+const ENDPOINT = `${BASE_URL}/api/posts`;
 
 export function useCreatePost(): UseCreatePostResult {
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ export function useCreatePost(): UseCreatePostResult {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/posts", {
+      const response = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
