@@ -20,16 +20,29 @@ public class FollowController : ControllerBase
     [HttpPost("follow")]
     public async Task<IActionResult> Follow(FollowRequest request)
     {
-        var result = await _followService.FollowAsync(request.FollowerId, request.FolloweeId);
+        var result = await _followService.FollowAsync(
+            request.FollowerId, 
+            request.FolloweeId
+            );
 
-        if (result.IsSuccess == true) 
+        if (result.IsSuccess == true)
         { return Ok(); }
-        
+
         return BadRequest(result.ErrorMessage);
 
     }
 
-    public async Task Unfollow(FollowRequest request)
+    public async Task<IActionResult> Unfollow(FollowRequest request)
     {
-throw new NotImplementedException();    }
+        var result = await _followService.UnfollowAsync(
+            request.FollowerId, 
+            request.FolloweeId
+            );
+
+        if (result.IsSuccess == true)
+        { return Ok(); }
+        return BadRequest(result.ErrorMessage);
+
+
+    }
 }

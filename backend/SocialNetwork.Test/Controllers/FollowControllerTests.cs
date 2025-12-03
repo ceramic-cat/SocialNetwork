@@ -40,24 +40,24 @@ public class FollowControllerTests
     [Fact]
     public async Task Follow_InvalidRequest_ReturnsBadRequest()
     {
-        {
-            //Arrange
-            _followServiceMock.Setup(m => 
-                m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
-            var followerId = Guid.NewGuid();
-            var followeeId = Guid.NewGuid();
 
-            var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
+        //Arrange
+        _followServiceMock.Setup(m =>
+            m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
 
-            //Act
-            var reply = await _sut.Follow(request);
+        var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
 
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(reply);
-            Assert.Equal("Error", badRequestResult.Value);
-            _followServiceMock.Verify(
-                s => s.FollowAsync(followerId, followeeId), Times.Once());
-        }
+        //Act
+        var reply = await _sut.Follow(request);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(reply);
+        Assert.Equal("Error", badRequestResult.Value);
+        _followServiceMock.Verify(
+            s => s.FollowAsync(followerId, followeeId), Times.Once());
+
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class FollowControllerTests
         var followeeId = Guid.NewGuid();
 
         var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
-        
+
         //Act
         var response = await _sut.Unfollow(request);
 
@@ -79,11 +79,32 @@ public class FollowControllerTests
             s => s.UnfollowAsync(followerId, followeeId), Times.Once());
     }
 
+
+
+
+
+   // Arrange
+   // _followServiceMock.Setup(m =>
+   //     m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Success);
+   // var followerId = Guid.NewGuid();
+   // var followeeId = Guid.NewGuid();
+
+   // var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
+
+   // Act
+   // var reply = await _sut.Follow(request);
+
+   // Assert
+   //Assert.IsType<OkResult>(reply);
+   // _followServiceMock.Verify(
+   //     s => s.FollowAsync(followerId, followeeId), Times.Once());
+
+
     [Fact]
-    public async Unfollow_InvalidRequest_ReturnsBadRequest()
+    public async Task Unfollow_InvalidRequest_ReturnsBadRequest()
     {
         _followServiceMock.Setup(m =>
-    m.UnfollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
+            m.UnfollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
         var followerId = Guid.NewGuid();
         var followeeId = Guid.NewGuid();
 
