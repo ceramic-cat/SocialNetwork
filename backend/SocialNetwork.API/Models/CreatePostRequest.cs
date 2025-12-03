@@ -7,6 +7,6 @@ namespace SocialNetwork.API.Models
 
         public Guid ReceiverId { get; set; }
 
-        public string Message { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
     }
 }

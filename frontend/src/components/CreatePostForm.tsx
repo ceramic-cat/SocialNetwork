@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button, Form, Row, Col, Spinner, Alert } from "react-bootstrap";
 import { useCreatePost } from "../hooks/useCreatePost";
-import type { CreatePostRequest } from "../types/Post";
+import type { CreatePostRequest } from "../types/post";
 
-const MAX_MESSAGE_LENGTH = 280;
+const MAX_CONTENT_LENGTH = 280;
 
 export interface CreatePostFormProps {
   senderId: string;
@@ -16,7 +16,7 @@ export default function CreatePostForm({
   senderName,
   onSuccess,
 }: CreatePostFormProps) {
-  const [message, setMessage] = useState("");
+  const [content, setContent] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const {
@@ -28,9 +28,9 @@ export default function CreatePostForm({
   } = useCreatePost();
 
   function validate(): string | null {
-    if (!message.trim()) return "Message cannot be empty.";
-    if (message.length > MAX_MESSAGE_LENGTH) {
-      return `Message cannot exceed ${MAX_MESSAGE_LENGTH} characters.`;
+    if (!content.trim()) return "Content cannot be empty.";
+    if (content.length > MAX_CONTENT_LENGTH) {
+      return `Content cannot exceed ${MAX_CONTENT_LENGTH} characters.`;
     }
     return null;
   }
@@ -51,13 +51,13 @@ export default function CreatePostForm({
     const payload: CreatePostRequest = {
       senderId,
       receiverId: senderId, // change here if posting on another's timeline
-      message,
+      content,
     };
 
     const ok = await createPost(payload);
 
     if (ok) {
-      setMessage("");
+      setContent("");
 
       if (onSuccess) {
         onSuccess();
@@ -65,8 +65,8 @@ export default function CreatePostForm({
     }
   }
 
-  function handleMessageChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setMessage(event.target.value);
+  function handleContentChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setContent(event.target.value);
     if (validationError) {
       setValidationError(null);
     }
@@ -97,12 +97,12 @@ export default function CreatePostForm({
             <Form.Control
               as="textarea"
               rows={4}
-              value={message}
-              onChange={handleMessageChange}
+              value={content}
+              onChange={handleContentChange}
               className="rounded-3"
               isInvalid={
                 !!validationError &&
-                (validationError.toLowerCase().includes("message") ||
+                (validationError.toLowerCase().includes("content") ||
                   validationError.toLowerCase().includes("exceed"))
               }
             />
