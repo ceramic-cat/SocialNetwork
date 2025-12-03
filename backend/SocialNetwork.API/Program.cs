@@ -20,6 +20,15 @@ namespace SocialNetwork.API
       builder.Services.AddScoped<IPostService, PostService>();
       builder.Services.AddScoped<IAuthService, AuthService>();
 
+      // Direct Message services
+      builder.Services.AddScoped<IUserRepository, SqliteUserRepository>();
+      builder.Services.AddScoped<IDirectMessageRepository>(sp =>
+      {
+          var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+          return new SqliteDirectMessageRepository(connectionString!);
+      });
+      builder.Services.AddScoped<IDirectMessageService, DirectMessageService>();
+
       builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
