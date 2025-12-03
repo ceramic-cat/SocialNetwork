@@ -22,6 +22,8 @@ namespace SocialNetwork.API
       builder.Services.AddScoped<IPostService, PostService>();
       builder.Services.AddScoped<IPostRepository, InMemoryPostRepository>();
       builder.Services.AddScoped<IAuthService, AuthService>();
+      builder.Services.AddScoped<IFollowsService, FollowService>();
+      builder.Services.AddScoped<IFollowRepository, FollowRepository>();
 
       builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
