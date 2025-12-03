@@ -67,11 +67,21 @@ public class UserFollowsRepositoryTests : IDisposable
 
         // Assert
         Assert.True(result);
-
-        
     }
 
+    [Fact]
+    public async Task ExistsAsync_WhenNotFollowing_ReturnsFalse()
+    {        
+            // Arrange
+            var followerId = Guid.NewGuid();
+            var followeeId = Guid.NewGuid();
 
+            // Act
+            var result = await _repository.ExistsAsync(followerId, followeeId);
 
+            // Assert
+            Assert.False(result);
+
+        }
 
 }
