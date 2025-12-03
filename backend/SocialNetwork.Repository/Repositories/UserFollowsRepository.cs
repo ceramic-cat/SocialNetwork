@@ -1,4 +1,5 @@
-﻿using SocialNetwork.API.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialNetwork.API.Models;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Interfaces;
 using System;
@@ -31,5 +32,11 @@ public class UserFollowsRepository : IUserFollowsRepository
         
     }
     public Task DeleteAsync(Guid followerId, Guid followeeId) => throw new NotImplementedException();
-    public Task<bool> ExistsAsync(Guid followerId, Guid followeeId) => throw new NotImplementedException();
+    public async Task<bool> ExistsAsync(Guid followerId, Guid followeeId)
+    { 
+        return await _db.UserFollows
+            .AnyAsync(i => i.FollowerId == followerId && i.FolloweeId == followeeId);
+
+    }
+
 }
