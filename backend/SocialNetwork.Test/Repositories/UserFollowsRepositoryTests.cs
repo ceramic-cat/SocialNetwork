@@ -8,6 +8,7 @@ using System.Text;
 
 namespace SocialNetwork.Test.Repositories;
 
+// IDisposable disposes of the database after each test.
 public class UserFollowsRepositoryTests : IDisposable
 {
     private readonly SqliteConnection _connection;
@@ -83,5 +84,24 @@ public class UserFollowsRepositoryTests : IDisposable
             Assert.False(result);
 
         }
+
+    [Fact]
+    public async Task DeleteAsync_DeletesFollowFromDatabase()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
+
+        // Act
+        await _repository.AddAsync(followerId, followeeId);
+        var successfulSave = await _repository.ExistsAsync(followerId, followeeId);
+
+        await _repository.DeleteAsync(followerId, followeeId);
+        var sucessfulDelete = await _repository.ExistsAsync(followerId, followeeId);
+
+        // Assert
+        Assert.True(successfulSave);
+        Assert.False(sucessfulDelete);
+    }
 
 }
