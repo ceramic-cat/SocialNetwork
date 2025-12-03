@@ -7,29 +7,28 @@ using System.Text;
 namespace SocialNetwork.Repository.Services;
 
 
-public interface IFollowService
+public interface IUserFollowsService
 {
-    Task<Result> FollowUserAsync(Guid follower, Guid followee);
-    Task<Result> UnfollowUserAsync(Guid follower, Guid followee);
+    Task<Result> FollowAsync(Guid follower, Guid followee);
+    Task<Result> UnfollowAsync(Guid follower, Guid followee);
 }
-
-public class FollowService : IFollowService
+public class UserFollowsService : IUserFollowsService
 {
-    private readonly IFollowRepository _repository;
+    private readonly IUserFollowsRepository _repository;
 
-    public FollowService(IFollowRepository repository)
+    public UserFollowsService(IUserFollowsRepository repository)
     {
         _repository = repository;
     }
 
-     public async Task<Result> FollowUserAsync(Guid follower, Guid followee)
+     public async Task<Result> FollowAsync(Guid follower, Guid followee)
     {
         if (follower == followee)
         {
             return Result.Failure("You can't follow yourself");
         }
 
-        if(await _repository.IsFollowingAsync(follower, followee))
+        if(await _repository.ExistsAsync(follower, followee))
         {
             return Result.Failure("Already following this user");
         }
@@ -38,9 +37,9 @@ public class FollowService : IFollowService
 
     }
 
-    public async Task<Result> UnfollowUserAsync(Guid follower, Guid followee)
+    public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
     {
-        if (false == await _repository.IsFollowingAsync(follower, followee))
+        if (false == await _repository.ExistsAsync(follower, followee))
         {
             return Result.Failure("Unable to unfollow that user");
         }
@@ -48,3 +47,4 @@ public class FollowService : IFollowService
         return Result.Success();
     }
 }
+
