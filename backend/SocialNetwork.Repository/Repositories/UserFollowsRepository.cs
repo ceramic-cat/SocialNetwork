@@ -31,7 +31,18 @@ public class UserFollowsRepository : IUserFollowsRepository
         await _db.SaveChangesAsync();
         
     }
-    public Task DeleteAsync(Guid followerId, Guid followeeId) => throw new NotImplementedException();
+    public async Task DeleteAsync(Guid followerId, Guid followeeId)
+    {
+        var follow = await _db.UserFollows
+            .FirstOrDefaultAsync(f => f.FollowerId == followerId && f.FolloweeId == followeeId);
+
+        if (follow is not null)
+        {
+            _db.UserFollows.Remove(follow);
+            await _db.SaveChangesAsync();
+        }
+
+    }
     public async Task<bool> ExistsAsync(Guid followerId, Guid followeeId)
     { 
         return await _db.UserFollows
