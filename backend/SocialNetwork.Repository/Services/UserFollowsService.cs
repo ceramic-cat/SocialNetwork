@@ -33,7 +33,16 @@ public class UserFollowsService : IUserFollowsService
             return Result.Failure("Already following this user");
         }
 
-        return Result.Success();
+        try
+        {
+            await _repository.AddAsync(follower, followee);
+            return Result.Success();
+        }
+        catch (Exception ex) { 
+        return Result.Failure(ex.Message);
+        }
+
+
 
     }
 
