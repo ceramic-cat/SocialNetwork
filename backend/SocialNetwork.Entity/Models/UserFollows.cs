@@ -9,16 +9,15 @@ namespace SocialNetwork.Entity.Models;
 [Table("userFollows")]
 public class UserFollows
 {
-
     [Key]
     [Column("id")]
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     [Column("followerId")]
-    public Guid FollowerId { get; set; }
+    public required Guid FollowerId { get; set; }
     [Column("followeeId")]
-    public Guid FolloweeID { get; set; }
+    public required Guid FolloweeId { get; set; }
     [Column("created")]
-    public string Created { get; set; } = default!;
+    public  DateTime Created { get; set; } = DateTime.UtcNow;
 
 
 }

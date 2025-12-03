@@ -49,7 +49,7 @@ public class UserFollowsRepositoryTests : IDisposable
         // Assert
         var saved = await _db.UserFollows.FirstOrDefaultAsync();
         Assert.NotNull(saved);
-        Assert.Equal(followeeId, saved.FollowerId);
+        Assert.Equal(followeeId, saved.FolloweeId);
         Assert.Equal(followerId, saved.FollowerId);
     }
 
