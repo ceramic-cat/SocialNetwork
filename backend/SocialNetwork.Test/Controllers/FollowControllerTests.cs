@@ -1,18 +1,19 @@
-﻿using System;
+﻿using SocialNetwork.Entity.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SocialNetwork.Test.Controllers;
 
-public class UserFollowsControllerTests
+public class FollowControllerTests
 {
 
-    private readonly Mock<IUserFollowsService> _followsUserServiceMock;
-    private readonly UserFollowsController _sut;
-    public UserFollowsControllerTests()
+    private readonly Mock<IFollowsService> _followsUserServiceMock;
+    private readonly FollowController _sut;
+    public FollowControllerTests()
     {
-        _followsUserServiceMock = new Mock<IUserFollowsService>();
-         _sut = new UserFollowsController( _followsUserServiceMock.Object );
+        _followsUserServiceMock = new Mock<IFollowsService>();
+         _sut = new FollowController( _followsUserServiceMock.Object );
     }
 
     [Fact]
@@ -24,9 +25,11 @@ public class UserFollowsControllerTests
         var followerId = Guid.NewGuid();
         var followeeId = Guid.NewGuid();
 
+        var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
+
         //Act
 
-        var reply = await _sut.Follow(followerId, followeeId);
+        var reply = await _sut.Follow(request);
 
         // Assert
         Assert.IsType<OkResult>(reply);

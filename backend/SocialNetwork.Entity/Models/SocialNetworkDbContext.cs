@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SocialNetwork.Entity.Models.Follow;
 
 namespace SocialNetwork.Entity.Models
 {

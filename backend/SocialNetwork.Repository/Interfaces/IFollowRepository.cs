@@ -3,7 +3,7 @@ using SocialNetwork.Entity.Models;
 
 namespace SocialNetwork.Repository.Interfaces;
 
-public interface IUserFollowsRepository
+public interface IFollowRepository
 {
     Task<bool> ExistsAsync(Guid followerId, Guid followeeId);
     Task AddAsync(Guid followerId, Guid followeeId);

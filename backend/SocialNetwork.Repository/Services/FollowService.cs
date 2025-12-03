@@ -7,16 +7,16 @@ using System.Text;
 namespace SocialNetwork.Repository.Services;
 
 
-public interface IUserFollowsService
+public interface IFollowsService
 {
     Task<Result> FollowAsync(Guid follower, Guid followee);
     Task<Result> UnfollowAsync(Guid follower, Guid followee);
 }
-public class UserFollowsService : IUserFollowsService
+public class FollowService : IFollowsService
 {
-    private readonly IUserFollowsRepository _repository;
+    private readonly IFollowRepository _repository;
 
-    public UserFollowsService(IUserFollowsRepository repository)
+    public FollowService(IFollowRepository repository)
     {
         _repository = repository;
     }

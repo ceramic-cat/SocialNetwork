@@ -6,20 +6,20 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 namespace SocialNetwork.Test.Services;
 
-public class UserFollowsServiceTests
+public class FollowsServiceTests
 {
 
     [Fact]
     public async Task FollowUserAsync_WhenNotAlreadyFollowing_ReturnsSuccess()
     {
         // Arrange
-        var mockRepo = new Mock<IUserFollowsRepository>();
+        var mockRepo = new Mock<IFollowRepository>();
 
         mockRepo.Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(false);
 
 
-        var service = new UserFollowsService(mockRepo.Object);
+        var service = new FollowService(mockRepo.Object);
         
         // Act
         var result = await service.FollowAsync(Guid.NewGuid(), Guid.NewGuid());
@@ -33,12 +33,12 @@ public class UserFollowsServiceTests
     public async Task FollowUserAsync_WhenAlreadyFollowing_ReturnsFailure()
     {
         // Arrange
-        var mockRepo = new Mock<IUserFollowsRepository>();
+        var mockRepo = new Mock<IFollowRepository>();
 
         mockRepo.Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(true);
 
-        var service = new UserFollowsService(mockRepo.Object);
+        var service = new FollowService(mockRepo.Object);
 
         // Act
         var result = await service.FollowAsync(Guid.NewGuid(), Guid.NewGuid());
@@ -53,11 +53,11 @@ public class UserFollowsServiceTests
     public async Task FollowUserAsync_WhenTryingToFollowYourself_ReturnsFailure()
     {
         // Arrange
-        var mockRepo = new Mock<IUserFollowsRepository>();
+        var mockRepo = new Mock<IFollowRepository>();
         var userId = Guid.NewGuid();
 
 
-        var service = new UserFollowsService(mockRepo.Object);
+        var service = new FollowService(mockRepo.Object);
 
         // Act
         var result = await service.FollowAsync(userId, userId);
@@ -71,10 +71,10 @@ public class UserFollowsServiceTests
     public async Task UnfollowUserAsync_FollowerRelationshipDontExist_ReturnsFailure()
     {
         // Arrange
-        var mockRepo = new Mock<IUserFollowsRepository>();
+        var mockRepo = new Mock<IFollowRepository>();
         mockRepo.Setup(r=> r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(false);
 
-        var service = new UserFollowsService(mockRepo.Object);
+        var service = new FollowService(mockRepo.Object);
 
         // Act
         var result = await service.UnfollowAsync(Guid.NewGuid(), Guid.NewGuid());
@@ -88,12 +88,12 @@ public class UserFollowsServiceTests
     public async Task UnfollowUserAsync_FollowerRelationshipExists_ReturnsTrue()
     {
         // Arrange
-        var mockRepo = new Mock<IUserFollowsRepository>();
+        var mockRepo = new Mock<IFollowRepository>();
         mockRepo.Setup(r => r.ExistsAsync(
             It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(true);
 
-        var service = new UserFollowsService(mockRepo.Object);
+        var service = new FollowService(mockRepo.Object);
 
         // Act
         var result = await service.UnfollowAsync(Guid.NewGuid(), Guid.NewGuid());

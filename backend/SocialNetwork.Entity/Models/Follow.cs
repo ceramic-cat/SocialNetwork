@@ -7,7 +7,7 @@ using System.Text;
 namespace SocialNetwork.Entity.Models;
 
 [Table("userFollows")]
-public class UserFollows
+public class Follow
 {
     [Key]
     [Column("id")]

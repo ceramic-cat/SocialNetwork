@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialNetwork.API.Models;
 using SocialNetwork.Entity.Models;
+using SocialNetwork.Entity.Models.Follow;
 using SocialNetwork.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace SocialNetwork.Repository.Repositories;
 
 
 
-public class UserFollowsRepository : IUserFollowsRepository
+public class UserFollowsRepository : IFollowRepository
 {
     private readonly SocialNetworkDbContext _db;
 
