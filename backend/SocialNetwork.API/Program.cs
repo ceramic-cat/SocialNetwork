@@ -1,6 +1,4 @@
-using SocialNetwork.Repository.Interfaces;
 using SocialNetwork.Repository.Services;
-using SocialNetwork.Repository.Repositories;
 using SocialNetwork.Entity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

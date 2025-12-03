@@ -1,6 +1,5 @@
 ﻿using SocialNetwork.Entity;
 using SocialNetwork.Entity.Models;
-using SocialNetwork.Repository.Interfaces;
 using System;
 using System.Threading.Tasks;
 
