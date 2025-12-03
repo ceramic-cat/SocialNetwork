@@ -10,11 +10,11 @@ namespace SocialNetwork.Repository.Repositories;
 
 
 
-public class UserFollowsRepository : IFollowRepository
+public class FollowRepository : IFollowRepository
 {
     private readonly SocialNetworkDbContext _db;
 
-    public UserFollowsRepository(SocialNetworkDbContext db)
+    public FollowRepository(SocialNetworkDbContext db)
     {
         _db = db;
     }

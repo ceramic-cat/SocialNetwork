@@ -13,7 +13,7 @@ public class UserFollowsRepositoryTests : IDisposable
 {
     private readonly SqliteConnection _connection;
     private readonly SocialNetworkDbContext _db;
-    private readonly UserFollowsRepository _repository;
+    private readonly FollowRepository _repository;
 
     public UserFollowsRepositoryTests()
     {
@@ -27,7 +27,7 @@ public class UserFollowsRepositoryTests : IDisposable
         _db = new SocialNetworkDbContext(options);
         _db.Database.EnsureCreated();
 
-        _repository = new UserFollowsRepository(_db);
+        _repository = new FollowRepository(_db);
     }
 
 

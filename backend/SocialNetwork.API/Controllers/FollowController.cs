@@ -24,7 +24,7 @@ public class FollowController : ControllerBase
 
         if (result.IsSuccess == true) 
         { return Ok(); }
-
+        
         return BadRequest(result.ErrorMessage);
 
     }

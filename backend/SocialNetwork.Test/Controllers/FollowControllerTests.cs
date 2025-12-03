@@ -1,4 +1,5 @@
-﻿using SocialNetwork.Entity.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using SocialNetwork.Entity.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,6 +35,29 @@ public class FollowControllerTests
         Assert.IsType<OkResult>(reply);
         _followsUserServiceMock.Verify(
             s =>s.FollowAsync(followerId, followeeId), Times.Once());
+    }
+
+    [Fact]
+    public async Task FollowUser_InvalidRequest_ReturnsBadRequest()
+    {
+        {
+            //Arrange
+            _followsUserServiceMock.Setup(m =>
+            m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
+            var followerId = Guid.NewGuid();
+            var followeeId = Guid.NewGuid();
+
+            var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
+
+            //Act
+            var reply = await _sut.Follow(request);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(reply);
+            Assert.Equal("Error", badRequestResult.Value);
+            _followsUserServiceMock.Verify(
+                s => s.FollowAsync(followerId, followeeId), Times.Once());
+        }
     }
 
 
