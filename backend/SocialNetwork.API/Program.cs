@@ -3,6 +3,9 @@ using SocialNetwork.Repository.Services;
 using SocialNetwork.Repository.Repositories;
 using SocialNetwork.Entity.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace SocialNetwork.API
 {
@@ -34,6 +37,26 @@ namespace SocialNetwork.API
            });
      });
 
+     var jwtSettings = builder.Configuration.GetSection("Jwt");
+      builder.Services.AddAuthentication(options =>
+     {
+         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+          options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+     })
+        .AddJwtBearer(options =>
+     {
+        options.TokenValidationParameters = new TokenValidationParameters
+       {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+       };
+     });
+
       var app = builder.Build();
 
       if (app.Environment.IsDevelopment())
@@ -45,6 +68,7 @@ namespace SocialNetwork.API
       app.UseHttpsRedirection();
       app.UseCors("AllowFrontend");
 
+      app.UseAuthentication();
       app.UseAuthorization();
       app.MapControllers();
       app.Run();
