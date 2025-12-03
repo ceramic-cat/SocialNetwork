@@ -53,6 +53,23 @@ public class UserFollowsRepositoryTests : IDisposable
         Assert.Equal(followerId, saved.FollowerId);
     }
 
+    [Fact]
+    public async Task ExistsAsync_ReturnsTrueIfFollows()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
+
+        // Act
+        await _repository.AddAsync(followerId, followeeId);
+
+        var result = await _repository.ExistsAsync(followerId, followeeId);
+
+        // Assert
+        Assert.True(result);
+
+        
+    }
 
 
 

@@ -41,9 +41,6 @@ public class UserFollowsService : IUserFollowsService
         catch (Exception ex) { 
         return Result.Failure(ex.Message);
         }
-
-
-
     }
 
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
