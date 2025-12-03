@@ -9,19 +9,19 @@ namespace SocialNetwork.Test.Controllers;
 public class FollowControllerTests
 {
 
-    private readonly Mock<IFollowsService> _followsUserServiceMock;
+    private readonly Mock<IFollowsService> _followServiceMock;
     private readonly FollowController _sut;
     public FollowControllerTests()
     {
-        _followsUserServiceMock = new Mock<IFollowsService>();
-         _sut = new FollowController( _followsUserServiceMock.Object );
+        _followServiceMock = new Mock<IFollowsService>();
+        _sut = new FollowController(_followServiceMock.Object);
     }
 
     [Fact]
-    public async Task FollowUser_ValidRequest_ReturnsOk()
+    public async Task Follow_ValidRequest_ReturnsOk()
     {
         //Arrange
-        _followsUserServiceMock.Setup( m => 
+        _followServiceMock.Setup(m =>
         m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Success);
         var followerId = Guid.NewGuid();
         var followeeId = Guid.NewGuid();
@@ -33,17 +33,17 @@ public class FollowControllerTests
 
         // Assert
         Assert.IsType<OkResult>(reply);
-        _followsUserServiceMock.Verify(
-            s =>s.FollowAsync(followerId, followeeId), Times.Once());
+        _followServiceMock.Verify(
+            s => s.FollowAsync(followerId, followeeId), Times.Once());
     }
 
     [Fact]
-    public async Task FollowUser_InvalidRequest_ReturnsBadRequest()
+    public async Task Follow_InvalidRequest_ReturnsBadRequest()
     {
         {
             //Arrange
-            _followsUserServiceMock.Setup(m =>
-            m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
+            _followServiceMock.Setup(m => 
+                m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
             var followerId = Guid.NewGuid();
             var followeeId = Guid.NewGuid();
 
@@ -55,10 +55,51 @@ public class FollowControllerTests
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(reply);
             Assert.Equal("Error", badRequestResult.Value);
-            _followsUserServiceMock.Verify(
+            _followServiceMock.Verify(
                 s => s.FollowAsync(followerId, followeeId), Times.Once());
         }
     }
 
+    [Fact]
+    public async Task Unfollow_ValidRequest_ReturnsOk()
+    {
+        _followServiceMock.Setup(m =>
+            m.UnfollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Success);
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
 
+        var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
+        
+        //Act
+        var response = await _sut.Unfollow(request);
+
+        // Assert
+        Assert.IsType<OkResult>(response);
+        _followServiceMock.Verify(
+            s => s.UnfollowAsync(followerId, followeeId), Times.Once());
+    }
+
+    [Fact]
+    public async Unfollow_InvalidRequest_ReturnsBadRequest()
+    {
+        _followServiceMock.Setup(m =>
+    m.UnfollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
+
+        var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
+
+        //Act
+        var response = await _sut.Unfollow(request);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(response);
+        Assert.Equal("Error", badRequestResult.Value);
+        _followServiceMock.Verify(
+            s => s.UnfollowAsync(followerId, followeeId), Times.Once());
+    }
 }
+
+
+
+
