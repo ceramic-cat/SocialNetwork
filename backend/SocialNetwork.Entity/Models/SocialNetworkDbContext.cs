@@ -8,5 +8,6 @@ namespace SocialNetwork.Entity.Models
             : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Post> Posts { get; set; }
     }
 }

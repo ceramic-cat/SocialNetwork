@@ -1,6 +1,4 @@
-using SocialNetwork.Repository.Interfaces;
 using SocialNetwork.Repository.Services;
-using SocialNetwork.Repository.Repositories;
 using SocialNetwork.Entity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,7 +18,6 @@ namespace SocialNetwork.API
       builder.Services.AddSwaggerGen();
 
       builder.Services.AddScoped<IPostService, PostService>();
-      builder.Services.AddScoped<IPostRepository, InMemoryPostRepository>();
       builder.Services.AddScoped<IAuthService, AuthService>();
 
       builder.Services.AddDbContext<SocialNetworkDbContext>(options =>

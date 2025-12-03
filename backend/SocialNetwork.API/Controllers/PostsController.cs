@@ -19,7 +19,7 @@ namespace SocialNetwork.API.Controllers
 			var result = await _postService.CreatePostAsync(
 				request.SenderId,
 				request.ReceiverId,
-				request.Message);
+				request.Content);
 			
 			if (!result.Success)
 			{

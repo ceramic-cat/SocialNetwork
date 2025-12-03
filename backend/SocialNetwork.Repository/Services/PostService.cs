@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SocialNetwork.Entity;
+using SocialNetwork.Entity.Models;
+using System;
 using System.Threading.Tasks;
-using SocialNetwork.Entity;
-using SocialNetwork.Repository.Interfaces;
 
 namespace SocialNetwork.Repository.Services
 {
@@ -19,24 +19,24 @@ namespace SocialNetwork.Repository.Services
 
     public class PostService : IPostService
     {
-        private readonly IPostRepository _postRepository;
-        private const int MaxMessageLength = 280;
+        private readonly SocialNetworkDbContext _db;
+        private const int MaxContentLength = 280;
 
-        public PostService(IPostRepository postRepository)
+        public PostService(SocialNetworkDbContext db)
         {
-            _postRepository = postRepository;
+            _db = db;
         }
 
-        public async Task<PostResult> CreatePostAsync(Guid senderId, Guid receiverId, string message)
+        public async Task<PostResult> CreatePostAsync(Guid senderId, Guid receiverId, string content)
         {
-            if (string.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(content))
             {
-                return PostResult.Fail("Message cannot be empty.");
+                return PostResult.Fail("Content cannot be empty.");
             }
 
-            if (message.Length > MaxMessageLength)
+            if (content.Length > MaxContentLength)
             {
-                return PostResult.Fail($"Message cannot be longer than {MaxMessageLength} characters.");
+                return PostResult.Fail($"Content cannot be longer than {MaxContentLength} characters.");
             }
 
             var post = new Post
@@ -44,11 +44,12 @@ namespace SocialNetwork.Repository.Services
                 Id = Guid.NewGuid(),
                 SenderId = senderId,
                 ReceiverId = receiverId,
-                Message = message,
+                Content = content,
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _postRepository.AddAsync(post);
+            _db.Posts.Add(post);
+            await _db.SaveChangesAsync();
 
             return PostResult.Ok();
         }
