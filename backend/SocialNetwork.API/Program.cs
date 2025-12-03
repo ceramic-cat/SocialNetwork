@@ -17,7 +17,6 @@ namespace SocialNetwork.API
       builder.Services.AddSwaggerGen();
 
       builder.Services.AddScoped<IPostService, PostService>();
-      builder.Services.AddScoped<IPostRepository, InMemoryPostRepository>();
       builder.Services.AddScoped<IAuthService, AuthService>();
 
       builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
