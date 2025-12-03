@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration; // Add this
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Services;
 using Xunit;
@@ -13,7 +14,18 @@ namespace SocialNetwork.Test.Services
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
             var context = new SocialNetworkDbContext(options);
-            return new AuthService(context);
+
+            // Mock IConfiguration with in-memory data for Jwt settings
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "Jwt:Key", "TestKey123456789012345678901234567890" },
+                    { "Jwt:Issuer", "testissuer" },
+                    { "Jwt:Audience", "testaudience" }
+                })
+                .Build();
+
+            return new AuthService(context, config);
         }
 
         [Fact]
