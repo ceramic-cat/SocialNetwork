@@ -17,7 +17,7 @@ public class FollowController : ControllerBase
         _followService = followsService;
     }
 
-    [HttpPost("follow")]
+    [HttpPost]
     public async Task<IActionResult> Follow(FollowRequest request)
     {
         var result = await _followService.FollowAsync(
@@ -31,7 +31,7 @@ public class FollowController : ControllerBase
         return BadRequest(result.ErrorMessage);
 
     }
-
+    [HttpDelete]
     public async Task<IActionResult> Unfollow(FollowRequest request)
     {
         var result = await _followService.UnfollowAsync(
