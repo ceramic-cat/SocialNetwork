@@ -23,14 +23,14 @@ public class FollowService : IFollowsService
         _repository = repository;
     }
 
-     public async Task<Result> FollowAsync(Guid follower, Guid followee)
+    public async Task<Result> FollowAsync(Guid follower, Guid followee)
     {
         if (follower == followee)
         {
             return Result.Failure("You can't follow yourself");
         }
 
-        if(await _repository.ExistsAsync(follower, followee))
+        if (await _repository.ExistsAsync(follower, followee))
         {
             return Result.Failure("Already following this user");
         }
@@ -40,19 +40,21 @@ public class FollowService : IFollowsService
             await _repository.AddAsync(follower, followee);
             return Result.Success();
         }
-        catch (Exception ex) { 
-        return Result.Failure(ex.Message);
+        catch (Exception ex)
+        {
+            return Result.Failure(ex.Message);
         }
     }
 
-    public async Task<Result<Guid[]>> GetFollowsAsync(Guid followee)
+    public async Task<Result<Guid[]>> GetFollowsAsync(Guid follower)
     {
-        if (followee == Guid.Empty)
+        if (follower == Guid.Empty)
         {
             return Result<Guid[]>.Failure("Empty user");
         }
 
-        return Result<Guid[]>.Failure("Not implemented");
+        var follows = await _repository.GetFollowsAsync(follower);
+        return Result<Guid[]>.Success(follows);
     }
 
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
