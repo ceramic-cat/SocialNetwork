@@ -48,7 +48,7 @@ public class UserFollowsRepositoryTests : IDisposable
         await _repository.AddAsync(followerId, followeeId);
 
         // Assert
-        var saved = await _db.UserFollows.FirstOrDefaultAsync();
+        var saved = await _db.Follows.FirstOrDefaultAsync();
         Assert.NotNull(saved);
         Assert.Equal(followeeId, saved.FolloweeId);
         Assert.Equal(followerId, saved.FollowerId);
@@ -113,7 +113,7 @@ public class UserFollowsRepositoryTests : IDisposable
         var followee2 = Guid.NewGuid();
         var followee3 = Guid.NewGuid();
 
-        _db.UserFollows.AddRange(
+        _db.Follows.AddRange(
             new Follow { FollowerId = followerId, FolloweeId = followee1 },
             new Follow { FollowerId = followerId, FolloweeId = followee2 },
             new Follow { FollowerId = followerId, FolloweeId = followee3 }
@@ -152,7 +152,7 @@ public class UserFollowsRepositoryTests : IDisposable
         var followee1 = Guid.NewGuid();
         var followee2 = Guid.NewGuid();
 
-        _db.UserFollows.AddRange(
+        _db.Follows.AddRange(
             new Follow { FollowerId = user1, FolloweeId = followee1 },
             new Follow { FollowerId = user2, FolloweeId = followee2 });
         await _db.SaveChangesAsync();

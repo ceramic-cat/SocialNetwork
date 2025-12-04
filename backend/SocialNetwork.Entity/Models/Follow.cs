@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SocialNetwork.Entity.Models;
 
-[Table("userFollows")]
+[Table("follows")]
 public class Follow
 {
     [Key]
@@ -16,7 +16,7 @@ public class Follow
     public required Guid FollowerId { get; set; }
     [Column("followeeId")]
     public required Guid FolloweeId { get; set; }
-    [Column("created")]
+    [Column("createdAt")]
     public  DateTime Created { get; set; } = DateTime.UtcNow;
 
 
