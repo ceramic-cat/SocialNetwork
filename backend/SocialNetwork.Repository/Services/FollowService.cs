@@ -45,7 +45,15 @@ public class FollowService : IFollowsService
         }
     }
 
-    public Task<Result<Guid[]>> GetFollowsAsync(Guid follower) => throw new NotImplementedException();
+    public async Task<Result<Guid[]>> GetFollowsAsync(Guid followee)
+    {
+        if (followee == Guid.Empty)
+        {
+            return Result<Guid[]>.Failure("Empty user");
+        }
+
+        return Result<Guid[]>.Failure("Not implemented");
+    }
 
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
     {
