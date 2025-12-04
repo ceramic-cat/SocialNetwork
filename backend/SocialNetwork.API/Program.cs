@@ -53,8 +53,10 @@ namespace SocialNetwork.API
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
        };
      });
+            builder.Services.AddAuthorization();
 
-      var app = builder.Build();
+
+            var app = builder.Build();
 
       if (app.Environment.IsDevelopment())
       {
