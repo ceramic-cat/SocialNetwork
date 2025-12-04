@@ -72,18 +72,18 @@ public class UserFollowsRepositoryTests : IDisposable
 
     [Fact]
     public async Task ExistsAsync_WhenNotFollowing_ReturnsFalse()
-    {        
-            // Arrange
-            var followerId = Guid.NewGuid();
-            var followeeId = Guid.NewGuid();
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
 
-            // Act
-            var result = await _repository.ExistsAsync(followerId, followeeId);
+        // Act
+        var result = await _repository.ExistsAsync(followerId, followeeId);
 
-            // Assert
-            Assert.False(result);
+        // Assert
+        Assert.False(result);
 
-        }
+    }
 
     [Fact]
     public async Task DeleteAsync_DeletesFollowFromDatabase()
@@ -104,4 +104,64 @@ public class UserFollowsRepositoryTests : IDisposable
         Assert.False(sucessfulDelete);
     }
 
+    [Fact]
+    public async Task GetFollowsAsync_ReturnsFolloweeIds()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followee1 = Guid.NewGuid();
+        var followee2 = Guid.NewGuid();
+        var followee3 = Guid.NewGuid();
+
+        _db.UserFollows.AddRange(
+            new Follow { FollowerId = followerId, FolloweeId = followee1 },
+            new Follow { FollowerId = followerId, FolloweeId = followee2 },
+            new Follow { FollowerId = followerId, FolloweeId = followee3 }
+        );
+        await _db.SaveChangesAsync();
+
+        // Act
+        var result = await _repository.GetFollowsAsync(followerId);
+
+        // Assert
+        Assert.Equal(3, result.Length);
+        Assert.Contains(followee1, result);
+        Assert.Contains(followee2, result);
+        Assert.Contains(followee3, result);
+    }
+
+    [Fact]
+    public async Task GetFollowsAsync_WhenUserFollowsNobody_ReturnsEmptyArray()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+
+        // Act
+        var result = await _repository.GetFollowsAsync(followerId);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetFollowsAsync_OnlyReturnsFolloweesForSpecifiedUser()
+    {
+        // Arrange
+        var user1 = Guid.NewGuid();
+        var user2 = Guid.NewGuid();
+        var followee1 = Guid.NewGuid();
+        var followee2 = Guid.NewGuid();
+
+        _db.UserFollows.AddRange(
+            new Follow { FollowerId = user1, FolloweeId = followee1 },
+            new Follow { FollowerId = user2, FolloweeId = followee2 });
+        await _db.SaveChangesAsync();
+
+        // Act
+        var result = await _repository.GetFollowsAsync(user1);
+
+        // Assert
+        Assert.Contains(followee1, result);
+        Assert.DoesNotContain(followee2, result);
+    }
 }
