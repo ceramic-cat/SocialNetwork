@@ -1,84 +1,84 @@
 
+using Microsoft.EntityFrameworkCore;
+using SocialNetwork.Entity.Models;
+
 namespace SocialNetwork.Test.Services
 {
     public class PostServiceTests
     {
-        private readonly Mock<IPostRepository> _postRepositoryMock;
+        private readonly SocialNetworkDbContext _db;
         private readonly PostService _sut; 
 
         public PostServiceTests()
         {
-            _postRepositoryMock = new Mock<IPostRepository>();
+            var options = new DbContextOptionsBuilder<SocialNetworkDbContext>()
+                   .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                   .Options;
 
-            _sut = new PostService(
-                _postRepositoryMock.Object
-            );
+            _db = new SocialNetworkDbContext(options);
+            _sut = new PostService(_db);
         }
 
         [Fact]
-        public async Task CreatePostAsync_ReturnsFail_WhenMessageIsEmpty()
+        public async Task CreatePostAsync_ReturnsFail_WhenContentIsEmpty()
         {
             // Arrange
             var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
-            var message = string.Empty;
+            var content = string.Empty;
 
             // Act
-            var result = await _sut.CreatePostAsync(senderId, receiverId, message);
+            var result = await _sut.CreatePostAsync(senderId, receiverId, content);
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("Message cannot be empty.", result.ErrorMessage);
-
-            _postRepositoryMock.Verify(
-                r => r.AddAsync(It.IsAny<Post>()),
-                Times.Never
-            );
+            Assert.Equal("Content cannot be empty.", result.ErrorMessage);
+           
+            var postsInDb = await _db.Posts.CountAsync();
+            Assert.Equal(0, postsInDb);
+            
         }
 
         [Fact]
-        public async Task CreatePostAsync_ReturnsFail_WhenMessageIsTooLong()
+        public async Task CreatePostAsync_ReturnsFail_WhenContentIsTooLong()
         {
             // Arrange
             var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
-            var longMessage = new string('x', 281); 
+            var longContent = new string('x', 281); 
 
             // Act
-            var result = await _sut.CreatePostAsync(senderId, receiverId, longMessage);
+            var result = await _sut.CreatePostAsync(senderId, receiverId, longContent);
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("Message cannot be longer than 280 characters.", result.ErrorMessage);
+            Assert.Equal("Content cannot be longer than 280 characters.", result.ErrorMessage);
 
-            _postRepositoryMock.Verify(
-                r => r.AddAsync(It.IsAny<Post>()),
-                Times.Never
-            );
+            var postsInDb = await _db.Posts.CountAsync();
+            Assert.Equal(0, postsInDb);
 
         } 
         
         [Fact]
 
-        public async Task CreatePostAsync_ShouldSavePost_WhenMessageIsValid()
+        public async Task CreatePostAsync_ShouldSavePost_WhenContentIsValid()
         {
             // Arrange
             var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
-            var message = "This is a valid post message.";
+            var content = "This is a valid post.";
             // Act
-            var result = await _sut.CreatePostAsync(senderId, receiverId, message);
+            var result = await _sut.CreatePostAsync(senderId, receiverId, content);
             // Assert
             Assert.True(result.Success);
             Assert.Null(result.ErrorMessage);
-            _postRepositoryMock.Verify(
-                r => r.AddAsync(It.Is<Post>(p =>
-                    p.SenderId == senderId &&
-                    p.ReceiverId == receiverId &&
-                    p.Message == message
-                )),
-                Times.Once
-            );
+
+            var post = await _db.Posts.SingleAsync();
+            Assert.Equal(senderId, post.SenderId);
+            Assert.Equal(receiverId, post.ReceiverId);
+            Assert.Equal(content, post.Content);
+            Assert.NotEqual(default, post.CreatedAt);
+        
         }
 
     }

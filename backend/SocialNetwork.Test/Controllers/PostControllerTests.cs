@@ -18,17 +18,17 @@ namespace SocialNetwork.Test.Controllers
             // Arrange
             var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
-            var message = "Success post!";
+            var content = "Success post!";
 
             var request = new CreatePostRequest
             {
                 SenderId = senderId,
                 ReceiverId = receiverId,
-                Message = message
+                Content = content
             };
 
             _postServiceMock
-                .Setup(s => s.CreatePostAsync(senderId, receiverId, message))
+                .Setup(s => s.CreatePostAsync(senderId, receiverId, content))
                 .ReturnsAsync(PostResult.Ok());
 
             // Act
@@ -39,62 +39,62 @@ namespace SocialNetwork.Test.Controllers
             Assert.Equal(200, okResult.StatusCode);
 
             _postServiceMock.Verify(
-                s => s.CreatePostAsync(senderId, receiverId, message),
+                s => s.CreatePostAsync(senderId, receiverId, content),
                 Times.Once
             );
         }
 
         [Fact]
-        public async Task CreatePost_EmptyMessage_ReturnsBadRequest()
+        public async Task CreatePost_EmptyContent_ReturnsBadRequest()
         {
             // Arrange
             var sender = Guid.NewGuid();
             var receiver = Guid.NewGuid();
-            var message = "   "; 
+            var content = "   "; 
 
             var request = new CreatePostRequest
             {
                 SenderId = sender,
                 ReceiverId = receiver,
-                Message = message
+                Content = content
             };
 
             _postServiceMock
-                .Setup(s => s.CreatePostAsync(sender, receiver, message))
-                .ReturnsAsync(PostResult.Fail("Message cannot be empty."));
+                .Setup(s => s.CreatePostAsync(sender, receiver, content))
+                .ReturnsAsync(PostResult.Fail("Content cannot be empty."));
 
             // Act
             var result = await _sut.CreatePost(request);
 
             // Assert
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Message cannot be empty.", badRequest.Value);
+            Assert.Equal("Content cannot be empty.", badRequest.Value);
 
             _postServiceMock.Verify(s =>
-                s.CreatePostAsync(sender, receiver, message),
+                s.CreatePostAsync(sender, receiver, content),
                 Times.Once
             );
         }
         [Fact]
-        public async Task CreatePost_SenderidDoesntExist_ReturnsBadRequestWithErrorMessage()
+        public async Task CreatePost_SenderidDoesntExist_ReturnsBadRequestWithErrorContent()
         {
             // Arrange
             var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
-            var message = "This will fail";
+            var content = "This will fail";
 
             var request = new CreatePostRequest
             {
                 SenderId = senderId,
                 ReceiverId = receiverId,
-                Message = message
+                Content = content
             };
 
-            var errorMessage = "Sender does not exist.";
+            var errorContent = "Sender does not exist.";
 
             _postServiceMock
-                .Setup(s => s.CreatePostAsync(senderId, receiverId, message))
-                .ReturnsAsync(PostResult.Fail(errorMessage));
+                .Setup(s => s.CreatePostAsync(senderId, receiverId, content))
+                .ReturnsAsync(PostResult.Fail(errorContent));
 
             // Act
             var result = await _sut.CreatePost(request);
@@ -102,10 +102,10 @@ namespace SocialNetwork.Test.Controllers
             // Assert
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(400, badRequest.StatusCode);
-            Assert.Equal(errorMessage, badRequest.Value);
+            Assert.Equal(errorContent, badRequest.Value);
 
             _postServiceMock.Verify(
-                s => s.CreatePostAsync(senderId, receiverId, message),
+                s => s.CreatePostAsync(senderId, receiverId, content),
                 Times.Once
             );
         }

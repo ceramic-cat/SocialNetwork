@@ -8,7 +8,7 @@ namespace SocialNetwork.Entity.Models
     {
         [Key]
         [Column("id")]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column("username")]
         public string Username { get; set; } = default!;
