@@ -27,7 +27,6 @@ export default function LoginForm({
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h4>Login</h4>
       {showRegistrationSuccess && (
         <div className="text-success mb-3">Registration successful!</div>
       )}

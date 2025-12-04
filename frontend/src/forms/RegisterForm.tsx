@@ -40,7 +40,6 @@ export default function RegisterForm({
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h4>Register</h4>
       {displayError && <Alert variant="danger">{displayError}</Alert>}
 
       <Form.Group className="mb-3">
