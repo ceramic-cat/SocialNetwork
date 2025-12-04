@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using SocialNetwork.Repository.Interfaces;
+using SocialNetwork.Repository.Repositories;
 
 namespace SocialNetwork.API
 {

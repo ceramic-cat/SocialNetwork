@@ -1,5 +1,6 @@
 ﻿using Moq;
 using SocialNetwork.Entity;
+using SocialNetwork.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;

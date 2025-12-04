@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Entity.Models;
+using SocialNetwork.Repository.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
