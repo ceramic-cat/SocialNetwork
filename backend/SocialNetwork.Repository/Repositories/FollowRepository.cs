@@ -50,4 +50,5 @@ public class FollowRepository : IFollowRepository
 
     }
 
+    public Task<Guid[]> GetFollowsAsync(Guid follower) => throw new NotImplementedException();
 }

@@ -52,10 +52,9 @@ public class FollowsServiceTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var followService = new FollowService(_followRepositoryMock.Object);
 
         // Act
-        var result = await followService.FollowAsync(userId, userId);
+        var result = await _sut.FollowAsync(userId, userId);
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -67,10 +66,9 @@ public class FollowsServiceTests
     {
         // Arrange
         _followRepositoryMock.Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(false);
-        var followService = new FollowService(_followRepositoryMock.Object);
 
         // Act
-        var result = await followService.UnfollowAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await _sut.UnfollowAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -110,15 +108,35 @@ public class FollowsServiceTests
         Assert.True(result.IsSuccess);
         Assert.Equal(followedUsers, result.Data);
     }
-
+    [Fact]
     public async Task GetFollows_EmptyUser_ReturnsError()
     {
+        // Arrange
+        var followerId = Guid.Empty;
 
+        // Act
+        var result = await _sut.GetFollowsAsync(followerId);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Contains(result.ErrorMessage, "Empty user");
+        _followRepositoryMock.Verify(r => r.GetFollowsAsync(It.IsAny<Guid>()), Times.Never);
     }
 
     [Fact]
     public async Task GetFollows_ValidUserThatFollowsNoUsers_ReturnsEmptyList()
     {
+        // Arrange
+        _followRepositoryMock
+            .Setup(r => r.GetFollowsAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new Guid[] { });
+
+        // Act
+        var result = await _sut.GetFollowsAsync(Guid.NewGuid());
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Data);
 
     }
 

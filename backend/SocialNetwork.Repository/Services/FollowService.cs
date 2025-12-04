@@ -45,6 +45,7 @@ public class FollowService : IFollowsService
         }
     }
 
+    public Task<Result<Guid[]>> GetFollowsAsync(Guid follower) => throw new NotImplementedException();
 
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
     {
@@ -56,6 +57,5 @@ public class FollowService : IFollowsService
         return Result.Success();
     }
 
-    Task<Result<Guid[]>> IFollowsService.GetFollowsAsync(Guid follower) => throw new NotImplementedException();
 }
 
