@@ -1,5 +1,5 @@
 import { Button } from "react-bootstrap";
-import CreatePostModal from "../components/CreatePostModal";
+import CreatePostModal from "../modals/CreatePostModal";
 import AuthModal from "../modals/AuthModal";
 import useCurrentUser from "../hooks/useCurrentUser";
 
