@@ -9,5 +9,5 @@ public interface IFollowRepository
     Task AddAsync(Guid followerId, Guid followeeId);
     Task DeleteAsync(Guid followerId, Guid followeeId);
 
-    
+    Task<Guid[]> GetFollowsAsync(Guid follower);
 }

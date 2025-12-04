@@ -79,27 +79,6 @@ public class FollowControllerTests
             s => s.UnfollowAsync(followerId, followeeId), Times.Once());
     }
 
-
-
-
-
-   // Arrange
-   // _followServiceMock.Setup(m =>
-   //     m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Success);
-   // var followerId = Guid.NewGuid();
-   // var followeeId = Guid.NewGuid();
-
-   // var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
-
-   // Act
-   // var reply = await _sut.Follow(request);
-
-   // Assert
-   //Assert.IsType<OkResult>(reply);
-   // _followServiceMock.Verify(
-   //     s => s.FollowAsync(followerId, followeeId), Times.Once());
-
-
     [Fact]
     public async Task Unfollow_InvalidRequest_ReturnsBadRequest()
     {

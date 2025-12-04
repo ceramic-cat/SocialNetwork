@@ -8,40 +8,38 @@ namespace SocialNetwork.Test.Services;
 
 public class FollowsServiceTests
 {
+    private readonly Mock<IFollowRepository> _followRepositoryMock;
+    private readonly IFollowsService _sut;
+    public FollowsServiceTests()
+    {
+        _followRepositoryMock = new Mock<IFollowRepository>();
+        _sut = new FollowService(_followRepositoryMock.Object);
+    }
 
     [Fact]
-    public async Task FollowUserAsync_WhenNotAlreadyFollowing_ReturnsSuccess()
+    public async Task FollowAsync_WhenNotAlreadyFollowing_ReturnsSuccess()
     {
         // Arrange
-        var mockRepo = new Mock<IFollowRepository>();
 
-        mockRepo.Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _followRepositoryMock.Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(false);
-
-
-        var service = new FollowService(mockRepo.Object);
-        
         // Act
-        var result = await service.FollowAsync(Guid.NewGuid(), Guid.NewGuid());
-        
+        var result = await _sut.FollowAsync(Guid.NewGuid(), Guid.NewGuid());
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Null(result.ErrorMessage);
     }
 
     [Fact]
-    public async Task FollowUserAsync_WhenAlreadyFollowing_ReturnsFailure()
+    public async Task FollowAsync_WhenAlreadyFollowing_ReturnsFailure()
     {
         // Arrange
-        var mockRepo = new Mock<IFollowRepository>();
-
-        mockRepo.Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _followRepositoryMock.Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(true);
 
-        var service = new FollowService(mockRepo.Object);
-
         // Act
-        var result = await service.FollowAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await _sut.FollowAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -50,17 +48,14 @@ public class FollowsServiceTests
 
 
     [Fact]
-    public async Task FollowUserAsync_WhenTryingToFollowYourself_ReturnsFailure()
+    public async Task FollowAsync_WhenTryingToFollowYourself_ReturnsFailure()
     {
         // Arrange
-        var mockRepo = new Mock<IFollowRepository>();
         var userId = Guid.NewGuid();
-
-
-        var service = new FollowService(mockRepo.Object);
+        var followService = new FollowService(_followRepositoryMock.Object);
 
         // Act
-        var result = await service.FollowAsync(userId, userId);
+        var result = await followService.FollowAsync(userId, userId);
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -68,16 +63,14 @@ public class FollowsServiceTests
     }
 
     [Fact]
-    public async Task UnfollowUserAsync_FollowerRelationshipDontExist_ReturnsFailure()
+    public async Task UnfollowAsync_FollowerRelationshipDontExist_ReturnsFailure()
     {
         // Arrange
-        var mockRepo = new Mock<IFollowRepository>();
-        mockRepo.Setup(r=> r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(false);
-
-        var service = new FollowService(mockRepo.Object);
+        _followRepositoryMock.Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(false);
+        var followService = new FollowService(_followRepositoryMock.Object);
 
         // Act
-        var result = await service.UnfollowAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await followService.UnfollowAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -85,22 +78,50 @@ public class FollowsServiceTests
     }
 
     [Fact]
-    public async Task UnfollowUserAsync_FollowerRelationshipExists_ReturnsTrue()
+    public async Task UnfollowAsync_FollowerRelationshipExists_ReturnsTrue()
     {
         // Arrange
-        var mockRepo = new Mock<IFollowRepository>();
-        mockRepo.Setup(r => r.ExistsAsync(
-            It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _followRepositoryMock
+            .Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(true);
 
-        var service = new FollowService(mockRepo.Object);
-
         // Act
-        var result = await service.UnfollowAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await _sut.UnfollowAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         Assert.True(result.IsSuccess);
     }
+
+    [Fact]
+    public async Task GetFollows_ValidUser_ReturnsArrayOfId()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followedUsers = new[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+        _followRepositoryMock
+            .Setup(r => r.GetFollowsAsync(followerId))
+            .ReturnsAsync(followedUsers);
+
+        // Act
+        var result = await _sut.GetFollowsAsync(followerId);
+
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(followedUsers, result.Data);
+    }
+
+    public async Task GetFollows_EmptyUser_ReturnsError()
+    {
+
+    }
+
+    [Fact]
+    public async Task GetFollows_ValidUserThatFollowsNoUsers_ReturnsEmptyList()
+    {
+
+    }
+
 
 }
 

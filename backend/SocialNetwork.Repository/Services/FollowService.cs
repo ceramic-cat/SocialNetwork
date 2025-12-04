@@ -2,6 +2,7 @@
 using SocialNetwork.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace SocialNetwork.Repository.Services;
@@ -11,6 +12,7 @@ public interface IFollowsService
 {
     Task<Result> FollowAsync(Guid follower, Guid followee);
     Task<Result> UnfollowAsync(Guid follower, Guid followee);
+    Task<Result<Guid[]>> GetFollowsAsync(Guid follower);
 }
 public class FollowService : IFollowsService
 {
@@ -43,6 +45,7 @@ public class FollowService : IFollowsService
         }
     }
 
+
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
     {
         if (false == await _repository.ExistsAsync(follower, followee))
@@ -52,5 +55,7 @@ public class FollowService : IFollowsService
 
         return Result.Success();
     }
+
+    Task<Result<Guid[]>> IFollowsService.GetFollowsAsync(Guid follower) => throw new NotImplementedException();
 }
 
