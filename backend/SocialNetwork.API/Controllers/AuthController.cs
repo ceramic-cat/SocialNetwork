@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Repository.Services;
 using SocialNetwork.Entity.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetwork.API.Controllers
 {
@@ -37,6 +38,20 @@ namespace SocialNetwork.API.Controllers
         public IActionResult Logout()
         {
             return Ok("Logout successful.");
+        }
+
+        [HttpGet("validate")]
+        [Authorize]
+        public IActionResult ValidateToken()
+        {
+            var userId = User.FindFirst("UserId")?.Value;
+            var username = User.Identity?.Name;
+    
+             return Ok(new { 
+                 Valid = true, 
+                 UserId = userId,
+                    Username = username 
+                });
         }
     }
 }
