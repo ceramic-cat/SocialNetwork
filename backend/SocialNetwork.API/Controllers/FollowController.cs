@@ -42,7 +42,10 @@ public class FollowController : ControllerBase
         if (result.IsSuccess == true)
         { return Ok(); }
         return BadRequest(result.ErrorMessage);
+    }
 
-
+    public async Task<IActionResult> GetFollows(Guid id)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Moq;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Repositories;
 using System;
@@ -98,6 +99,41 @@ public class FollowControllerTests
         Assert.Equal("Error", badRequestResult.Value);
         _followServiceMock.Verify(
             s => s.UnfollowAsync(followerId, followeeId), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetFollowsAsync_ValidRequest_ReturnsOk()
+    {
+        // Arrange
+        var followedUsers = new Guid[] { Guid.NewGuid(), Guid.NewGuid() };
+
+        _followServiceMock
+            .Setup(m => m.GetFollowsAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(Result<Guid[]>.Success(followedUsers));
+
+        // Act
+        var result = await _sut.GetFollows(Guid.NewGuid());
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedGuids = Assert.IsType<Guid[]>(okResult.Value);
+        Assert.Equal(3, returnedGuids.Length);
+        Assert.Equal(followedUsers, returnedGuids);
+    }
+    [Fact]
+    public async Task GetFollowsAsync_EmptyGuid_ReturnsBadRequest()
+    {
+        // Arrange
+        _followServiceMock
+            .Setup(m => m.GetFollowsAsync(Guid.Empty))
+            .ReturnsAsync(Result<Guid[]>.Failure("Empty user"));
+
+        // Act
+        var result = await _sut.GetFollows(Guid.Empty);
+
+        // Assert
+        var badrequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal("Empty user", badrequestResult.Value);
     }
 }
 
