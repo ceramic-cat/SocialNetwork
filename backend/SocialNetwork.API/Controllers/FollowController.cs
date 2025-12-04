@@ -43,9 +43,13 @@ public class FollowController : ControllerBase
         { return Ok(); }
         return BadRequest(result.ErrorMessage);
     }
-
-    public async Task<IActionResult> GetFollows(Guid id)
+    [HttpGet]
+    public async Task<IActionResult> GetFollows([FromBody] Guid id)
     {
-        throw new NotImplementedException();
+        var result = await _followService.GetFollowsAsync(id);
+
+        if (result.IsSuccess == true) { return Ok(result.Data); }
+
+        return BadRequest(result.ErrorMessage);
     }
 }

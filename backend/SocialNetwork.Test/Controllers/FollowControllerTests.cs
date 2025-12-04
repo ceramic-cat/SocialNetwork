@@ -105,7 +105,7 @@ public class FollowControllerTests
     public async Task GetFollowsAsync_ValidRequest_ReturnsOk()
     {
         // Arrange
-        var followedUsers = new Guid[] { Guid.NewGuid(), Guid.NewGuid() };
+        var followedUsers = new Guid[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
 
         _followServiceMock
             .Setup(m => m.GetFollowsAsync(It.IsAny<Guid>()))
