@@ -7,6 +7,7 @@ interface HeaderProps {
   onCreatePost: () => void;
   onSendMessage: () => void;
   onLogout: () => void;
+  userId: string | null;
 }
 
 export default function Header({
@@ -15,6 +16,7 @@ export default function Header({
   onCreatePost,
   onSendMessage,
   onLogout,
+  userId,
 }: HeaderProps) {
   return (
     <header className="app-header sticky-top">
@@ -49,9 +51,16 @@ export default function Header({
                 <span className="d-none d-md-inline">Message</span>
               </Nav.Link>
 
-              <span className="app-header-username text-light d-none d-md-inline">
-                {username}
-              </span>
+              <Nav.Link
+                as={Link}
+                to={userId ? `/users/${userId}/timeline` : "#"}
+                className="app-header-link d-flex align-items-center gap-1"
+              >
+                <i className="bi bi-person" />
+                <span className="app-header-username text-light d-none d-md-inline">
+                  {username}
+                </span>
+              </Nav.Link>
 
               <Nav.Link
                 className="app-header-link d-flex align-items-center gap-1"

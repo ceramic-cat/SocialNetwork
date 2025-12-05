@@ -34,6 +34,7 @@ function App() {
         <Header
           isLoggedIn={isLoggedIn}
           username={username}
+          userId={userId}
           onCreatePost={() => setShowCreatePost(true)}
           onSendMessage={() => setShowMessageModal(true)}
           onLogout={handleLogout}
@@ -46,8 +47,8 @@ function App() {
         ) : (
           <>
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/timeline" element={<Timeline />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/users/:id/timeline" element={<Timeline />} />
             </Routes>
 
             {userId && username && (

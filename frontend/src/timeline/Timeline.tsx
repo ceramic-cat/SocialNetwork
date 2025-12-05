@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import PostCard from "./PostCard";
+import { useParams } from "react-router-dom";
 
 type PostDto = {
   id: string;
@@ -13,7 +14,7 @@ type PostDto = {
 const BASE_URL = "http://localhost:5148";
 
 export default function Timeline() {
-  const userId = "userID";
+  const { id: userId } = useParams<{ id: string }>();
 
   const [posts, setPosts] = useState<PostDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +27,6 @@ export default function Timeline() {
     fetch(`${BASE_URL}/api/users/${userId}/timeline`)
       .then((res) => res.json())
       .then((data: PostDto[]) => {
-        console.log("Timeline data:", data);
         setPosts(data);
       })
       .catch((err) => {
@@ -37,7 +37,7 @@ export default function Timeline() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [userId]);
 
   if (isLoading) {
     return <div>Loading timeline…</div>;
@@ -53,7 +53,6 @@ export default function Timeline() {
 
   return (
     <div>
-      Timeline Page - Under Construction. Try looking at the console.log
       {posts.map((post) => (
         <PostCard
           key={post.id}
