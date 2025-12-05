@@ -1,76 +1,72 @@
-import { useState, useEffect } from "react";
-import CreatePostModal from "../modals/CreatePostModal";
-import AuthModal from "../modals/AuthModal";
-import { Button } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import useCurrentUser from "../hooks/useCurrentUser";
+
+type PostDto = {
+  id: string;
+  senderId: string;
+  senderUsername: string;
+  receiverId: string;
+  content: string;
+  createdAt: string;
+};
 
 export default function TheFeed() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [posts, setPosts] = useState<PostDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const { userId, loading: userLoading, isLoggedIn } = useCurrentUser();
 
   useEffect(() => {
-    async function checkAuthStatus() {
-      const token = localStorage.getItem("token");
+    if (!userId || userLoading) return;
 
-      if (!token) {
-        setIsLoggedIn(false);
-        setLoading(false);
-        return;
-      }
-
+    async function fetchFeed() {
+      setLoading(true);
+      setError(null);
       try {
-        const response = await fetch("/api/auth/validate", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response.ok) {
-          setIsLoggedIn(true);
+        const res = await fetch(`http://localhost:5148/api/thefeed/${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setPosts(data);
         } else {
-          localStorage.removeItem("token");
-          setIsLoggedIn(false);
+          setError("Failed to load feed.");
         }
-      } catch (error) {
-        localStorage.removeItem("token");
-        setIsLoggedIn(false);
+      } catch (err) {
+        setError("Network error.");
       }
-
       setLoading(false);
     }
+    fetchFeed();
+  }, [userId, userLoading]);
 
-    checkAuthStatus();
-  }, []);
-
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-  };
-
-  if (loading) {
-    return <div className="text-center">Loading...</div>;
-  }
-
-  if (!isLoggedIn) {
-    return (
-      <AuthModal showInitially={true} onLoginSuccess={handleLoginSuccess} />
-    );
-  }
+  if (userLoading) return <div>Loading user...</div>;
+  if (!isLoggedIn) return <div></div>;
 
   return (
     <div className="text-center">
-      {/* Change to the correct senderId and senderName when we have users */}
-      <CreatePostModal
-        senderId="405F3E28-E455-4F15-95E8-A890F54C5848"
-        senderName="Maja Berg"
-      />
-      <Button variant="outline-danger" onClick={handleLogout}>
-        Logout
-      </Button>
+      <h2>Your Feed</h2>
+      {loading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div style={{ color: "red" }}>{error}</div>
+      ) : posts.length === 0 ? (
+        <div>No posts to show.</div>
+      ) : (
+        <ul>
+          {posts.map((post) => (
+            <li key={post.id}>
+              <div>
+                <strong>{post.content}</strong>
+                <br />
+                <small>
+                  {post.senderUsername} |{" "}
+                  {new Date(post.createdAt).toLocaleString()}
+                </small>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
