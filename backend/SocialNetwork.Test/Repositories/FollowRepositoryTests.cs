@@ -9,13 +9,13 @@ using System.Text;
 namespace SocialNetwork.Test.Repositories;
 
 // IDisposable disposes of the database after each test.
-public class UserFollowsRepositoryTests : IDisposable
+public class FollowRepositoryTests : IDisposable
 {
     private readonly SqliteConnection _connection;
     private readonly SocialNetworkDbContext _db;
     private readonly FollowRepository _repository;
 
-    public UserFollowsRepositoryTests()
+    public FollowRepositoryTests()
     {
         _connection = new SqliteConnection("DataSource=:memory:");
         _connection.Open();
