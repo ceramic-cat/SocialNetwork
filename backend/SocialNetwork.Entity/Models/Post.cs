@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SocialNetwork.Entity.Models
 {
+    [Table("posts")]
     public class Post
     {
         [Column("id")]
