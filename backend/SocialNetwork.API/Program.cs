@@ -1,12 +1,14 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository;
 using SocialNetwork.Repository.Interfaces;
 using SocialNetwork.Repository.Repositories;
 using SocialNetwork.Repository.Services;
+using System.Text;
 
 namespace SocialNetwork.API
 {
@@ -21,6 +23,7 @@ namespace SocialNetwork.API
             builder.Services.AddOpenApi(options =>
             {
                 options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+                options.AddOperationTransformer<AuthorizeOperationTransformer>();
             });
             builder.Services.AddScoped<IPostService, PostService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
