@@ -49,7 +49,8 @@ namespace SocialNetwork.Repository.Services
             new Claim("UserId", user.Id.ToString())
         };
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+      var jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("JWT key is not configured");
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
       var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
       var token = new JwtSecurityToken(
@@ -62,5 +63,38 @@ namespace SocialNetwork.Repository.Services
 
       return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    public async Task<bool> DeleteAccountAsync(Guid userId)
+    {
+      var user = await _db.Users.FindAsync(userId);
+      if (user == null)
+        return false;
+
+      _db.Users.Remove(user);
+      await _db.SaveChangesAsync();
+      return true;
+    }
+
+    public async Task<bool> EditProfileAsync(Guid userId, EditProfileRequest request)
+    {
+      var user = await _db.Users.FindAsync(userId);
+      if (user == null)
+        return false;
+
+      if (!string.IsNullOrEmpty(request.Username))
+        user.Username = request.Username;
+
+      if (!string.IsNullOrEmpty(request.Email))
+        user.Email = request.Email;
+
+      if (!string.IsNullOrEmpty(request.Password))
+        user.Password = request.Password;
+
+      _db.Users.Update(user);
+      await _db.SaveChangesAsync();
+      return true;
+    }
+    
+    
   }
 }

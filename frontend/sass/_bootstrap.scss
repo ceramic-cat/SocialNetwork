@@ -6,13 +6,14 @@ $navbar-dark-color: rgba(white, 0.8) !default;
 $navbar-dark-hover-color: rgba(white, 0.9) !default;
 $primary: #f2eee9;
 $secondary: #3a2b28;
+$warning: #ff6b6b;
 $enable-negative-margins: true;
 
 // Import bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
 //import icon
-//@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
 .form-label {
   color: #b8b8ff !important;
