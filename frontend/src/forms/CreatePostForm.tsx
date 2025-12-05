@@ -76,7 +76,7 @@ export default function CreatePostForm({
     <Form onSubmit={handleSubmit}>
       <Row className="mb-3">
         <Col>
-          <h5 className="mb-2">{senderName}</h5>
+          <h5 className="mb-2 sender-name">{senderName}</h5>
         </Col>
       </Row>
 
