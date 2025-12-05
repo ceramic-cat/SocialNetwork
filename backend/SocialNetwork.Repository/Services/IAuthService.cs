@@ -6,5 +6,7 @@ namespace SocialNetwork.Repository.Services
     {
         Task<bool> RegisterAsync(RegisterRequest request);
         Task<string?> LoginAsync(LoginRequest request);
+        Task<bool> DeleteAccountAsync(Guid userId);
+        Task<bool> EditProfileAsync(Guid userId, EditProfileRequest request);
     }
 }
