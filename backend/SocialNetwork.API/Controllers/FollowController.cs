@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Services;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
 
 namespace SocialNetwork.API.Controllers;
 
@@ -43,10 +45,18 @@ public class FollowController : ControllerBase
         { return Ok(); }
         return BadRequest(result.ErrorMessage);
     }
+    [Authorize]
     [HttpGet("get/{id}")]
     public async Task<IActionResult> GetFollows()
     {
-        var result = await _followService.GetFollowsAsync();
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _followService.GetFollowsAsync(userId);
 
         if (result.IsSuccess == true) { return Ok(result.Data); }
 

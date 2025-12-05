@@ -111,7 +111,7 @@ public class FollowControllerTests
         var followedUsers = new Guid[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
 
         _followServiceMock
-            .Setup(m => m.GetFollowsAsync())
+            .Setup(m => m.GetFollowsAsync(userId))
             .ReturnsAsync(Result<Guid[]>.Success(followedUsers));
 
         _sut.ControllerContext = new ControllerContext
@@ -134,12 +134,13 @@ public class FollowControllerTests
         Assert.Equal(3, returnedGuids.Length);
         Assert.Equal(followedUsers, returnedGuids);
     }
+
     [Fact]
     public async Task GetFollowsAsync_EmptyGuid_ReturnsBadRequest()
     {
         // Arrange
         _followServiceMock
-            .Setup(m => m.GetFollowsAsync())
+            .Setup(m => m.GetFollowsAsync(Guid.NewGuid()))
             .ReturnsAsync(Result<Guid[]>.Failure("Empty user"));
 
         // Act

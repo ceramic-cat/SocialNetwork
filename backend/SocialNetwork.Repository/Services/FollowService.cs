@@ -1,4 +1,5 @@
 ﻿using SocialNetwork.API.Models;
+using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ public interface IFollowsService
 {
     Task<Result> FollowAsync(Guid follower, Guid followee);
     Task<Result> UnfollowAsync(Guid follower, Guid followee);
-    Task<Result<Guid[]>> GetFollowsAsync();
+    Task<Result<Guid[]>> GetFollowsAsync(Guid follower);
 }
 public class FollowService : IFollowsService
 {
@@ -46,9 +47,15 @@ public class FollowService : IFollowsService
         }
     }
 
-    public async Task<Result<Guid[]>> GetFollowsAsync()
+    public async Task<Result<Guid[]>> GetFollowsAsync(Guid follower)
     {
-        throw new NotImplementedException();
+        if (follower == Guid.Empty)
+        {
+            return Result<Guid[]>.Failure("Empty user");
+        }
+
+        var follows = await _repository.GetFollowsAsync(follower);
+        return Result<Guid[]>.Success(follows);
     }
 
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
