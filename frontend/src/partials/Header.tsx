@@ -34,7 +34,7 @@ export default function Header({
                 onClick={onCreatePost}
               >
                 <i className="bi bi-pencil" />
-                <span className="d-none d-sm-inline">Post</span>
+                <span className="d-none d-md-inline">Post</span>
               </Nav.Link>
 
               <Nav.Link
@@ -42,7 +42,7 @@ export default function Header({
                 onClick={onSendMessage}
               >
                 <i className="bi bi-chat-heart" />
-                <span className="d-none d-sm-inline">Message</span>
+                <span className="d-none d-md-inline">Message</span>
               </Nav.Link>
 
               <span className="app-header-username d-none d-md-inline">
@@ -54,7 +54,7 @@ export default function Header({
                 onClick={onLogout}
               >
                 <i className="bi bi-door-open" />
-                <span className="d-none d-sm-inline">Logout</span>
+                <span className="d-none d-md-inline">Logout</span>
               </Nav.Link>
             </Nav>
           )}
