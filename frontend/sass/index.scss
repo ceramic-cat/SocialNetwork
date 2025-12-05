@@ -4,18 +4,3 @@
 // Import fonts from Google Fonts
 @import url("https://fonts.googleapis.com/css2?family=Chewy&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Passions+Conflict&family=Tangerine:wght@400;700&display=swap");
-
-/* background styling with glass-effect*/
-.app-shell {
-  min-height: 100vh;
-  background: rgba(59, 130, 246, 0.15);
-  backdrop-filter: blur(40px) saturate(220%);
-  -webkit-backdrop-filter: blur(40px) saturate(220%);
-  background-image: linear-gradient(
-    135deg,
-    rgba(96, 165, 250, 0.35),
-    rgba(30, 58, 138, 0.5)
-  );
-  box-shadow: inset 0 40px 80px rgba(255, 255, 255, 0.05);
-  color: #eaf2ff;
-}

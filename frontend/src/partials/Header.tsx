@@ -23,7 +23,11 @@ export default function Header({
           fluid
           className="d-flex justify-content-between align-items-center"
         >
-          <Navbar.Brand as={Link} to="/" className="app-header-brand">
+          <Navbar.Brand
+            as={Link}
+            to="/"
+            className="text-warning app-header-brand"
+          >
             Social Network
           </Navbar.Brand>
 
@@ -45,7 +49,7 @@ export default function Header({
                 <span className="d-none d-md-inline">Message</span>
               </Nav.Link>
 
-              <span className="app-header-username d-none d-md-inline">
+              <span className="app-header-username text-light d-none d-md-inline">
                 {username}
               </span>
 

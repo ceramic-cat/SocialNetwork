@@ -28,7 +28,7 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className="page-container">
       {isLoggedIn && (
         <Header
           isLoggedIn={isLoggedIn}
@@ -39,7 +39,7 @@ function App() {
         />
       )}
 
-      <main className="app-main">
+      <main className="page-background">
         {!isLoggedIn ? (
           <AuthModal showInitially={true} onLoginSuccess={handleLoginSuccess} />
         ) : (
