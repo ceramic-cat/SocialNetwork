@@ -37,36 +37,50 @@ export default function AuthModal({
 
   return (
     <>
-      <Modal show={show} centered>
-        <Modal.Header>
-          <ButtonGroup>
-            <Button
-              variant={mode === "login" ? "primary" : "outline-primary"}
-              onClick={() => handleSwitch("login")}
-            >
-              Login
-            </Button>
-            <Button
-              variant={mode === "register" ? "primary" : "outline-primary"}
-              onClick={() => handleSwitch("register")}
-            >
-              Register
-            </Button>
-          </ButtonGroup>
-        </Modal.Header>
-        <Modal.Body>
-          {mode === "login" ? (
-            <LoginForm
-              onSuccess={handleLoginSuccess}
-              showRegistrationSuccess={registrationSuccess}
-            />
-          ) : (
-            <RegisterForm
-              onSuccess={handleLoginSuccess}
-              onSwitchToLogin={handleRegistrationSuccess}
-            />
-          )}
-        </Modal.Body>
+      <Modal show={show} centered className="auth-modal">
+        <div className="auth-modal-content">
+          <div className="background-animation"></div>
+          <div className="floating-elements">
+            <div className="element element-1"></div>
+            <div className="element element-2"></div>
+            <div className="element element-3"></div>
+          </div>
+
+          <Modal.Header className="auth-modal-header">
+            <div className="modal-title">
+              <h3 className="title">Social Network</h3>
+              <p className="subtitle">Creativity and social connection</p>
+            </div>
+            <ButtonGroup className="auth-tab-group">
+              <Button
+                className={`auth-tab ${mode === "login" ? "active" : ""}`}
+                onClick={() => handleSwitch("login")}
+              >
+                Login
+              </Button>
+              <Button
+                className={`auth-tab ${mode === "register" ? "active" : ""}`}
+                onClick={() => handleSwitch("register")}
+              >
+                Register
+              </Button>
+            </ButtonGroup>
+          </Modal.Header>
+
+          <Modal.Body className="auth-modal-body">
+            {mode === "login" ? (
+              <LoginForm
+                onSuccess={handleLoginSuccess}
+                showRegistrationSuccess={registrationSuccess}
+              />
+            ) : (
+              <RegisterForm
+                onSuccess={handleLoginSuccess}
+                onSwitchToLogin={handleRegistrationSuccess}
+              />
+            )}
+          </Modal.Body>
+        </div>
       </Modal>
     </>
   );
