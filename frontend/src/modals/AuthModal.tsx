@@ -37,7 +37,7 @@ export default function AuthModal({
 
   return (
     <>
-      <Modal show={show} centered className="auth-modal" backdrop="static">
+      <Modal show={show} centered className="auth-modal">
         <div className="auth-modal-content">
           <div className="background-animation"></div>
           <div className="floating-elements">
