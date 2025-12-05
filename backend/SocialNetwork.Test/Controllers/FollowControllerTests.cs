@@ -136,20 +136,44 @@ public class FollowControllerTests
     }
 
     [Fact]
-    public async Task GetFollowsAsync_EmptyGuid_ReturnsBadRequest()
+    public async Task GetFollowsAsync_NoToken_ReturnsUnauthorized()
     {
         // Arrange
-        _followServiceMock
-            .Setup(m => m.GetFollowsAsync(Guid.NewGuid()))
-            .ReturnsAsync(Result<Guid[]>.Failure("Empty user"));
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext()
+        };
 
         // Act
         var result = await _sut.GetFollows();
 
         // Assert
-        var badrequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        Assert.Equal("Empty user", badrequestResult.Value);
+        Assert.IsType<UnauthorizedResult>(result);
     }
+
+    [Fact]
+    public async Task GetFollows_WithInvalidGuidInToken_ReturnsUnauthorized()
+    {
+        // Arrange
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext
+            {
+                User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, "not-a-valid-guid")
+                }, "TestAuth"))
+            }
+        };
+
+        // Act
+        var result = await _sut.GetFollows();
+
+        // Assert 
+        Assert.IsType<UnauthorizedResult>(result);
+
+    }
+
 }
 
 

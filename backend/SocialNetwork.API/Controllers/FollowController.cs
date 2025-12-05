@@ -53,7 +53,7 @@ public class FollowController : ControllerBase
 
         if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
         {
-            return Unauthorized();
+            return Unauthorized("Invalid token");
         }
 
         var result = await _followService.GetFollowsAsync(userId);
