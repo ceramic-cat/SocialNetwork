@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import CreatePostForm from "./CreatePostForm";
+import CreatePostForm from "../forms/CreatePostForm";
 
 export interface CreatePostModalProps {
   senderId: string;
