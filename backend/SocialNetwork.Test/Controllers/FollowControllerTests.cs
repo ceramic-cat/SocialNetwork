@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 namespace SocialNetwork.Test.Controllers;
@@ -102,17 +104,29 @@ public class FollowControllerTests
     }
 
     [Fact]
-    public async Task GetFollowsAsync_ValidRequest_ReturnsOk()
+    public async Task GetFollowsAsync_WithValidToken_ReturnsOkWithGuids()
     {
         // Arrange
-        var followedUsers = new Guid[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
+        var userId = Guid.NewGuid();
+        var followedUsers = new Guid[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
 
         _followServiceMock
-            .Setup(m => m.GetFollowsAsync(It.IsAny<Guid>()))
+            .Setup(m => m.GetFollowsAsync())
             .ReturnsAsync(Result<Guid[]>.Success(followedUsers));
 
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext
+            {
+                User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                {
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                }, "TestAuth"))
+            }
+        };
+
         // Act
-        var result = await _sut.GetFollows(Guid.NewGuid());
+        var result = await _sut.GetFollows();
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -125,11 +139,11 @@ public class FollowControllerTests
     {
         // Arrange
         _followServiceMock
-            .Setup(m => m.GetFollowsAsync(Guid.Empty))
+            .Setup(m => m.GetFollowsAsync())
             .ReturnsAsync(Result<Guid[]>.Failure("Empty user"));
 
         // Act
-        var result = await _sut.GetFollows(Guid.Empty);
+        var result = await _sut.GetFollows();
 
         // Assert
         var badrequestResult = Assert.IsType<BadRequestObjectResult>(result);

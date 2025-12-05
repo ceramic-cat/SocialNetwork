@@ -12,7 +12,7 @@ public interface IFollowsService
 {
     Task<Result> FollowAsync(Guid follower, Guid followee);
     Task<Result> UnfollowAsync(Guid follower, Guid followee);
-    Task<Result<Guid[]>> GetFollowsAsync(Guid follower);
+    Task<Result<Guid[]>> GetFollowsAsync();
 }
 public class FollowService : IFollowsService
 {
@@ -46,15 +46,9 @@ public class FollowService : IFollowsService
         }
     }
 
-    public async Task<Result<Guid[]>> GetFollowsAsync(Guid follower)
+    public async Task<Result<Guid[]>> GetFollowsAsync()
     {
-        if (follower == Guid.Empty)
-        {
-            return Result<Guid[]>.Failure("Empty user");
-        }
-
-        var follows = await _repository.GetFollowsAsync(follower);
-        return Result<Guid[]>.Success(follows);
+        throw new NotImplementedException();
     }
 
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)

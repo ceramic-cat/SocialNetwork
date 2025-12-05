@@ -44,9 +44,9 @@ public class FollowController : ControllerBase
         return BadRequest(result.ErrorMessage);
     }
     [HttpGet("get/{id}")]
-    public async Task<IActionResult> GetFollows(Guid id)
+    public async Task<IActionResult> GetFollows()
     {
-        var result = await _followService.GetFollowsAsync(id);
+        var result = await _followService.GetFollowsAsync();
 
         if (result.IsSuccess == true) { return Ok(result.Data); }
 

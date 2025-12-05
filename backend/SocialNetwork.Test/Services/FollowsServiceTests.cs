@@ -102,7 +102,7 @@ public class FollowsServiceTests
             .ReturnsAsync(followedUsers);
 
         // Act
-        var result = await _sut.GetFollowsAsync(followerId);
+        var result = await _sut.GetFollowsAsync();
 
 
         // Assert
@@ -116,7 +116,7 @@ public class FollowsServiceTests
         var followerId = Guid.Empty;
 
         // Act
-        var result = await _sut.GetFollowsAsync(followerId);
+        var result = await _sut.GetFollowsAsync();
 
         // Assert
         Assert.False(result.IsSuccess);
@@ -133,7 +133,7 @@ public class FollowsServiceTests
             .ReturnsAsync(new Guid[] { });
 
         // Act
-        var result = await _sut.GetFollowsAsync(Guid.NewGuid());
+        var result = await _sut.GetFollowsAsync();
 
         // Assert
         Assert.True(result.IsSuccess);
