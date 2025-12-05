@@ -18,13 +18,13 @@ public class FollowController : ControllerBase
     {
         _followService = followsService;
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Follow(FollowRequest request)
+    [Authorize]
+    [HttpPost("{id}")]
+    public async Task<IActionResult> Follow(Guid followeeId)
     {
         var result = await _followService.FollowAsync(
-            request.FollowerId, 
-            request.FolloweeId
+            Guid.NewGuid(), 
+            followeeId
             );
 
         if (result.IsSuccess == true)

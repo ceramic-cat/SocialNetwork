@@ -25,15 +25,25 @@ public class FollowControllerTests
     public async Task Follow_ValidTokenAndGuid_ReturnsOk()
     {
         //Arrange
-        _followServiceMock.Setup(m =>
-        m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Success);
-        var followerId = Guid.NewGuid();
         var followeeId = Guid.NewGuid();
+        var followerId = Guid.NewGuid();
 
-        var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
+        _followServiceMock.Setup(m =>
+        m.FollowAsync(followerId, followeeId)).ReturnsAsync(Result.Success);
+
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext
+            {
+                User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+        {
+                new Claim("UserId", followerId.ToString())
+                }, "TestAuth"))
+            }
+        };
 
         //Act
-        var reply = await _sut.Follow(request);
+        var reply = await _sut.Follow(followeeId);
 
         // Assert
         Assert.IsType<OkResult>(reply);
@@ -44,23 +54,74 @@ public class FollowControllerTests
     [Fact]
     public async Task Follow_InvalidRequest_ReturnsBadRequest()
     {
-
-        //Arrange
-        _followServiceMock.Setup(m =>
-            m.FollowAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(Result.Failure("Error"));
+        // Arrange
         var followerId = Guid.NewGuid();
         var followeeId = Guid.NewGuid();
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext
+            {
+                User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+        {
+                new Claim("UserId", followerId.ToString())
+                }, "TestAuth"))
+            }
+        };
 
-        var request = new FollowRequest { FollowerId = followerId, FolloweeId = followeeId };
+        _followServiceMock
+            .Setup(m => m.FollowAsync(followerId, followeeId))
+            .ReturnsAsync(Result.Failure("Error"));
 
-        //Act
-        var reply = await _sut.Follow(request);
+        // Act
+        var result = await _sut.Follow(followeeId);
 
         // Assert
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(reply);
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
         Assert.Equal("Error", badRequestResult.Value);
         _followServiceMock.Verify(
             s => s.FollowAsync(followerId, followeeId), Times.Once());
+
+
+    }
+
+
+    [Fact]
+    public async Task Follow_NoToken_ReturnsUnauthorized()
+    {
+        // Arrange
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext()
+        };
+
+        // Act
+        var result = await _sut.Follow(Guid.NewGuid());
+
+        // Assert
+        Assert.IsType<UnauthorizedResult>(result);
+    }
+
+
+    [Fact]
+    public async Task Follows_WithInvalidGuidInToken_ReturnsUnauthorized()
+    {
+        // Arrange
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext
+            {
+                User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                {
+                    new Claim("UserId", "not-a-valid-guid")
+                }, "TestAuth"))
+            }
+        };
+
+        // Act
+        var result = await _sut.Follow(Guid.NewGuid());
+
+        // Assert 
+        Assert.IsType<UnauthorizedResult>(result);
 
     }
 
