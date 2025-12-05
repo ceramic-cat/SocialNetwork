@@ -41,7 +41,7 @@ export default function Header({
                 className="app-header-link d-flex align-items-center gap-1"
                 onClick={onSendMessage}
               >
-                <i className="bi bi-chat-heart" />
+                <i className="bi bi-chat-dots" />
                 <span className="d-none d-md-inline">Message</span>
               </Nav.Link>
 
