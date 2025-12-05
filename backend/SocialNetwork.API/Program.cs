@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SocialNetwork.Entity.Models;
+using SocialNetwork.Repository;
+using SocialNetwork.Repository.Interfaces;
+using SocialNetwork.Repository.Repositories;
 using SocialNetwork.Repository.Services;
 
 namespace SocialNetwork.API
@@ -15,10 +18,18 @@ namespace SocialNetwork.API
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
+            builder.Services.AddOpenApi(options =>
+            {
+                options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+            });
             builder.Services.AddScoped<IPostService, PostService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IFollowsService, FollowService>();
+            builder.Services.AddScoped<IFollowRepository, FollowRepository>();
+            builder.Services.AddScoped<IPostService, PostService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<ITimelineService, TimelineService>();
+            builder.Services.AddScoped<IPostRepository, PostRepository>();
 
             builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -43,8 +54,8 @@ namespace SocialNetwork.API
                 options.AddPolicy("AllowFrontend", policy =>
                 {
                     policy.WithOrigins("http://localhost:5173")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
 
@@ -70,12 +81,16 @@ namespace SocialNetwork.API
                 };
             });
 
+            builder.Services.AddAuthorization();
             var app = builder.Build();
-
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.MapOpenApi();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/openapi/v1.json", "v1");
+                    options.RoutePrefix = "swagger";
+                });
             }
 
             app.UseHttpsRedirection();
@@ -85,7 +100,6 @@ namespace SocialNetwork.API
             app.UseAuthorization();
 
             app.MapControllers();
-
             app.Run();
         }
     }

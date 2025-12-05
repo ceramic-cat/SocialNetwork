@@ -1,4 +1,6 @@
 using SocialNetwork.Entity.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace SocialNetwork.Test.Controllers
 {
@@ -60,6 +62,117 @@ namespace SocialNetwork.Test.Controllers
 
             var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
             Assert.Equal("Invalid credentials.", unauthorized.Value);
+        }
+
+         [Fact]
+        public async Task EditProfile_ReturnsOk_OnSuccess()
+        {
+            var userId = Guid.NewGuid();
+            var request = new EditProfileRequest { Username = "newuser" };
+            _authServiceMock.Setup(s => s.EditProfileAsync(userId, request)).ReturnsAsync(true);
+
+            // Mock User Claims
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim("UserId", userId.ToString())
+            }, "mock"));
+            _authController.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            var result = await _authController.EditProfile(request);
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal("Profile updated successfully.", okResult.Value);
+        }
+
+        [Fact]
+        public async Task EditProfile_ReturnsBadRequest_OnFailure()
+        {
+            var userId = Guid.NewGuid();
+            var request = new EditProfileRequest { Username = "newuser" };
+            _authServiceMock.Setup(s => s.EditProfileAsync(userId, request)).ReturnsAsync(false);
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim("UserId", userId.ToString())
+            }, "mock"));
+            _authController.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            var result = await _authController.EditProfile(request);
+
+            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Could not update profile.", badRequest.Value);
+        }
+
+        [Fact]
+        public async Task DeleteAccount_ReturnsOk_OnSuccess()
+        {
+            var userId = Guid.NewGuid();
+            _authServiceMock.Setup(s => s.DeleteAccountAsync(userId)).ReturnsAsync(true);
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim("UserId", userId.ToString())
+            }, "mock"));
+            _authController.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            var result = await _authController.DeleteAccount();
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal("Account deleted successfully.", okResult.Value);
+        }
+
+        [Fact]
+        public async Task DeleteAccount_ReturnsBadRequest_OnFailure()
+        {
+            var userId = Guid.NewGuid();
+            _authServiceMock.Setup(s => s.DeleteAccountAsync(userId)).ReturnsAsync(false);
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim("UserId", userId.ToString())
+            }, "mock"));
+            _authController.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            var result = await _authController.DeleteAccount();
+
+            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Could not delete account.", badRequest.Value);
+        }
+
+        [Fact]
+        public async Task DeleteUserById_ReturnsOk_OnSuccess()
+        {
+            var userId = Guid.NewGuid();
+            _authServiceMock.Setup(s => s.DeleteAccountAsync(userId)).ReturnsAsync(true);
+
+            var result = await _authController.DeleteUserById(userId);
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal("User deleted successfully.", okResult.Value);
+        }
+
+        [Fact]
+        public async Task DeleteUserById_ReturnsNotFound_OnFailure()
+        {
+            var userId = Guid.NewGuid();
+            _authServiceMock.Setup(s => s.DeleteAccountAsync(userId)).ReturnsAsync(false);
+
+            var result = await _authController.DeleteUserById(userId);
+
+            var notFound = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal("User not found or could not be deleted.", notFound.Value);
         }
     }
 }

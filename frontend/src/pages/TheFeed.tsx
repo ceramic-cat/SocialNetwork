@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import CreatePostModal from "../components/CreatePostModal";
+import CreatePostModal from "../modals/CreatePostModal";
 import AuthModal from "../modals/AuthModal";
 import { Button } from "react-bootstrap";
 
