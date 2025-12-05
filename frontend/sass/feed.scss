@@ -1,0 +1,37 @@
+.feed-list {
+  @extend .list-unstyled;
+  @extend .d-flex;
+  @extend .flex-column;
+  @extend .align-items-center;
+  gap: 1.5rem;
+}
+
+.feed-post {
+  width: 100%;
+  max-width: 500px;
+  background: linear-gradient(135deg, #23234a 0%, #2d1b3d 100%);
+  border: 1.5px solid rgba(138, 43, 226, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(138, 43, 226, 0.08);
+  padding: 1.2rem 1.5rem;
+  color: #fff;
+  text-align: left;
+}
+
+.feed-post .sender-name {
+  color: #b8b8ff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
+}
+
+.feed-post .post-content {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.feed-post .post-date {
+  font-size: 0.9rem;
+  color: #b8b8ff;
+}
