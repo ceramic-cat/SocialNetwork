@@ -40,12 +40,13 @@ public class FollowController : ControllerBase
         return BadRequest(result.ErrorMessage);
 
     }
-    [HttpDelete]
-    public async Task<IActionResult> Unfollow(FollowRequest request)
+    [Authorize]
+    [HttpDelete(":followeeId")]
+    public async Task<IActionResult> Unfollow(Guid followeeId)
     {
         var result = await _followService.UnfollowAsync(
-            request.FollowerId, 
-            request.FolloweeId
+            Guid.NewGuid(), 
+            followeeId
             );
 
         if (result.IsSuccess == true)
