@@ -3,7 +3,7 @@ import CreatePostModal from "../components/CreatePostModal";
 import AuthModal from "../modals/AuthModal";
 import { Button } from "react-bootstrap";
 
-export default function Home() {
+export default function TheFeed() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
