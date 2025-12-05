@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/Home";
-import Timeline from "./pages/Timeline";
+import Timeline from "./timeline/Timeline";
 import Header from "./partials/Header";
 import useCurrentUser from "./hooks/useCurrentUser";
 import AuthModal from "./modals/AuthModal";

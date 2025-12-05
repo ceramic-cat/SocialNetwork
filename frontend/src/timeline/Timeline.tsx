@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { Card } from "react-bootstrap";
 import { useState } from "react";
+import PostCard from "./PostCard";
 
 type PostDto = {
   id: string;
@@ -13,7 +13,7 @@ type PostDto = {
 const BASE_URL = "http://localhost:5148";
 
 export default function Timeline() {
-  const userId = "Works if userid is added hardcoded";
+  const userId = "405F3E28-E455-4F15-95E8-A890F54C5848";
 
   const [posts, setPosts] = useState<PostDto[]>([]);
 
@@ -30,22 +30,14 @@ export default function Timeline() {
   return (
     <div>
       Timeline Page - Under Construction. Try looking at the console.log
-      <Card className="mt-5">
-        <Card.Header>Quote</Card.Header>
-        <Card.Body>
-          <blockquote className="blockquote mb-0">
-            <ul>
-              {posts.map((post) => (
-                <li key={post.id}>{post.content}</li>
-              ))}
-            </ul>
-            <footer className="blockquote-footer">
-              Someone famous in <cite title="Source Title">Source Title</cite>
-            </footer>
-          </blockquote>
-        </Card.Body>
-      </Card>
-      ;
+      {posts.map((post) => (
+        <PostCard
+          key={post.id}
+          sender={post.senderId}
+          content={post.content}
+          timestamp={new Date(post.createdAt).toLocaleString()}
+        />
+      ))}
     </div>
   );
 }
