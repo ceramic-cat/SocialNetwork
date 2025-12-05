@@ -19,12 +19,14 @@ export default function Home() {
 
   if (!isLoggedIn) {
     return (
-      <AuthModal showInitially={true} onLoginSuccess={handleLoginSuccess} />
+      <div className="page-background">
+        <AuthModal showInitially={true} onLoginSuccess={handleLoginSuccess} />
+      </div>
     );
   }
 
   return (
-    <div className="text-center">
+    <div className="text-center page-background">
       {userId && username && (
         <CreatePostModal senderId={userId} senderName={username} />
       )}
