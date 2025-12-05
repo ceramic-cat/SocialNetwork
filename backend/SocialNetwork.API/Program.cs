@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SocialNetwork.Entity.Models;
+using SocialNetwork.Repository;
+using SocialNetwork.Repository.Interfaces;
 using SocialNetwork.Repository.Services;
+
 
 namespace SocialNetwork.API
 {
@@ -17,8 +20,10 @@ namespace SocialNetwork.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IPostService, PostService>();
-            builder.Services.AddScoped<IAuthService, AuthService>();
+      builder.Services.AddScoped<IPostService, PostService>();
+      builder.Services.AddScoped<IAuthService, AuthService>();
+      builder.Services.AddScoped<ITimelineService, TimelineService>();
+      builder.Services.AddScoped<IPostRepository, PostRepository>();
 
             builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
