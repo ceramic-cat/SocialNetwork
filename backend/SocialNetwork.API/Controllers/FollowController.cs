@@ -44,10 +44,14 @@ public class FollowController : ControllerBase
     [HttpDelete(":followeeId")]
     public async Task<IActionResult> Unfollow(Guid followeeId)
     {
-        var result = await _followService.UnfollowAsync(
-            Guid.NewGuid(), 
-            followeeId
-            );
+        var userIdClaim = User.FindFirst("UserId")?.Value;
+
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var followerId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _followService.UnfollowAsync(followerId, followeeId);
 
         if (result.IsSuccess == true)
         { return Ok(); }
