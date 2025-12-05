@@ -7,7 +7,7 @@ namespace SocialNetwork.Entity.Models
         public SocialNetworkDbContext(DbContextOptions<SocialNetworkDbContext> options)
             : base(options) { }
 
-        public DbSet<User> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Post> Posts { get; set; }
     }
