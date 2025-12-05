@@ -48,8 +48,8 @@ export default function AuthModal({
 
           <Modal.Header className="auth-modal-header">
             <div className="modal-title">
-              <h3 className="app-title">Social Network</h3>
-              <p className="app-subtitle">Connect with others</p>
+              <h3 className="title">Social Network</h3>
+              <p className="subtitle">Creativity and social connection</p>
             </div>
             <ButtonGroup className="auth-tab-group">
               <Button

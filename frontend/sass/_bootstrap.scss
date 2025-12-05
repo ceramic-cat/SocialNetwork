@@ -13,3 +13,126 @@ $enable-negative-margins: true;
 
 //import icon
 //@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+.form-label {
+  color: #b8b8ff !important;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(138, 43, 226, 0.3) !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+  padding: 0.8rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(138, 43, 226, 0.8) !important;
+  box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25) !important;
+  color: #fff !important;
+}
+
+.form-control::placeholder {
+  color: rgba(184, 184, 255, 0.6) !important;
+}
+
+.form-label {
+  color: #b8b8ff !important;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(138, 43, 226, 0.3) !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+  padding: 0.8rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(138, 43, 226, 0.8) !important;
+  box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25) !important;
+  color: #fff !important;
+}
+
+.form-control::placeholder {
+  color: rgba(184, 184, 255, 0.6) !important;
+}
+
+.btn-primary:not(.auth-tab) {
+  background: linear-gradient(45deg, #8a2be2, #4b0082) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.8rem 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:not(.auth-tab):hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary:not(.auth-tab):active {
+  transform: translateY(0);
+}
+
+.text-success {
+  color: #4ecdc4 !important;
+  text-align: center;
+  font-weight: 600;
+  padding: 0.8rem;
+  background: rgba(78, 205, 196, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(78, 205, 196, 0.3);
+}
+
+.alert-danger {
+  background: rgba(255, 107, 107, 0.1) !important;
+  border: 1px solid rgba(255, 107, 107, 0.3) !important;
+  border-radius: 10px !important;
+  color: #ff6b6b !important;
+}
+
+.text-success {
+  color: #4ecdc4 !important;
+  text-align: center;
+  font-weight: 600;
+  padding: 0.8rem;
+  background: rgba(78, 205, 196, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(78, 205, 196, 0.3);
+}
+
+.alert-danger {
+  background: rgba(255, 107, 107, 0.1) !important;
+  border: 1px solid rgba(255, 107, 107, 0.3) !important;
+  border-radius: 10px !important;
+  color: #ff6b6b !important;
+}
+
+.auth-page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(
+    circle at center,
+    #48486e 0%,
+    #2e2e5e 40%,
+    #0f0f1e 80%,
+    #0a0a15 100%
+  );
+  background-attachment: fixed;
+}

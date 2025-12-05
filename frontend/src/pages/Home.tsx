@@ -57,7 +57,9 @@ export default function Home() {
 
   if (!isLoggedIn) {
     return (
-      <AuthModal showInitially={true} onLoginSuccess={handleLoginSuccess} />
+      <div className="auth-page-background">
+        <AuthModal showInitially={true} onLoginSuccess={handleLoginSuccess} />
+      </div>
     );
   }
 

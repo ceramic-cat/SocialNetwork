@@ -46,8 +46,6 @@
 
 .floating-elements {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -107,7 +105,7 @@
   flex-direction: column;
 }
 
-.app-title {
+.title {
   color: #fff;
   font-size: 1.8rem;
   font-weight: 700;
@@ -115,7 +113,7 @@
   text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
 }
 
-.app-subtitle {
+.subtitle {
   color: #b8b8ff;
   font-size: 0.9rem;
   margin-bottom: 2rem;
@@ -176,32 +174,6 @@
   z-index: 10;
 }
 
-.auth-modal-body .form-label {
-  color: #b8b8ff;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-.form-control {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(138, 43, 226, 0.3);
-  border-radius: 10px;
-  color: #fff;
-  padding: 0.8rem 1rem;
-  transition: all 0.3s ease;
-}
-
-.auth-modal-body .form-control:focus {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(138, 43, 226, 0.8);
-  box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25);
-  color: #fff;
-}
-
-.auth-modal-body .form-control::placeholder {
-  color: rgba(184, 184, 255, 0.6);
-}
-
 .auth-modal-body .btn-primary {
   background: linear-gradient(45deg, #8a2be2, #4b0082);
   border: none;
@@ -223,21 +195,4 @@
 
 .btn-primary:active {
   transform: translateY(0);
-}
-
-.text-success {
-  color: #4ecdc4 !important;
-  text-align: center;
-  font-weight: 600;
-  padding: 0.8rem;
-  background: rgba(78, 205, 196, 0.1);
-  border-radius: 10px;
-  border: 1px solid rgba(78, 205, 196, 0.3);
-}
-
-.alert-danger {
-  background: rgba(255, 107, 107, 0.1);
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  border-radius: 10px;
-  color: #ff6b6b;
 }
