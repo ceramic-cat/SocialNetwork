@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SocialNetwork.Entity.Models;
-using SocialNetwork.Repository.Interfaces;
-using SocialNetwork.Repository.Repositories;
+using SocialNetwork.Repository;
 using SocialNetwork.Repository.Services;
+
 
 namespace SocialNetwork.API
 {
@@ -25,6 +25,8 @@ namespace SocialNetwork.API
             builder.Services.AddScoped<IFollowRepository, FollowRepository>();
             builder.Services.AddScoped<IPostService, PostService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<ITimelineService, TimelineService>();
+            builder.Services.AddScoped<IPostRepository, PostRepository>();
 
             builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -49,8 +51,8 @@ namespace SocialNetwork.API
                 options.AddPolicy("AllowFrontend", policy =>
                 {
                     policy.WithOrigins("http://localhost:5173")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
 
@@ -76,6 +78,7 @@ namespace SocialNetwork.API
                 };
             });
 
+            builder.Services.AddAuthorization();
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -91,8 +94,7 @@ namespace SocialNetwork.API
             app.UseAuthorization();
 
             app.MapControllers();
-
-            app.Run();
-        }
+        app.Run();
     }
+}
 }
