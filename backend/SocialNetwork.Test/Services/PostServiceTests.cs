@@ -57,18 +57,69 @@ namespace SocialNetwork.Test.Services
             var postsInDb = await _db.Posts.CountAsync();
             Assert.Equal(0, postsInDb);
 
-        } 
-        
-        [Fact]
+        }
 
+        [Fact]
+        public async Task CreatePostAsync_ReturnsFail_WhenSenderDoesNotExist()
+        {
+            // Arrange
+            var senderId = Guid.NewGuid(); 
+            var receiverId = Guid.NewGuid();
+            var content = "Hello, World!";
+           
+            _db.Users.Add(new User
+            {
+                Id = receiverId,
+                Username = "receiver",
+                Email = "receiver@example.com",
+                Password = "pw1234as!",
+                Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
+            });
+            await _db.SaveChangesAsync();
+
+            // Act
+            var result = await _sut.CreatePostAsync(senderId, receiverId, content);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.Equal("Sender does not exist.", result.ErrorMessage);
+
+            var postsInDb = await _db.Posts.CountAsync();
+            Assert.Equal(0, postsInDb);
+        }
+
+        [Fact]
         public async Task CreatePostAsync_ShouldSavePost_WhenContentIsValid()
         {
             // Arrange
             var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
             var content = "This is a valid post.";
+
+            _db.Users.AddRange(
+                new User
+                {
+                    Id = senderId,
+                    Username = "sender",
+                    Email = "sender@example.com",
+                    Password = "pw1234as!",
+                    Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
+                },
+                new User
+                {
+                    Id = receiverId,
+                    Username = "receiver",
+                    Email = "receiver@example.com",
+                    Password = "pw1234as!",
+                    Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
+                }
+            );
+
+            await _db.SaveChangesAsync();
+
             // Act
             var result = await _sut.CreatePostAsync(senderId, receiverId, content);
+
             // Assert
             Assert.True(result.Success);
             Assert.Null(result.ErrorMessage);
@@ -78,8 +129,11 @@ namespace SocialNetwork.Test.Services
             Assert.Equal(receiverId, post.ReceiverId);
             Assert.Equal(content, post.Content);
             Assert.NotEqual(default, post.CreatedAt);
-        
+
+            var postsInDb = await _db.Posts.CountAsync();
+            Assert.Equal(1, postsInDb);
         }
+
 
     }
 }
