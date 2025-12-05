@@ -22,7 +22,7 @@ public class FollowControllerTests
     }
 
     [Fact]
-    public async Task Follow_ValidRequest_ReturnsOk()
+    public async Task Follow_ValidTokenAndGuid_ReturnsOk()
     {
         //Arrange
         _followServiceMock.Setup(m =>
@@ -120,7 +120,7 @@ public class FollowControllerTests
             {
                 User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                 {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                new Claim("UserId", userId.ToString())
                 }, "TestAuth"))
             }
         };
@@ -161,7 +161,7 @@ public class FollowControllerTests
             {
                 User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, "not-a-valid-guid")
+                    new Claim("UserId", "not-a-valid-guid")
                 }, "TestAuth"))
             }
         };
@@ -174,6 +174,35 @@ public class FollowControllerTests
 
     }
 
+
+    [Fact]
+    public async Task GetFollows_UserFollowsNobody_ReturnsEmptyArray()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext
+            {
+                User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                {
+            new Claim("UserId", userId.ToString())
+        }, "TestAuth"))
+            }
+        };
+
+        _followServiceMock
+            .Setup(s => s.GetFollowsAsync(userId))
+            .ReturnsAsync(Result<Guid[]>.Success(Array.Empty<Guid>()));
+
+        // Act
+        var result = await _sut.GetFollows();
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var data = Assert.IsType<Guid[]>(okResult.Value);
+        Assert.Empty(data);
+    }
 }
 
 

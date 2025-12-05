@@ -45,11 +45,12 @@ public class FollowController : ControllerBase
         { return Ok(); }
         return BadRequest(result.ErrorMessage);
     }
+
     [Authorize]
-    [HttpGet("get/{id}")]
+    [HttpGet]
     public async Task<IActionResult> GetFollows()
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = User.FindFirst("UserId")?.Value;
 
         if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
         {
@@ -58,7 +59,10 @@ public class FollowController : ControllerBase
 
         var result = await _followService.GetFollowsAsync(userId);
 
-        if (result.IsSuccess == true) { return Ok(result.Data); }
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
 
         return BadRequest(result.ErrorMessage);
     }
