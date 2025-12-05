@@ -19,11 +19,18 @@ public class FollowController : ControllerBase
         _followService = followsService;
     }
     [Authorize]
-    [HttpPost("{id}")]
+    [HttpPost(":followeeId")]
     public async Task<IActionResult> Follow(Guid followeeId)
     {
+        var userIdClaim = User.FindFirst("UserId")?.Value;
+
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var followerId))
+        {
+            return Unauthorized();
+        }
+
         var result = await _followService.FollowAsync(
-            Guid.NewGuid(), 
+            followerId,
             followeeId
             );
 
