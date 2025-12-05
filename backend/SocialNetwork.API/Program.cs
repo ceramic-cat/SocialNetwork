@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository;
+using SocialNetwork.Repository.Interfaces;
+using SocialNetwork.Repository.Repositories;
 using SocialNetwork.Repository.Services;
 
 
@@ -94,7 +96,7 @@ namespace SocialNetwork.API
             app.UseAuthorization();
 
             app.MapControllers();
-        app.Run();
+            app.Run();
+        }
     }
-}
 }
