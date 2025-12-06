@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { useState } from "react";
 import PostCard from "./PostCard";
 import { useParams } from "react-router-dom";
+import { useDeletePost } from "../hooks/useDeletePost";
+import useCurrentUser from "../hooks/useCurrentUser";
+import { API } from "../config/api";
 
 type PostDto = {
   id: string;
@@ -11,8 +14,6 @@ type PostDto = {
   createdAt: string;
 };
 
-const BASE_URL = "http://localhost:5148";
-
 export default function Timeline() {
   const { id: userId } = useParams<{ id: string }>();
 
@@ -20,11 +21,19 @@ export default function Timeline() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { userId: currentUserId } = useCurrentUser();
+  const { deletePost, loading: deleting, error: deleteError } = useDeletePost();
+
   useEffect(() => {
+    if (!userId) {
+      setError("No user id provided.");
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError(null);
 
-    fetch(`${BASE_URL}/api/users/${userId}/timeline`)
+    fetch(API.USERS.TIMELINE(userId))
       .then((res) => res.json())
       .then((data: PostDto[]) => {
         setPosts(data);
@@ -38,6 +47,18 @@ export default function Timeline() {
         setIsLoading(false);
       });
   }, [userId]);
+
+  async function handleDelete(postId: string) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
+    if (!confirmed) return;
+
+    const ok = await deletePost(postId);
+    if (ok) {
+      setPosts((prev) => prev.filter((p) => p.id !== postId));
+    }
+  }
 
   if (isLoading) {
     return <div>Loading timeline…</div>;
@@ -53,12 +74,19 @@ export default function Timeline() {
 
   return (
     <div>
+      {deleteError && (
+        <div className="text-danger mb-2 small">{deleteError}</div>
+      )}
+
       {posts.map((post) => (
         <PostCard
           key={post.id}
           sender={post.senderId}
           content={post.content}
           timestamp={new Date(post.createdAt).toLocaleString()}
+          canDelete={currentUserId === post.senderId}
+          onDelete={() => handleDelete(post.id)}
+          deleting={deleting}
         />
       ))}
     </div>
