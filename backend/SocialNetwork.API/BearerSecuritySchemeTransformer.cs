@@ -25,15 +25,6 @@ internal sealed class BearerSecuritySchemeTransformer(
                     BearerFormat = "JWT"
                 }
             };
-
-            foreach (var operation in document.Paths.Values.SelectMany(path => path.Operations))
-            {
-                operation.Value.Security ??= [];
-                operation.Value.Security.Add(new OpenApiSecurityRequirement
-                {
-                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
-                });
-            }
         }
     }
 }
