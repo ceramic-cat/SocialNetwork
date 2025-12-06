@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API } from "../config/api";
 
 interface LoginRequest {
   username: string;
@@ -23,8 +24,6 @@ export interface UseAuthResult {
   resetError: () => void;
 }
 
-const BASE_URL = "http://localhost:5148";
-
 export function useAuth(): UseAuthResult {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +33,7 @@ export function useAuth(): UseAuthResult {
     setLoading(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/login`, {
+      const response = await fetch(API.AUTH.LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +63,7 @@ export function useAuth(): UseAuthResult {
     setLoading(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/register`, {
+      const response = await fetch(API.AUTH.REGISTER, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
