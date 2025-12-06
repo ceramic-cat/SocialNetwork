@@ -80,5 +80,36 @@ namespace SocialNetwork.Repository.Services
 
             return PostResult.Ok();
         }
+
+        public async Task<PostResult> DeletePostAsync(Guid postId, Guid userId)
+        {
+            if (postId == Guid.Empty)
+            {
+                return PostResult.Fail("PostId cannot be empty.");
+            }
+
+            if (userId == Guid.Empty)
+            {
+                return PostResult.Fail("RequesterId cannot be empty.");
+            }
+
+            var post = await _db.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+            if (post == null)
+            {
+                return PostResult.Fail("Post not found.");
+            }
+
+            if (post.SenderId != userId)
+            {
+                return PostResult.Fail("You are not allowed to delete this post.");
+            }
+
+            _db.Posts.Remove(post);
+            await _db.SaveChangesAsync();
+
+            return PostResult.Ok();
+        }
+
     }
 }

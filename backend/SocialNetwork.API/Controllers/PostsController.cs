@@ -42,5 +42,27 @@ namespace SocialNetwork.API.Controllers
 			}
 			return Ok(result);
 		}
-	}
+
+        [HttpDelete("{postId:guid}")]
+        public async Task<IActionResult> DeletePost(Guid postId)
+        {
+            var userIdClaim = User.FindFirst("UserId")?.Value;
+
+            if (!Guid.TryParse(userIdClaim, out var requesterId))
+            {
+                var authFail = PostResult.Fail("Invalid or missing user id in token.");
+                return Unauthorized(authFail);
+            }
+
+            var result = await _postService.DeletePostAsync(postId, requesterId);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+    }
 }
