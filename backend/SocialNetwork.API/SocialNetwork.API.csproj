@@ -20,5 +20,8 @@
     <ProjectReference Include="..\SocialNetwork.Repository\SocialNetwork.Repository.csproj" />
 	  <ProjectReference Include="..\SocialNetwork.Entity\SocialNetwork.Entity.csproj" />
   </ItemGroup>
-
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
 </Project>
