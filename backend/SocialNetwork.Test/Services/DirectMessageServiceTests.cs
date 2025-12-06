@@ -169,7 +169,7 @@ namespace SocialNetwork.Test.Services
             // Arrange
             var senderId = Guid.NewGuid();
             Guid? receiverId = null;
-            var content = "This is a valid message.";
+            var content = "Hello, World!";
 
             _db.Users.Add(new User
             {
