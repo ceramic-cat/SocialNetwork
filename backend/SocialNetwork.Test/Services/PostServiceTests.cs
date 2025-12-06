@@ -1,7 +1,4 @@
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
-using SocialNetwork.Entity.Models;
+using SocialNetwork.Repository.Errors;
 
 namespace SocialNetwork.Test.Services
 {
@@ -17,7 +14,8 @@ namespace SocialNetwork.Test.Services
                    .Options;
 
             _db = new SocialNetworkDbContext(options);
-            _sut = new PostService(_db);
+            var postRepository = new PostRepository(_db);
+            _sut = new PostService(_db, postRepository);
         }
 
         [Fact]
@@ -33,7 +31,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("Content cannot be empty.", result.ErrorMessage);
+            Assert.Equal(PostErrors.ContentEmpty, result.ErrorMessage);
 
             var postsInDb = await _db.Posts.CountAsync();
             Assert.Equal(0, postsInDb);
@@ -53,7 +51,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("Content cannot be longer than 280 characters.", result.ErrorMessage);
+            Assert.Equal(PostErrors.ContentTooLong, result.ErrorMessage);
 
             var postsInDb = await _db.Posts.CountAsync();
             Assert.Equal(0, postsInDb);
@@ -83,7 +81,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("Sender does not exist.", result.ErrorMessage);
+            Assert.Equal(PostErrors.SenderDoesNotExist, result.ErrorMessage);
 
             var postsInDb = await _db.Posts.CountAsync();
             Assert.Equal(0, postsInDb);
@@ -148,7 +146,7 @@ namespace SocialNetwork.Test.Services
 
             //Assert
             Assert.False(result.Success);
-            Assert.Equal("Post not found.", result.ErrorMessage);
+            Assert.Equal(PostErrors.PostNotFound, result.ErrorMessage);
         }
 
 
@@ -201,9 +199,8 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("You are not allowed to delete this post.", result.ErrorMessage);
+            Assert.Equal(PostErrors.NotAllowedToDelete, result.ErrorMessage);
 
-            // Post ska fortfarande finnas
             var stillThere = await _db.Posts.AnyAsync(p => p.Id == post.Id);
             Assert.True(stillThere);
         }
