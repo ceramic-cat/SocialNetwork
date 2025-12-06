@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import Home from "./pages/Home";
+import TheFeed from "./pages/TheFeed";
 import Timeline from "./timeline/Timeline";
 import Header from "./partials/Header";
 import useCurrentUser from "./hooks/useCurrentUser";
@@ -47,7 +47,7 @@ function App() {
         ) : (
           <>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<TheFeed />} />
               <Route path="/users/:id/timeline" element={<Timeline />} />
             </Routes>
 

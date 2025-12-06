@@ -12,6 +12,9 @@ $enable-negative-margins: true;
 // Import bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
+@import "./feed.scss";
+@import "./authmodal.scss";
+
 //import icon
 @import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
