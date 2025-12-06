@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import TheFeed from "./pages/TheFeed";
+import Timeline from "./timeline/Timeline";
 import Header from "./partials/Header";
 import useCurrentUser from "./hooks/useCurrentUser";
 import AuthModal from "./modals/AuthModal";
@@ -33,6 +34,7 @@ function App() {
         <Header
           isLoggedIn={isLoggedIn}
           username={username}
+          userId={userId}
           onCreatePost={() => setShowCreatePost(true)}
           onSendMessage={() => setShowMessageModal(true)}
           onLogout={handleLogout}
@@ -46,6 +48,7 @@ function App() {
           <>
             <Routes>
               <Route path="/" element={<TheFeed />} />
+              <Route path="/users/:id/timeline" element={<Timeline />} />
             </Routes>
 
             {userId && username && (
