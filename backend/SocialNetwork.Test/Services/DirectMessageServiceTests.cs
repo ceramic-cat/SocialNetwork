@@ -164,7 +164,7 @@ namespace SocialNetwork.Test.Services
         }
 
         [Fact]
-        public async Task SendDirectMessageAsync_ShouldSaveMessage_WhenReceiverIdIsNull()
+        public async Task SendDirectMessageAsync_ReturnsFail_WhenReceiverIdIsNull()
         {
             // Arrange
             var senderId = Guid.NewGuid();
@@ -185,17 +185,11 @@ namespace SocialNetwork.Test.Services
             var result = await _sut.SendDirectMessageAsync(senderId, receiverId, content);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.Null(result.ErrorMessage);
-
-            var message = await _db.DirectMessages.SingleAsync();
-            Assert.Equal(senderId, message.SenderId);
-            Assert.Equal(Guid.Empty, message.ReceiverId);
-            Assert.Equal(content, message.Content);
-            Assert.NotEqual(default, message.CreatedAt);
+            Assert.False(result.IsSuccess);
+            Assert.Equal("ReceiverId cannot be empty.", result.ErrorMessage);
 
             var messagesInDb = await _db.DirectMessages.CountAsync();
-            Assert.Equal(1, messagesInDb);
+            Assert.Equal(0, messagesInDb);
         }
 
         [Fact]
