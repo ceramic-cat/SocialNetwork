@@ -1,5 +1,3 @@
-using SocialNetwork.Repository.Errors;
-
 namespace SocialNetwork.Test.Services
 {
     public class PostServiceTests

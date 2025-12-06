@@ -3,8 +3,19 @@ global using System.Threading.Tasks;
 global using Moq;
 global using Xunit;
 global using Microsoft.AspNetCore.Mvc;
-
 global using SocialNetwork.Repository.Services;
 global using SocialNetwork.Entity;
 global using SocialNetwork.API.Controllers;
 global using SocialNetwork.API.Models;
+global using Microsoft.EntityFrameworkCore;
+global using SocialNetwork.Entity.Models;
+global using SocialNetwork.Repository;
+global using System.Security.Claims;
+global using Microsoft.AspNetCore.Http;
+global using SocialNetwork.Repository.Errors;
+global using SocialNetwork.Repository.Repositories;
+global using Microsoft.Data.Sqlite;
+global using MockQueryable.Moq;
+global using Microsoft.Extensions.Configuration;
+global using SocialNetwork.Repository.Interfaces;
+
