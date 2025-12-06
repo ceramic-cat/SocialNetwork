@@ -64,6 +64,7 @@ public class FollowService : IFollowsService
             return Result.Failure("Unable to unfollow that user");
         }
 
+        await _repository.DeleteAsync(follower, followee);
         return Result.Success();
     }
 

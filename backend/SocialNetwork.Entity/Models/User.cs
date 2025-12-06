@@ -19,7 +19,7 @@ namespace SocialNetwork.Entity.Models
         [Column("password")]
         public string Password { get; set; } = default!;
 
-        [Column("created")]
+        [Column("createdAt")]
         public string Created { get; set; } = default!;
     }
 }

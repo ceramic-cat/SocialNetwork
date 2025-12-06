@@ -34,11 +34,7 @@ namespace SocialNetwork.API.Controllers
             return Ok(new LoginResponse { Token = token });
         }
 
-        [HttpDelete("logout")]
-        public IActionResult Logout()
-        {
-            return Ok("Logout successful.");
-        }
+        
 
         [HttpGet("validate")]
         [Authorize]
@@ -46,12 +42,60 @@ namespace SocialNetwork.API.Controllers
         {
             var userId = User.FindFirst("UserId")?.Value;
             var username = User.Identity?.Name;
-    
-             return Ok(new { 
-                 Valid = true, 
-                 UserId = userId,
-                    Username = username 
-                });
+
+            return Ok(new
+            {
+                Valid = true,
+                UserId = userId,
+                Username = username
+            });
         }
+
+        [HttpPut("edit-profile")]
+        [Authorize]
+        public async Task<IActionResult> EditProfile([FromBody] EditProfileRequest request)
+        {
+            var userId = User.FindFirst("UserId")?.Value;
+            if (userId == null)
+                return Unauthorized("User not found.");
+
+            var result = await _authService.EditProfileAsync(Guid.Parse(userId), request);
+            if (!result)
+                return BadRequest("Could not update profile.");
+
+            return Ok("Profile updated successfully.");
+        }
+        
+        [HttpDelete("delete-account")]
+        [Authorize]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var userId = User.FindFirst("UserId")?.Value;
+            if (userId == null)
+                return Unauthorized("User not found.");
+
+            var result = await _authService.DeleteAccountAsync(Guid.Parse(userId));
+            if (!result)
+                return BadRequest("Could not delete account.");
+
+            return Ok("Account deleted successfully.");
+        }
+
+        [HttpDelete("logout")]
+        public IActionResult Logout()
+        {
+            return Ok("Logout successful.");
+        }
+        
+        [HttpDelete("delete-user/{id}")]
+        public async Task<IActionResult> DeleteUserById(Guid id)
+        {
+            var result = await _authService.DeleteAccountAsync(id);
+            if (!result)
+                return NotFound("User not found or could not be deleted.");
+
+            return Ok("User deleted successfully.");
+        }
+
     }
 }
