@@ -23,6 +23,13 @@ namespace SocialNetwork.Repository
                 .Where(p => p.ReceiverId == userId)
                 .ToListAsync();
         }
+        public async Task<List<Post>> GetPostsByUserIdsAsync(Guid[] userIds)
+        {
+            return await _db.Posts
+                .Where(p => userIds.Contains(p.SenderId))
+                .ToListAsync();
+        }
+        
         public async Task AddPostAsync(Post post)
         {
             _db.Posts.Add(post);
