@@ -1,7 +1,3 @@
-
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-
 namespace SocialNetwork.Test.Controllers
 {
     public class PostsControllerTests
@@ -89,7 +85,7 @@ namespace SocialNetwork.Test.Controllers
 
             _postServiceMock
                 .Setup(s => s.CreatePostAsync(senderId, receiverId, content))
-                .ReturnsAsync(PostResult.Fail("Content cannot be empty."));
+                .ReturnsAsync(PostResult.Fail(PostErrors.ContentEmpty));
 
             // Act
             var result = await _sut.CreatePost(request);
@@ -100,7 +96,7 @@ namespace SocialNetwork.Test.Controllers
 
             var body = Assert.IsType<PostResult>(badRequest.Value);
             Assert.False(body.Success);
-            Assert.Equal("Content cannot be empty.", body.ErrorMessage);
+            Assert.Equal(PostErrors.ContentEmpty, body.ErrorMessage);
 
             _postServiceMock.Verify(
                 s => s.CreatePostAsync(senderId, receiverId, content),
@@ -124,11 +120,9 @@ namespace SocialNetwork.Test.Controllers
                 Content = content
             };
 
-            var errorContent = "Sender does not exist.";
-
             _postServiceMock
                 .Setup(s => s.CreatePostAsync(senderId, receiverId, content))
-                .ReturnsAsync(PostResult.Fail(errorContent));
+                .ReturnsAsync(PostResult.Fail(PostErrors.SenderDoesNotExist));
 
             // Act
             var result = await _sut.CreatePost(request);
@@ -139,12 +133,113 @@ namespace SocialNetwork.Test.Controllers
 
             var body = Assert.IsType<PostResult>(badRequest.Value);
             Assert.False(body.Success);
-            Assert.Equal(errorContent, body.ErrorMessage);
+            Assert.Equal(PostErrors.SenderDoesNotExist, body.ErrorMessage);
 
             _postServiceMock.Verify(
                 s => s.CreatePostAsync(senderId, receiverId, content),
                 Times.Once
             );
+        }
+
+        [Fact]
+        public async Task DeletePost_ValidRequest_ReturnsOk()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var postId = Guid.NewGuid();
+
+            SetUserWithId(userId);
+
+            _postServiceMock
+                .Setup(s => s.DeletePostAsync(postId, userId))
+                .ReturnsAsync(PostResult.Ok());
+
+            // Act
+            var result = await _sut.DeletePost(postId);
+
+            // Assert
+            var ok = Assert.IsType<OkObjectResult>(result);
+            var body = Assert.IsType<PostResult>(ok.Value);
+            Assert.True(body.Success);
+            Assert.Null(body.ErrorMessage);
+
+            _postServiceMock.Verify(
+                s => s.DeletePostAsync(postId, userId),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task DeletePost_InvalidUserIdInToken_ReturnsUnauthorized()
+        {
+            // Arrange
+            _sut.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
+
+            var postId = Guid.NewGuid();
+
+            // Act
+            var result = await _sut.DeletePost(postId);
+
+            // Assert
+            var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
+            var body = Assert.IsType<PostResult>(unauthorized.Value);
+            Assert.False(body.Success);
+            Assert.Equal(PostErrors.InvalidUserId, body.ErrorMessage);
+
+            _postServiceMock.Verify(
+                s => s.DeletePostAsync(It.IsAny<Guid>(), It.IsAny<Guid>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task DeletePost_PostNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var postId = Guid.NewGuid();
+            SetUserWithId(userId);
+
+            _postServiceMock
+                .Setup(s => s.DeletePostAsync(postId, userId))
+                .ReturnsAsync(PostResult.Fail(PostErrors.PostNotFound));
+
+            // Act
+            var result = await _sut.DeletePost(postId);
+
+            // Assert
+            var notFound = Assert.IsType<NotFoundObjectResult>(result);
+            var body = Assert.IsType<PostResult>(notFound.Value);
+            Assert.False(body.Success);
+            Assert.Equal(PostErrors.PostNotFound, body.ErrorMessage);
+
+            _postServiceMock.Verify(
+                s => s.DeletePostAsync(postId, userId),
+                Times.Once);
+        }
+        [Fact]
+        public async Task DeletePost_UserNotOwner_ReturnsForbidden()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var postId = Guid.NewGuid();
+            SetUserWithId(userId);
+
+            _postServiceMock
+                .Setup(s => s.DeletePostAsync(postId, userId))
+                .ReturnsAsync(PostResult.Fail(PostErrors.NotAllowedToDelete));
+
+            // Act
+            var result = await _sut.DeletePost(postId);
+
+            // Assert
+            var forbidden = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(StatusCodes.Status403Forbidden, forbidden.StatusCode);
+
+            var body = Assert.IsType<PostResult>(forbidden.Value);
+            Assert.False(body.Success);
+            Assert.Equal(PostErrors.NotAllowedToDelete, body.ErrorMessage);
         }
     }
 }
