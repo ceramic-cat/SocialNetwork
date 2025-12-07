@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "../sass/index.scss";
-import "../sass/authmodal.scss";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 
