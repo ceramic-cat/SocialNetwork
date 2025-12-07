@@ -7,6 +7,7 @@ interface CurrentUser {
 
 const BASE_URL = "http://localhost:5148";
 const ENDPOINT = `${BASE_URL}/api/auth/validate`;
+const DELETE_ACCOUNT_ENDPOINT = `${BASE_URL}/api/auth/delete-account`;
 
 export default function useCurrentUser() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -87,6 +88,27 @@ export default function useCurrentUser() {
     setUser(null);
   };
 
+  const handleDeleteAccount = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(DELETE_ACCOUNT_ENDPOINT, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    } catch {}
+  };
+
   return {
     isLoggedIn,
     loading,
@@ -95,5 +117,6 @@ export default function useCurrentUser() {
     username: user?.username ?? null,
     handleLoginSuccess,
     handleLogout,
+    handleDeleteAccount,
   };
 }
