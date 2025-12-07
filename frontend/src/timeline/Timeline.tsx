@@ -1,7 +1,10 @@
+import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import PostCard from "./PostCard";
+import TimelineStatus from "./TimelineStatus";
 import { useParams } from "react-router-dom";
+import { Col, Row } from "react-bootstrap";
 import { useDeletePost } from "../hooks/useDeletePost";
 import useCurrentUser from "../hooks/useCurrentUser";
 import { API } from "../config/api";
@@ -30,16 +33,21 @@ export default function Timeline() {
       setIsLoading(false);
       return;
     }
+
     setIsLoading(true);
     setError(null);
 
     fetch(API.USERS.TIMELINE(userId))
-      .then((res) => res.json())
-      .then((data: PostDto[]) => {
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to load timeline");
+        }
+        return res.json();
+      })
+      .then((data) => {
         setPosts(data);
       })
-      .catch((err) => {
-        console.error("Failed to load timeline:", err);
+      .catch(() => {
         setError("Could not load timeline.");
         setPosts([]);
       })
@@ -47,6 +55,7 @@ export default function Timeline() {
         setIsLoading(false);
       });
   }, [userId]);
+  let content: ReactNode;
 
   async function handleDelete(postId: string) {
     const confirmed = window.confirm(
@@ -61,34 +70,43 @@ export default function Timeline() {
   }
 
   if (isLoading) {
-    return <div>Loading timeline…</div>;
+    content = <TimelineStatus message="Loading timeline…" type="loading" />;
+  } else if (error) {
+    content = <TimelineStatus message={error} type="error" />;
+  } else if (posts.length === 0) {
+    content = (
+      <TimelineStatus message="No posts to display in this timeline." />
+    );
+  } else {
+    content = (
+      <>
+        {posts.map((post) => (
+          <PostCard
+            key={post.id}
+            sender={post.senderId}
+            content={post.content}
+            timestamp={new Date(post.createdAt).toLocaleString()}
+            canDelete={currentUserId === post.senderId}
+            onDelete={() => handleDelete(post.id)}
+            deleting={deleting}
+          />
+        ))}
+      </>
+    );
   }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  if (posts.length === 0) {
-    return <div>No posts to display in this timeline.</div>;
-  }
-
   return (
-    <div>
-      {deleteError && (
-        <div className="text-danger mb-2 small">{deleteError}</div>
-      )}
-
-      {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          sender={post.senderId}
-          content={post.content}
-          timestamp={new Date(post.createdAt).toLocaleString()}
-          canDelete={currentUserId === post.senderId}
-          onDelete={() => handleDelete(post.id)}
-          deleting={deleting}
-        />
-      ))}
-    </div>
+    <Row className="justify-content-center">
+      <Col xs={12}>
+        <div>
+          {deleteError && (
+            <div className="text-danger mb-2 small">{deleteError}</div>
+          )}
+          <h2 className="feed-title">{userId} Timeline</h2>
+        </div>
+      </Col>
+      <Col xs={12} md={8} lg={6} className="feed-list-container">
+        <div className="timeline-content">{content}</div>
+      </Col>
+    </Row>
   );
 }
