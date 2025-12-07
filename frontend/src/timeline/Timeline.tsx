@@ -44,7 +44,11 @@ export default function Timeline() {
   return (
     <Row className="justify-content-center">
       <Col xs={12}>
-        <h2 className="feed-title">{timelineOwnerName}'s Timeline</h2>
+        <h2 className="feed-title">
+          {posts.length === 0
+            ? "Empty Timeline"
+            : `${timelineOwnerName}'s Timeline`}
+        </h2>
       </Col>
       <Col xs={12} md={8} lg={6} className="feed-list-container">
         <div className="timeline-content">{content}</div>
