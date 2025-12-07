@@ -1,51 +1,16 @@
-import React, { ReactNode } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import PostCard from "./PostCard";
-import TimelineStatus from "./TimelineStatus";
+import type { ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
 
-type PostDto = {
-  id: string;
-  senderId: string;
-  recieverId: string;
-  content: string;
-  createdAt: string;
-};
-
-const BASE_URL = "http://localhost:5148";
+import PostCard from "./PostCard";
+import TimelineStatus from "./TimelineStatus";
+import { useTimeline } from "../hooks/useTimeline";
 
 export default function Timeline() {
   const { id: userId } = useParams<{ id: string }>();
 
-  const [posts, setPosts] = useState<PostDto[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { posts, isLoading, error } = useTimeline(userId);
 
-  useEffect(() => {
-    if (!userId) return;
-    setIsLoading(true);
-    setError(null);
-
-    fetch(`${BASE_URL}/api/users/${userId}/timeline`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to load timeline");
-        }
-        return res.json();
-      })
-      .then((data: PostDto[]) => {
-        setPosts(data);
-      })
-      .catch(() => {
-        setError("Could not load timeline.");
-        setPosts([]);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [userId]);
   let content: ReactNode;
 
   if (isLoading) {
