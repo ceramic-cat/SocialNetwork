@@ -1,0 +1,26 @@
+.timeline-status {
+  background: linear-gradient(135deg, #151525 0%, #1f1f3a 100%);
+  border: 1px solid rgba(138, 43, 226, 0.25);
+  border-radius: 15px;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #e4e4ff;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(138, 43, 226, 0.15);
+
+  font-size: 1.15rem;
+  line-height: 1.5;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &.loading {
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  &.error {
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.2);
+  }
+}
