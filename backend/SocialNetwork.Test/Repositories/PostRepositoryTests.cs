@@ -1,4 +1,4 @@
-﻿namespace SocialNetwork.Test.Repository
+﻿namespace SocialNetwork.Test.Repositories
 {
     public class PostRepositoryTests
     {
