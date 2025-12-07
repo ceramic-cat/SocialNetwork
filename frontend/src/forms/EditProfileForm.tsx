@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Form, Button, Alert, InputGroup } from "react-bootstrap";
-
-const API_URL = "http://localhost:5148/api/auth/edit-profile";
+import { Form, Button, InputGroup } from "react-bootstrap";
+import { useEditProfile } from "../hooks/useEditProfile";
+import ProfileAlert from "../alerts/ProfileAlert";
 
 interface EditProfileFormProps {
   onSuccess?: () => void;
@@ -11,55 +11,30 @@ export default function EditProfileForm({ onSuccess }: EditProfileFormProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [editingField, setEditingField] = useState<
     "username" | "email" | "password" | null
   >(null);
 
+  const { loading, error, success, editProfile, resetMessages } =
+    useEditProfile(() => {
+      setEditingField(null);
+      setPassword("");
+      if (onSuccess) onSuccess();
+    });
+
   async function handleSubmit(e?: React.FormEvent) {
     if (e) e.preventDefault();
-    setError(null);
-    setSuccess(null);
-    setLoading(true);
-
-    let body: any = {};
-    if (editingField === "username" && username) body.username = username;
-    if (editingField === "email" && email) body.email = email;
-    if (editingField === "password" && password) body.password = password;
-
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(API_URL, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body),
-      });
-
-      if (!response.ok) {
-        const data = await response.text();
-        setError(data || "Could not update profile.");
-      } else {
-        setSuccess("Profile updated successfully!");
-        setEditingField(null);
-        setPassword("");
-        if (onSuccess) onSuccess();
-      }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    resetMessages();
+    if (editingField === "username" && username)
+      await editProfile("username", username);
+    if (editingField === "email" && email) await editProfile("email", email);
+    if (editingField === "password" && password)
+      await editProfile("password", password);
   }
 
   return (
     <Form>
-      {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+      <ProfileAlert error={error} success={success} />
 
       <Form.Group className="mb-3">
         <Form.Label>Username</Form.Label>
@@ -82,6 +57,7 @@ export default function EditProfileForm({ onSuccess }: EditProfileFormProps) {
               onClick={() => {
                 setUsername("");
                 setEditingField(null);
+                resetMessages();
               }}
             >
               Cancel
@@ -121,6 +97,7 @@ export default function EditProfileForm({ onSuccess }: EditProfileFormProps) {
               onClick={() => {
                 setEmail("");
                 setEditingField(null);
+                resetMessages();
               }}
             >
               Cancel
@@ -161,6 +138,7 @@ export default function EditProfileForm({ onSuccess }: EditProfileFormProps) {
               onClick={() => {
                 setPassword("");
                 setEditingField(null);
+                resetMessages();
               }}
             >
               Cancel
