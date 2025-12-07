@@ -1,10 +1,4 @@
-﻿using SocialNetwork.Repository.Interfaces;
-using SocialNetwork.Entity.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SocialNetwork.Test.Services
+﻿namespace SocialNetwork.Test.Services
 {
     public class TimelineServiceTests
     {

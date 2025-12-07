@@ -1,10 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using SocialNetwork.Entity.Models;
-using SocialNetwork.Repository.Services;
-using Xunit;
-using MockQueryable.Moq; 
-
 namespace SocialNetwork.Test.Services
 {
     public class AuthServiceTests

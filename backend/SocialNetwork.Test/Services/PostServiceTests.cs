@@ -1,13 +1,9 @@
-
-using Microsoft.EntityFrameworkCore;
-using SocialNetwork.Entity.Models;
-
 namespace SocialNetwork.Test.Services
 {
     public class PostServiceTests
     {
         private readonly SocialNetworkDbContext _db;
-        private readonly PostService _sut; 
+        private readonly PostService _sut;
 
         public PostServiceTests()
         {
@@ -16,7 +12,8 @@ namespace SocialNetwork.Test.Services
                    .Options;
 
             _db = new SocialNetworkDbContext(options);
-            _sut = new PostService(_db);
+            var postRepository = new PostRepository(_db);
+            _sut = new PostService(_db, postRepository);
         }
 
         [Fact]
@@ -32,11 +29,11 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("Content cannot be empty.", result.ErrorMessage);
-           
+            Assert.Equal(PostErrors.ContentEmpty, result.ErrorMessage);
+
             var postsInDb = await _db.Posts.CountAsync();
             Assert.Equal(0, postsInDb);
-            
+
         }
 
         [Fact]
@@ -45,14 +42,14 @@ namespace SocialNetwork.Test.Services
             // Arrange
             var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
-            var longContent = new string('x', 281); 
+            var longContent = new string('x', 281);
 
             // Act
             var result = await _sut.CreatePostAsync(senderId, receiverId, longContent);
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("Content cannot be longer than 280 characters.", result.ErrorMessage);
+            Assert.Equal(PostErrors.ContentTooLong, result.ErrorMessage);
 
             var postsInDb = await _db.Posts.CountAsync();
             Assert.Equal(0, postsInDb);
@@ -63,10 +60,10 @@ namespace SocialNetwork.Test.Services
         public async Task CreatePostAsync_ReturnsFail_WhenSenderDoesNotExist()
         {
             // Arrange
-            var senderId = Guid.NewGuid(); 
+            var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
             var content = "Hello, World!";
-           
+
             _db.Users.Add(new User
             {
                 Id = receiverId,
@@ -82,7 +79,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal("Sender does not exist.", result.ErrorMessage);
+            Assert.Equal(PostErrors.SenderDoesNotExist, result.ErrorMessage);
 
             var postsInDb = await _db.Posts.CountAsync();
             Assert.Equal(0, postsInDb);
@@ -134,6 +131,77 @@ namespace SocialNetwork.Test.Services
             Assert.Equal(1, postsInDb);
         }
 
+        [Fact]
+        public async Task DeletePostAsync_ReturnsFail_WhenPostDoesNotExist()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            var postId = Guid.NewGuid();
+
+
+            //Act
+            var result = await _sut.DeletePostAsync(postId, userId);
+
+            //Assert
+            Assert.False(result.Success);
+            Assert.Equal(PostErrors.PostNotFound, result.ErrorMessage);
+        }
+
+
+        [Fact]
+        public async Task DeletePostAsync_DeletesPost_WhenUserIsOwner()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            var post = new Post
+            {
+                Id = Guid.NewGuid(),
+                SenderId = userId,
+                ReceiverId = Guid.NewGuid(),
+                Content = "Sample post",
+                CreatedAt = DateTime.UtcNow
+            };
+                _db.Posts.Add(post);
+                await _db.SaveChangesAsync();
+            //Act
+
+            var result = await _sut.DeletePostAsync(post.Id, userId);
+            //Assert
+
+            Assert.True(result.Success);
+            var exists = await _db.Posts.AnyAsync(p => p.Id == post.Id);
+            Assert.False(exists);
+
+        }
+        [Fact]
+        public async Task DeletePostAsync_ReturnsFail_WhenUserIsNotOwner()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var otherUserId = Guid.NewGuid();
+
+            var post = new Post
+            {
+                Id = Guid.NewGuid(),
+                SenderId = userId,
+                ReceiverId = userId,
+                Content = "Owned by someone else",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _db.Posts.Add(post);
+            await _db.SaveChangesAsync();
+
+            // Act
+            var result = await _sut.DeletePostAsync(post.Id, otherUserId);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.Equal(PostErrors.NotAllowedToDelete, result.ErrorMessage);
+
+            var stillThere = await _db.Posts.AnyAsync(p => p.Id == post.Id);
+            Assert.True(stillThere);
+        }
 
     }
 }

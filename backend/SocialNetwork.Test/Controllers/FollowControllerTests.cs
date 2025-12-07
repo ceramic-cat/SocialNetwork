@@ -1,14 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using SocialNetwork.Entity.Models;
-using SocialNetwork.Repository.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-
-namespace SocialNetwork.Test.Controllers;
+﻿namespace SocialNetwork.Test.Controllers;
 
 public class FollowControllerTests
 {
