@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SocialNetwork.Entity.Models;
-using SocialNetwork.API.Controllers;
-using SocialNetwork.API.Models;
-using SocialNetwork.Repository.Services;
-using Moq;
-using Microsoft.AspNetCore.Mvc;
-using Xunit;
-
-namespace SocialNetwork.Test.Controllers
+﻿namespace SocialNetwork.Test.Controllers
 {
     public class TimelineControllerTests
     {

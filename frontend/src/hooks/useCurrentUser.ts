@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
+import { API } from "../config/api";
 
 interface CurrentUser {
   id: string;
   username: string;
 }
-
-const BASE_URL = "http://localhost:5148";
-const ENDPOINT = `${BASE_URL}/api/auth/validate`;
 const DELETE_ACCOUNT_ENDPOINT = `${BASE_URL}/api/auth/delete-account`;
 
 export default function useCurrentUser() {
@@ -26,7 +24,7 @@ export default function useCurrentUser() {
       }
 
       try {
-        const response = await fetch(ENDPOINT, {
+        const response = await fetch(API.AUTH.VALIDATE, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -63,7 +61,7 @@ export default function useCurrentUser() {
     if (!token) return;
 
     try {
-      const res = await fetch(ENDPOINT, {
+      const res = await fetch(API.AUTH.VALIDATE, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

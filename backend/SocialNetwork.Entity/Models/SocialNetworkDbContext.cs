@@ -10,5 +10,6 @@ namespace SocialNetwork.Entity.Models
         public virtual DbSet<User> Users { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<DirectMessage> DirectMessages { get; set; }
     }
 }

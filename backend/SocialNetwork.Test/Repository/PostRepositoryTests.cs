@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SocialNetwork.Entity.Models;           
-using SocialNetwork.Repository;
-namespace SocialNetwork.Test.Repository
+﻿namespace SocialNetwork.Test.Repository
 {
     public class PostRepositoryTests
     {
