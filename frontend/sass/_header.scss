@@ -1,3 +1,12 @@
+.app-header-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 /* Base style for header links */
 .app-header-link {
   position: relative;
@@ -34,7 +43,7 @@
 
 /* Icon styling */
 .app-header-link i {
-  font-size: 1.15rem;
+  font-size: 20px;
   transition: transform 0.18s ease, filter 0.18s ease;
 }
 .app-header-link:hover i {

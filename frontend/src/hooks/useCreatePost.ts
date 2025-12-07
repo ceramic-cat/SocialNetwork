@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { CreatePostRequest } from "../types/post";
+import { API } from "../config/api";
 
 export interface UseCreatePostResult {
   createPost: (payload: CreatePostRequest) => Promise<boolean>;
@@ -8,9 +9,6 @@ export interface UseCreatePostResult {
   success: string | null;
   resetStatus: () => void;
 }
-
-const BASE_URL = "http://localhost:5148";
-const ENDPOINT = `${BASE_URL}/api/posts`;
 
 export function useCreatePost(): UseCreatePostResult {
   const [loading, setLoading] = useState(false);
@@ -33,7 +31,7 @@ export function useCreatePost(): UseCreatePostResult {
         headers["Authorization"] = `Bearer ${token}`;
       }
 
-      const response = await fetch(ENDPOINT, {
+      const response = await fetch(API.POSTS, {
         method: "POST",
         headers,
         body: JSON.stringify(payload),

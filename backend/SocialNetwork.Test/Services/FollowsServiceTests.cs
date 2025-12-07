@@ -1,11 +1,4 @@
-﻿using Moq;
-using SocialNetwork.Entity;
-using SocialNetwork.Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-namespace SocialNetwork.Test.Services;
+﻿namespace SocialNetwork.Test.Services;
 
 public class FollowsServiceTests
 {
