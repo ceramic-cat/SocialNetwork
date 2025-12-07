@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-
-const BASE_URL = "http://localhost:5148";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { API } from "../config/api";
 
 export type PostDto = {
   id: string;
@@ -16,6 +15,7 @@ type UseTimelineResult = {
   posts: PostDto[];
   isLoading: boolean;
   error: string | null;
+  setPosts: Dispatch<SetStateAction<PostDto[]>>;
 };
 
 export function useTimeline(userId: string | undefined): UseTimelineResult {
@@ -31,7 +31,7 @@ export function useTimeline(userId: string | undefined): UseTimelineResult {
       setError(null);
 
       try {
-        const res = await fetch(`${BASE_URL}/api/users/${userId}/timeline`);
+        const res = await fetch(API.USERS.TIMELINE(userId));
 
         if (!res.ok) {
           throw new Error("Failed to load timeline");
@@ -50,5 +50,5 @@ export function useTimeline(userId: string | undefined): UseTimelineResult {
     loadTimeline();
   }, [userId]);
 
-  return { posts, isLoading, error };
+  return { posts, isLoading, error, setPosts };
 }

@@ -25,20 +25,21 @@ export default function PostCard({
       <Card.Body>
         <div className="post-content">{content}</div>
 
-        <div className="timestamp">{timestamp}</div>
+        <div className="post-footer">
+          <span className="timestamp">{timestamp}</span>
+
+          {canDelete && onDelete && (
+            <Button
+              variant="outline-danger"
+              size="sm"
+              onClick={onDelete}
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </Button>
+          )}
+        </div>
       </Card.Body>
-      <Card.Footer>
-        {canDelete && onDelete && (
-          <Button
-            variant="outline-danger"
-            size="sm"
-            onClick={onDelete}
-            disabled={deleting}
-          >
-            {deleting ? "Deleting..." : "Delete"}
-          </Button>
-        )}
-      </Card.Footer>
     </Card>
   );
 }
