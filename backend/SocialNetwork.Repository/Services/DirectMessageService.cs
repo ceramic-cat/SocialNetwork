@@ -16,17 +16,7 @@ public class DirectMessageService : IDirectMessageService
 
     public async Task<Result> SendDirectMessageAsync(Guid senderId, Guid? receiverId, string content)
     {
-        var directMessage = new DirectMessage
-        {
-            SenderId = senderId,
-            ReceiverId = receiverId ?? Guid.Empty,
-            Content = content,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        _db.DirectMessages.Add(directMessage);
-        await _db.SaveChangesAsync();
-        return Result.Success();
+        throw new NotImplementedException();
     }
 }
 
