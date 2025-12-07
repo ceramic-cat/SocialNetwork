@@ -32,7 +32,6 @@ export default function Timeline() {
         setPosts(data);
       })
       .catch((err) => {
-        console.error("Failed to load timeline:", err);
         setError("Could not load timeline.");
         setPosts([]);
       })
@@ -56,7 +55,7 @@ export default function Timeline() {
   return (
     <Row className="justify-content-center">
       <Col xs={12}>
-        <h2 className="feed-title">User Timeline</h2>
+        <h2 className="feed-title">{userId} Timeline</h2>
       </Col>
       <Col xs={12} md={8} lg={6} className="feed-list-container">
         <div>
