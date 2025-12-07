@@ -5,7 +5,6 @@ interface CurrentUser {
   id: string;
   username: string;
 }
-const DELETE_ACCOUNT_ENDPOINT = `${BASE_URL}/api/auth/delete-account`;
 
 export default function useCurrentUser() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -91,7 +90,7 @@ export default function useCurrentUser() {
     if (!token) return;
 
     try {
-      const response = await fetch(DELETE_ACCOUNT_ENDPOINT, {
+      const response = await fetch(API.AUTH.DELETE_ACCOUNT, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
