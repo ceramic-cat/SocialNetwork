@@ -85,6 +85,27 @@ export default function useCurrentUser() {
     setUser(null);
   };
 
+  const handleDeleteAccount = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(API.AUTH.DELETE_ACCOUNT, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    } catch {}
+  };
+
   return {
     isLoggedIn,
     loading,
@@ -93,5 +114,6 @@ export default function useCurrentUser() {
     username: user?.username ?? null,
     handleLoginSuccess,
     handleLogout,
+    handleDeleteAccount,
   };
 }
