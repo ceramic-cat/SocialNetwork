@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import PostCard from "./PostCard";
+
 import { useParams } from "react-router-dom";
+import { Col, Row } from "react-bootstrap";
 
 type PostDto = {
   id: string;
@@ -52,15 +54,22 @@ export default function Timeline() {
   }
 
   return (
-    <div>
-      {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          sender={post.senderId}
-          content={post.content}
-          timestamp={new Date(post.createdAt).toLocaleString()}
-        />
-      ))}
-    </div>
+    <Row className="justify-content-center">
+      <Col xs={12}>
+        <h2 className="feed-title">User Timeline</h2>
+      </Col>
+      <Col xs={12} md={8} lg={6} className="feed-list-container">
+        <div>
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              sender={post.senderId}
+              content={post.content}
+              timestamp={new Date(post.createdAt).toLocaleString()}
+            />
+          ))}
+        </div>
+      </Col>
+    </Row>
   );
 }
