@@ -134,6 +134,28 @@ public class FollowsServiceTests
 
     }
 
+    [Fact]
+    public async Task IsFollowing_ValidUserThatFollowsId_ReturnsTrue()
+    {
+
+    }
+
+    [Fact]
+    public async Task IsFollowing_ValidUserDontFollowId_ReturnsFalse()
+    {
+
+    }
+
+    public async Task IsFollowing_EmptyUser_ReturnsError()
+    {
+
+    }
+
+    [Fact]
+    public async Task IsFollowing_IdNotFound_ReturnsError()
+    {
+
+    }
 
 }
 
