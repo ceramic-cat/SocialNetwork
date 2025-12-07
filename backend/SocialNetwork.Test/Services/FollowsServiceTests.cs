@@ -137,25 +137,41 @@ public class FollowsServiceTests
     [Fact]
     public async Task IsFollowing_ValidUserThatFollowsId_ReturnsTrue()
     {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
 
+        _followRepositoryMock
+            .Setup(r => r.ExistsAsync(followerId, followeeId))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await _sut.IsFollowing(followerId, followeeId);
+
+        // Assert
+        Assert.True(result.Data);
+        Assert.Empty(result.ErrorMessage);
     }
 
     [Fact]
     public async Task IsFollowing_ValidUserDontFollowId_ReturnsFalse()
     {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
 
+        _followRepositoryMock
+            .Setup(r => r.ExistsAsync(followerId, followeeId))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _sut.IsFollowing(followerId, followeeId);
+
+        // Assert
+        Assert.False(result.Data);
+        Assert.Empty(result.ErrorMessage);
     }
 
-    public async Task IsFollowing_EmptyUser_ReturnsError()
-    {
-
-    }
-
-    [Fact]
-    public async Task IsFollowing_IdNotFound_ReturnsError()
-    {
-
-    }
 
 }
 
