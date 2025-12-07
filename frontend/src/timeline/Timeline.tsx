@@ -11,6 +11,11 @@ export default function Timeline() {
 
   const { posts, isLoading, error } = useTimeline(userId);
 
+  const timelineOwnerName =
+    posts.length > 0 && posts[0].receiverUsername
+      ? posts[0].receiverUsername
+      : userId ?? "Timeline";
+
   let content: ReactNode;
 
   if (isLoading) {
@@ -27,7 +32,7 @@ export default function Timeline() {
         {posts.map((post) => (
           <PostCard
             key={post.id}
-            sender={post.senderId}
+            sender={post.senderUsername}
             content={post.content}
             timestamp={new Date(post.createdAt).toLocaleString()}
           />
@@ -39,7 +44,7 @@ export default function Timeline() {
   return (
     <Row className="justify-content-center">
       <Col xs={12}>
-        <h2 className="feed-title">{userId} Timeline</h2>
+        <h2 className="feed-title">{timelineOwnerName}'s Timeline</h2>
       </Col>
       <Col xs={12} md={8} lg={6} className="feed-list-container">
         <div className="timeline-content">{content}</div>
