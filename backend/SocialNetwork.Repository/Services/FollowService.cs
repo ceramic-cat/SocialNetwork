@@ -59,7 +59,6 @@ public class FollowService : IFollowsService
         return Result<Guid[]>.Success(follows);
     }
 
-    public Task<Result<bool>> IsFollowing(Guid follower, Guid followee) => throw new NotImplementedException();
 
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
     {
@@ -70,6 +69,16 @@ public class FollowService : IFollowsService
 
         await _repository.DeleteAsync(follower, followee);
         return Result.Success();
+    }
+    public async Task<Result<bool>> IsFollowing(Guid follower, Guid followee)
+    {
+        if (followee == Guid.Empty) { 
+            return Result<bool>.Failure("Empty user");
+        }
+
+        var result = await _repository.ExistsAsync(follower, followee);
+
+        return Result<bool>.Success(result);
     }
 
 }

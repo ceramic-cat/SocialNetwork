@@ -150,7 +150,7 @@ public class FollowsServiceTests
 
         // Assert
         Assert.True(result.Data);
-        Assert.Empty(result.ErrorMessage);
+        Assert.Null(result.ErrorMessage);
     }
 
     [Fact]
@@ -169,7 +169,22 @@ public class FollowsServiceTests
 
         // Assert
         Assert.False(result.Data);
-        Assert.Empty(result.ErrorMessage);
+        Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task IsFollowing_EmptyUser_ReturnsError()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.Empty;
+
+        // Act
+        var result = await _sut.IsFollowing(followerId, followeeId);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Contains("Empty user", result.ErrorMessage);
     }
 
 
