@@ -48,7 +48,7 @@ namespace SocialNetwork.Test.Controllers
 
             _directMessageServiceMock
                 .Setup(s => s.SendDirectMessageAsync(senderId, receiverId, content))
-                .ReturnsAsync(Result.Success());
+                .ReturnsAsync(DirectMessageResult.Ok());
 
             // Act
             var result = await _sut.SendDirectMessage(request);
@@ -57,8 +57,8 @@ namespace SocialNetwork.Test.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.Equal(200, okResult.StatusCode);
 
-            var body = Assert.IsType<Result>(okResult.Value);
-            Assert.True(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(okResult.Value);
+            Assert.True(body.Success);
             Assert.Null(body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -89,8 +89,8 @@ namespace SocialNetwork.Test.Controllers
             var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
             Assert.Equal(401, unauthorized.StatusCode);
 
-            var body = Assert.IsType<Result>(unauthorized.Value);
-            Assert.False(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(unauthorized.Value);
+            Assert.False(body.Success);
             Assert.Equal(DirectMessageErrors.InvalidUserId, body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -127,8 +127,8 @@ namespace SocialNetwork.Test.Controllers
             var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
             Assert.Equal(401, unauthorized.StatusCode);
 
-            var body = Assert.IsType<Result>(unauthorized.Value);
-            Assert.False(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(unauthorized.Value);
+            Assert.False(body.Success);
             Assert.Equal(DirectMessageErrors.InvalidUserId, body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -165,8 +165,8 @@ namespace SocialNetwork.Test.Controllers
             var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
             Assert.Equal(401, unauthorized.StatusCode);
 
-            var body = Assert.IsType<Result>(unauthorized.Value);
-            Assert.False(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(unauthorized.Value);
+            Assert.False(body.Success);
             Assert.Equal(DirectMessageErrors.InvalidUserId, body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -193,7 +193,7 @@ namespace SocialNetwork.Test.Controllers
 
             _directMessageServiceMock
                 .Setup(s => s.SendDirectMessageAsync(senderId, receiverId, content))
-                .ReturnsAsync(Result.Failure(DirectMessageErrors.ContentEmpty));
+                .ReturnsAsync(DirectMessageResult.Fail(DirectMessageErrors.ContentEmpty));
 
             // Act
             var result = await _sut.SendDirectMessage(request);
@@ -202,8 +202,8 @@ namespace SocialNetwork.Test.Controllers
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(400, badRequest.StatusCode);
 
-            var body = Assert.IsType<Result>(badRequest.Value);
-            Assert.False(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(badRequest.Value);
+            Assert.False(body.Success);
             Assert.Equal(DirectMessageErrors.ContentEmpty, body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -230,7 +230,7 @@ namespace SocialNetwork.Test.Controllers
 
             _directMessageServiceMock
                 .Setup(s => s.SendDirectMessageAsync(senderId, receiverId, longContent))
-                .ReturnsAsync(Result.Failure(DirectMessageErrors.ContentTooLong));
+                .ReturnsAsync(DirectMessageResult.Fail(DirectMessageErrors.ContentTooLong));
 
             // Act
             var result = await _sut.SendDirectMessage(request);
@@ -239,8 +239,8 @@ namespace SocialNetwork.Test.Controllers
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(400, badRequest.StatusCode);
 
-            var body = Assert.IsType<Result>(badRequest.Value);
-            Assert.False(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(badRequest.Value);
+            Assert.False(body.Success);
             Assert.Equal(DirectMessageErrors.ContentTooLong, body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -267,7 +267,7 @@ namespace SocialNetwork.Test.Controllers
 
             _directMessageServiceMock
                 .Setup(s => s.SendDirectMessageAsync(senderId, receiverId, content))
-                .ReturnsAsync(Result.Failure(DirectMessageErrors.ReceiverEmpty));
+                .ReturnsAsync(DirectMessageResult.Fail(DirectMessageErrors.ReceiverEmpty));
 
             // Act
             var result = await _sut.SendDirectMessage(request);
@@ -276,8 +276,8 @@ namespace SocialNetwork.Test.Controllers
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(400, badRequest.StatusCode);
 
-            var body = Assert.IsType<Result>(badRequest.Value);
-            Assert.False(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(badRequest.Value);
+            Assert.False(body.Success);
             Assert.Equal(DirectMessageErrors.ReceiverEmpty, body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -304,7 +304,7 @@ namespace SocialNetwork.Test.Controllers
 
             _directMessageServiceMock
                 .Setup(s => s.SendDirectMessageAsync(senderId, receiverId, content))
-                .ReturnsAsync(Result.Failure(DirectMessageErrors.SenderDoesNotExist));
+                .ReturnsAsync(DirectMessageResult.Fail(DirectMessageErrors.SenderDoesNotExist));
 
             // Act
             var result = await _sut.SendDirectMessage(request);
@@ -313,8 +313,8 @@ namespace SocialNetwork.Test.Controllers
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(400, badRequest.StatusCode);
 
-            var body = Assert.IsType<Result>(badRequest.Value);
-            Assert.False(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(badRequest.Value);
+            Assert.False(body.Success);
             Assert.Equal(DirectMessageErrors.SenderDoesNotExist, body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -341,7 +341,7 @@ namespace SocialNetwork.Test.Controllers
 
             _directMessageServiceMock
                 .Setup(s => s.SendDirectMessageAsync(senderId, receiverId, content))
-                .ReturnsAsync(Result.Failure(DirectMessageErrors.ReceiverDoesNotExist));
+                .ReturnsAsync(DirectMessageResult.Fail(DirectMessageErrors.ReceiverDoesNotExist));
 
             // Act
             var result = await _sut.SendDirectMessage(request);
@@ -350,8 +350,8 @@ namespace SocialNetwork.Test.Controllers
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(400, badRequest.StatusCode);
 
-            var body = Assert.IsType<Result>(badRequest.Value);
-            Assert.False(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(badRequest.Value);
+            Assert.False(body.Success);
             Assert.Equal(DirectMessageErrors.ReceiverDoesNotExist, body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
@@ -378,7 +378,7 @@ namespace SocialNetwork.Test.Controllers
 
             _directMessageServiceMock
                 .Setup(s => s.SendDirectMessageAsync(senderId, receiverId, content))
-                .ReturnsAsync(Result.Success());
+                .ReturnsAsync(DirectMessageResult.Ok());
 
             // Act
             var result = await _sut.SendDirectMessage(request);
@@ -387,8 +387,8 @@ namespace SocialNetwork.Test.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.Equal(200, okResult.StatusCode);
 
-            var body = Assert.IsType<Result>(okResult.Value);
-            Assert.True(body.IsSuccess);
+            var body = Assert.IsType<DirectMessageResult>(okResult.Value);
+            Assert.True(body.Success);
             Assert.Null(body.ErrorMessage);
 
             _directMessageServiceMock.Verify(
