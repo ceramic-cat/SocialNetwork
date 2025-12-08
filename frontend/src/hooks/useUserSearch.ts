@@ -1,4 +1,3 @@
-// src/hooks/useUserSearch.ts
 import { useState } from "react";
 import { API } from "../config/api";
 
@@ -25,12 +24,7 @@ export function useUserSearch(): UseUserSearchResult {
 
     const trimmed = query.trim();
 
-    if (!trimmed) {
-      setResults([]);
-      return;
-    }
-
-    if (trimmed.length < 2) {
+    if (!trimmed || trimmed.length < 2) {
       setResults([]);
       return;
     }
@@ -38,9 +32,12 @@ export function useUserSearch(): UseUserSearchResult {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("token");
+
       const res = await fetch(API.USERS.SEARCH(trimmed), {
         headers: {
           "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
       });
 
