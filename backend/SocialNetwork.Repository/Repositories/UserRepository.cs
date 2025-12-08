@@ -22,11 +22,12 @@ namespace SocialNetwork.Repository
 
         public async Task<List<User>> SearchByUsernameAsync(string query)
         {
+            var normalized = query.Trim().ToLower();
+
             return await _db.Users
-                .AsNoTracking()
-                .Where(u => u.Username.Contains(query))
-                .OrderBy(u => u.Username)
+                .Where(u => u.Username.ToLower().Contains(normalized))
                 .ToListAsync();
         }
+
     }
 }
