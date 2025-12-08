@@ -94,7 +94,7 @@ namespace SocialNetwork.Repository.Services
       await _db.SaveChangesAsync();
       return true;
     }
-    
-    
-  }
+
+        public Task<string?> GetUsernameAsync(Guid userId) => throw new NotImplementedException();
+    }
 }

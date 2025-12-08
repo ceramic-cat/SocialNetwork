@@ -1,3 +1,5 @@
+using SocialNetwork.Entity.Models;
+
 namespace SocialNetwork.Test.Services
 {
     public class AuthServiceTests
@@ -37,7 +39,7 @@ namespace SocialNetwork.Test.Services
                 .Build();
         }
 
-        private AuthService CreateMockedService(List<User> users)
+        private IAuthService CreateMockedService(List<User> users)
         {
             var mockSet = CreateMockDbSet(users);
             var mockContext = new Mock<SocialNetworkDbContext>(new DbContextOptions<SocialNetworkDbContext>());
@@ -147,6 +149,51 @@ namespace SocialNetwork.Test.Services
             var result = await service.EditProfileAsync(Guid.NewGuid(), editRequest);
 
             Assert.False(result);
+        }
+
+        [Fact]
+        public async Task GetUsernameAsync_WithValidUser_ReturnsUsername()
+        {
+            // Arrange
+            var user1 = new User { Id = Guid.NewGuid(), Username = "alice", Email = "alice@example.com", Password = "pass" };
+            var user2 = new User { Id = Guid.NewGuid(), Username = "bob", Email = "bob@example.com", Password = "pass" };
+            var user3 = new User { Id = Guid.NewGuid(), Username = "charlie", Email = "charlie@example.com", Password = "pass" };
+            var users = new List<User> { user1, user2, user3 };
+            var service = CreateMockedService(users);
+
+            // Act
+            var result = await service.GetUsernameAsync(user2.Id);
+
+            // Assert
+            Assert.Equal(user2.Username, result);
+        }
+
+        [Fact]
+        public async Task GetUsernameAsync_NoMatchingGuid_ReturnsNull()
+        {
+            // Arrange
+            var users = new List<User>();
+            var service = CreateMockedService(users);
+
+            // Act
+            var result = await service.GetUsernameAsync(Guid.NewGuid());
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetUsernameAsync_EmptyGuid_ReturnsNull()
+        {
+            // Arrange
+            var users = new List<User>();
+            var service = CreateMockedService(users);
+
+            // Act
+            var result = await service.GetUsernameAsync(Guid.Empty);
+
+            //Assert 
+            Assert.Null(result);
         }
     }
 }
