@@ -17,7 +17,7 @@ namespace SocialNetwork.Entity.Models
         public Guid ReceiverId { get; set; }
 
         [Column("content")]
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
 
         [Column("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
