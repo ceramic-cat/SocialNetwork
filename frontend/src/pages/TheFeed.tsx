@@ -48,6 +48,10 @@ export default function TheFeed() {
           <ul className="feed-list">
             {posts.map((post) => (
               <li key={post.id} className="feed-post">
+                <Col className="post-date">
+                  <i className="bi bi-clock-history" />
+                  {new Date(post.createdAt).toLocaleString()}
+                </Col>
                 <Row>
                   <Col xs={12} md={10}>
                     <Col className="sender-name mb-2">
@@ -58,11 +62,8 @@ export default function TheFeed() {
                         {post.senderUsername}
                       </Link>
                     </Col>
+
                     <Col className="post-content mb-2 ">{post.content}</Col>
-                    <Col className="post-date mt-2">
-                      <i className="bi bi-clock-history" />{" "}
-                      {new Date(post.createdAt).toLocaleString()}
-                    </Col>
                   </Col>
                 </Row>
               </li>

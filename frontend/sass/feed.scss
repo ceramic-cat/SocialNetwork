@@ -22,6 +22,7 @@
   max-height: 70vh;
   overflow-y: auto;
   padding-right: 8px;
+  padding-top: 8px;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -82,9 +83,11 @@
 }
 
 .feed-post .post-date {
-  font-size: 0.9rem;
+  position: absolute;
+  font-size: 0.7rem;
   color: #b8b8ff;
   opacity: 0.8;
+  right: 1rem;
 }
 
 .feed-space-animation {
