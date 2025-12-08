@@ -1,8 +1,7 @@
 import Timeline from '../timeline/Timeline'
 import { useParams } from 'react-router-dom';
 import useCurrentUser from '../hooks/useCurrentUser';
-import { useIsFollowing } from '../hooks/useIsFollowing';
-import { Button, Spinner } from 'react-bootstrap';
+import FollowButton from '../partials/FollowButton';
 
 
 export default function User() {
@@ -10,28 +9,21 @@ export default function User() {
   const { userId: currentUserId, username } = useCurrentUser();
 
   const isOwnPage = userId === currentUserId;
-  const { error, isLoading, isFollowing } = useIsFollowing(userId, isOwnPage);
 
-
-
+  if (!userId) return <div>User not found</div>;
 
   return (
     <>
-
-      {isOwnPage &&
+      {isOwnPage ? (
         <div>
-          <h1 className='text-white'>Welcome back {username}</h1>
+          <h1 className="text-white">Welcome back {username}</h1>
         </div>
-      }
-      {!isOwnPage &&
+      ) : (
         <div>
-          <h1 className='text-primary'>Welcome to {userId}</h1>
-          {error && <div className='text-primary'> {error}</div>}
-          <Button
-            disabled={isLoading}
-          >{isLoading ? 'Loading...' : isFollowing ? 'Unfollow' : 'Follow'}</Button>
+          <h1 className="text-primary">Welcome to {userId}</h1>
+          <FollowButton userId={userId} />
         </div>
-      }
+      )}
 
       <Timeline />
     </>
