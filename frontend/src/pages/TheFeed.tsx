@@ -46,28 +46,37 @@ export default function TheFeed() {
           <Col className="alert-info">No posts to show.</Col>
         ) : (
           <ul className="feed-list">
-            {posts.map((post) => (
-              <li key={post.id} className="feed-post">
-                <Col className="post-date">
-                  <i className="bi bi-clock-history" />
-                  {new Date(post.createdAt).toLocaleString()}
-                </Col>
-                <Row>
-                  <Col xs={12} md={10}>
-                    <Col className="sender-name mb-2">
-                      <Link
-                        className="link-unstyled"
-                        to={`/users/${post.senderId}/timeline`}
-                      >
-                        {post.senderUsername}
-                      </Link>
-                    </Col>
-
-                    <Col className="post-content mb-2 ">{post.content}</Col>
+            {posts.map((post) => {
+              const isNew =
+                Date.now() - new Date(post.createdAt).getTime() <
+                24 * 60 * 60 * 1000;
+              return (
+                <li
+                  key={post.id}
+                  className={`feed-post${isNew ? " new-post" : ""}`}
+                >
+                  {isNew && <span className="new-badge">New</span>}
+                  <Col className="post-date">
+                    <i className="bi bi-clock-history" />
+                    {new Date(post.createdAt).toLocaleString()}
                   </Col>
-                </Row>
-              </li>
-            ))}
+                  <Row>
+                    <Col xs={12} md={10}>
+                      <Col className="sender-name mb-2">
+                        <Link
+                          className="link-unstyled"
+                          to={`/users/${post.senderId}/timeline`}
+                        >
+                          {post.senderUsername}
+                        </Link>
+                      </Col>
+
+                      <Col className="post-content mb-2 ">{post.content}</Col>
+                    </Col>
+                  </Row>
+                </li>
+              );
+            })}
           </ul>
         )}
       </Col>

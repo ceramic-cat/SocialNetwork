@@ -55,6 +55,30 @@
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
 }
+.new-badge {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: #9343df;
+  color: #fff;
+  padding: 0.2em 0.7em;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  z-index: 2;
+  animation: float-badge 3s infinite ease-in-out;
+}
+
+@keyframes float-badge {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
 
 .feed-post:hover {
   transform: translateY(-4px) scale(1.02);
