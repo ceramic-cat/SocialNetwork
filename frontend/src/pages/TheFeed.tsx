@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Row, Col } from "react-bootstrap";
-import useCurrentUser from "../hooks/useCurrentUser";
+import { Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 type PostDto = {
   id: string;
@@ -16,8 +17,11 @@ export default function TheFeed() {
   const [posts, setPosts] = useState<PostDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [following, setFollowing] = useState<string[]>([]);
 
   const { userId, loading: userLoading, isLoggedIn } = useCurrentUser();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!userId || userLoading) return;
@@ -41,11 +45,31 @@ export default function TheFeed() {
     fetchFeed();
   }, [userId, userLoading]);
 
+  useEffect(() => {
+    if (!userId || userLoading) return;
+
+    async function fetchFollowing() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const res = await fetch("http://localhost:5148/api/follow", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setFollowing(data);
+        }
+      } catch {
+        setError("Network error.");
+      }
+    }
+    fetchFollowing();
+  }, [userId, userLoading]);
   if (userLoading) return <div>Loading user...</div>;
   if (!isLoggedIn) return <div></div>;
 
   return (
-    <Row className="justify-content-center">
+    <Row className="justify-content-center text-center">
       <div className="feed-space-animation"></div>
 
       <Col xs={12}>
@@ -53,11 +77,22 @@ export default function TheFeed() {
       </Col>
       <Col xs={12} md={8} lg={6} className="feed-list-container">
         {loading ? (
-          <div>Loading...</div>
+          <Col className="alert-info">Loading...</Col>
         ) : error ? (
-          <div style={{ color: "red" }}>{error}</div>
+          <Col className="alert-danger">{error}</Col>
+        ) : following.length === 0 ? (
+          <Col className="alert-following-info">
+            <div>You are not following anyone yet.</div>
+            <Button
+              variant="secondary"
+              className="mt-3"
+              onClick={() => navigate("/search")}
+            >
+              Find users to follow
+            </Button>
+          </Col>
         ) : posts.length === 0 ? (
-          <div>No posts to show.</div>
+          <Col className="alert-info">No posts to show.</Col>
         ) : (
           <ul className="feed-list">
             {posts.map((post) => (
