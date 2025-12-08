@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Services;
+using SocialNetwork.Repository.Errors;
 
 namespace SocialNetwork.Test.Services
 {
@@ -54,7 +55,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("SenderId cannot be empty.", result.ErrorMessage);
+            Assert.Equal(DirectMessageErrors.SenderEmpty, result.ErrorMessage);
             await AssertNoMessagesInDatabaseAsync();
         }
 
@@ -71,7 +72,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("Content cannot be empty.", result.ErrorMessage);
+            Assert.Equal(DirectMessageErrors.ContentEmpty, result.ErrorMessage);
             await AssertNoMessagesInDatabaseAsync();
         }
 
@@ -88,7 +89,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal($"Content cannot be longer than {MaxContentLength} characters.", result.ErrorMessage);
+            Assert.Equal(DirectMessageErrors.ContentTooLong, result.ErrorMessage);
             await AssertNoMessagesInDatabaseAsync();
         }
 
@@ -107,7 +108,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("Sender does not exist.", result.ErrorMessage);
+            Assert.Equal(DirectMessageErrors.SenderDoesNotExist, result.ErrorMessage);
             await AssertNoMessagesInDatabaseAsync();
         }
 
@@ -126,7 +127,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("ReceiverId cannot be empty.", result.ErrorMessage);
+            Assert.Equal(DirectMessageErrors.ReceiverEmpty, result.ErrorMessage);
             await AssertNoMessagesInDatabaseAsync();
         }
 
@@ -145,7 +146,7 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("Receiver does not exist.", result.ErrorMessage);
+            Assert.Equal(DirectMessageErrors.ReceiverDoesNotExist, result.ErrorMessage);
             await AssertNoMessagesInDatabaseAsync();
         }
 

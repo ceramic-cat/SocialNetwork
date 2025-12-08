@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.API.Models;
 using SocialNetwork.Entity.Models;
+using SocialNetwork.Repository.Errors;
 
 namespace SocialNetwork.Repository.Services;
 
@@ -36,22 +37,22 @@ public class DirectMessageService : IDirectMessageService
     {
         if (senderId == Guid.Empty)
         {
-            return Result.Failure("SenderId cannot be empty.");
+            return Result.Failure(DirectMessageErrors.SenderEmpty);
         }
 
         if (receiverId == Guid.Empty)
         {
-            return Result.Failure("ReceiverId cannot be empty.");
+            return Result.Failure(DirectMessageErrors.ReceiverEmpty);
         }
 
         if (string.IsNullOrWhiteSpace(content))
         {
-            return Result.Failure("Content cannot be empty.");
+            return Result.Failure(DirectMessageErrors.ContentEmpty);
         }
 
         if (content.Length > MaxContentLength)
         {
-            return Result.Failure($"Content cannot be longer than {MaxContentLength} characters.");
+            return Result.Failure(DirectMessageErrors.ContentTooLong);
         }
 
         return null;
@@ -67,12 +68,12 @@ public class DirectMessageService : IDirectMessageService
 
         if (!existingUserIds.Contains(senderId))
         {
-            return Result.Failure("Sender does not exist.");
+            return Result.Failure(DirectMessageErrors.SenderDoesNotExist);
         }
 
         if (!existingUserIds.Contains(receiverId))
         {
-            return Result.Failure("Receiver does not exist.");
+            return Result.Failure(DirectMessageErrors.ReceiverDoesNotExist);
         }
 
         return null;
