@@ -97,5 +97,12 @@ namespace SocialNetwork.API.Controllers
         {
             return Ok("Logout successful.");
         }
+
+        [HttpGet("get-username/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetUsernameById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -174,5 +174,50 @@ namespace SocialNetwork.Test.Controllers
             var notFound = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("User not found or could not be deleted.", notFound.Value);
         }
+
+        [Fact]
+        public async Task GetUsernameById_ReturnsNotFound_WithEmptyGuid()
+        {
+            // Arrange
+            var userId = Guid.Empty;
+            _authServiceMock.Setup(s => s.GetUsernameAsync(userId)).ReturnsAsync((string?)null);
+
+            // Act
+            var result = await _authController.GetUsernameById(userId);
+
+            // Assert
+            var notFound = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal("User not found.", notFound.Value);
+        }
+
+        [Fact]
+        public async Task GetUsernameById_ReturnNotFound_OnNoMatch()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            _authServiceMock.Setup(s => s.GetUsernameAsync(userId)).ReturnsAsync((string?)null);
+
+            // Act
+            var result = await _authController.GetUsernameById(userId);
+
+            // Assert
+            var notFound = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal("User not found.", notFound.Value);
+        }
+
+        [Fact]
+        public async Task GetUsernameById_ReturnOk_OnMatch()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            _authServiceMock.Setup(s => s.GetUsernameAsync(userId)).ReturnsAsync("testuser");
+
+            // Act
+            var result = await _authController.GetUsernameById(userId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal("testuser", okResult.Value);
+        }
     }
 }
