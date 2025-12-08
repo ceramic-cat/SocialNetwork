@@ -7,6 +7,7 @@ interface HeaderProps {
   onCreatePost: () => void;
   onSendMessage: () => void;
   onLogout: () => void;
+  userId: string | null;
 }
 
 export default function Header({
@@ -15,6 +16,7 @@ export default function Header({
   onCreatePost,
   onSendMessage,
   onLogout,
+  userId,
 }: HeaderProps) {
   return (
     <header className="app-header sticky-top">
@@ -28,37 +30,35 @@ export default function Header({
             to="/"
             className="text-warning app-header-brand"
           >
-            Social Network
+            MySpace
           </Navbar.Brand>
 
           {isLoggedIn && (
-            <Nav className="d-flex align-items-center gap-3">
-              <Nav.Link
-                className="app-header-link d-flex align-items-center gap-1"
-                onClick={onCreatePost}
-              >
+            <Nav className="app-header-nav">
+              <Nav.Link className="app-header-link" onClick={onCreatePost}>
                 <i className="bi bi-pencil" />
-                <span className="d-none d-md-inline">Post</span>
+                <span className="d-none d-md-inline ms-1">Post</span>
               </Nav.Link>
 
-              <Nav.Link
-                className="app-header-link d-flex align-items-center gap-1"
-                onClick={onSendMessage}
-              >
+              <Nav.Link className="app-header-link" onClick={onSendMessage}>
                 <i className="bi bi-chat" />
-                <span className="d-none d-md-inline">Message</span>
+                <span className="d-none d-md-inline ms-1">Message</span>
               </Nav.Link>
 
-              <span className="app-header-username text-light d-none d-md-inline">
-                {username}
-              </span>
-
               <Nav.Link
-                className="app-header-link d-flex align-items-center gap-1"
-                onClick={onLogout}
+                as={Link}
+                to={userId ? `/users/${userId}/timeline` : "#"}
+                className="app-header-link"
               >
+                <i className="bi bi-person" />
+                <span className="app-header-username text-light d-none d-md-inline ms-1">
+                  {username}
+                </span>
+              </Nav.Link>
+
+              <Nav.Link className="app-header-link" onClick={onLogout}>
                 <i className="bi bi-door-open" />
-                <span className="d-none d-md-inline">Logout</span>
+                <span className="d-none d-md-inline ms-1">Logout</span>
               </Nav.Link>
             </Nav>
           )}

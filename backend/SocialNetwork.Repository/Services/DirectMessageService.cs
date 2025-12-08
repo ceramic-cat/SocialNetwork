@@ -1,5 +1,6 @@
 using SocialNetwork.Entity;
 using SocialNetwork.Repository.Interfaces;
+using SocialNetwork.Repository.Errors;
 
 namespace SocialNetwork.Repository.Services
 {
@@ -17,32 +18,35 @@ namespace SocialNetwork.Repository.Services
             _userRepository = userRepository;
         }
 
-        public async Task<DirectMessageResult> SendDirectMessageAsync(Guid senderId, Guid receiverId, string message)
+        public async Task<DirectMessageResult> SendDirectMessageAsync(Guid senderId, Guid receiverId, string content)
         {
-            // Validate receiver exists
+            var senderExists = await _userRepository.ExistsAsync(senderId);
+            if (!senderExists)
+            {
+                return DirectMessageResult.Fail(DirectMessageErrors.SenderDoesNotExist);
+            }
+
             var receiverExists = await _userRepository.ExistsAsync(receiverId);
             if (!receiverExists)
             {
-                return DirectMessageResult.Fail("Receiver does not exist.");
+                return DirectMessageResult.Fail(DirectMessageErrors.ReceiverDoesNotExist);
             }
 
-            // Validate message
-            if (string.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(content))
             {
-                return DirectMessageResult.Fail("Message cannot be empty.");
+                return DirectMessageResult.Fail(DirectMessageErrors.ContentEmpty);
             }
 
-            if (message.Length > MaxMessageLength)
+            if (content.Length > MaxMessageLength)
             {
-                return DirectMessageResult.Fail($"Message cannot be longer than {MaxMessageLength} characters.");
+                return DirectMessageResult.Fail(DirectMessageErrors.ContentTooLong);
             }
 
-            // Create and save direct message
             var directMessage = new DirectMessage
             {
                 SenderId = senderId,
                 ReceiverId = receiverId,
-                Message = message,
+                Content = content,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -52,4 +56,3 @@ namespace SocialNetwork.Repository.Services
         }
     }
 }
-

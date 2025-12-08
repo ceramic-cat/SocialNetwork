@@ -1,12 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using SocialNetwork.Entity.Models;
-using SocialNetwork.Repository.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SocialNetwork.Test.Repositories;
+﻿namespace SocialNetwork.Test.Repositories;
 
 // IDisposable disposes of the database after each test.
 public class FollowRepositoryTests : IDisposable

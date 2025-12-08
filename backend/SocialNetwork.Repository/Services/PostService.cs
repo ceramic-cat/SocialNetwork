@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Entity;
 using SocialNetwork.Entity.Models;
-using System;
-using System.Threading.Tasks;
+using SocialNetwork.Repository.Errors;
+using SocialNetwork.Repository.Interfaces;
 
 namespace SocialNetwork.Repository.Services
 {
@@ -23,48 +23,40 @@ namespace SocialNetwork.Repository.Services
         public static PostResult Ok()
             => new PostResult(true);
     }
+
     public class PostService : IPostService
     {
         private readonly SocialNetworkDbContext _db;
+        private readonly IPostRepository _postRepository;
         private const int MaxContentLength = 280;
 
-        public PostService(SocialNetworkDbContext db)
+        public PostService(SocialNetworkDbContext db, IPostRepository postRepository)
         {
             _db = db;
+            _postRepository = postRepository;
         }
 
         public async Task<PostResult> CreatePostAsync(Guid senderId, Guid receiverId, string content)
         {
             if (senderId == Guid.Empty)
-            {
-                return PostResult.Fail("SenderId cannot be empty.");
-            }
+                return PostResult.Fail(PostErrors.SenderEmpty);
+
             if (receiverId == Guid.Empty)
-            {
-                return PostResult.Fail("ReceiverId cannot be empty.");
-            }
+                return PostResult.Fail(PostErrors.RecieverEmpty);
 
             if (string.IsNullOrWhiteSpace(content))
-            {
-                return PostResult.Fail("Content cannot be empty.");
-            }
+                return PostResult.Fail(PostErrors.ContentEmpty);
 
             if (content.Length > MaxContentLength)
-            {
-                return PostResult.Fail($"Content cannot be longer than {MaxContentLength} characters.");
-            }
+                return PostResult.Fail(PostErrors.ContentTooLong);
 
             var senderExists = await _db.Users.AnyAsync(u => u.Id == senderId);
             if (!senderExists)
-            {
-                return PostResult.Fail("Sender does not exist.");
-            }
+                return PostResult.Fail(PostErrors.SenderDoesNotExist);
 
             var receiverExists = await _db.Users.AnyAsync(u => u.Id == receiverId);
             if (!receiverExists)
-            {
-                return PostResult.Fail("Receiver does not exist.");
-            }
+                return PostResult.Fail(PostErrors.ReceiverDoesNotExist);
 
             var post = new Post
             {
@@ -75,8 +67,28 @@ namespace SocialNetwork.Repository.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            _db.Posts.Add(post);
-            await _db.SaveChangesAsync();
+            await _postRepository.AddPostAsync(post);
+
+            return PostResult.Ok();
+        }
+
+        public async Task<PostResult> DeletePostAsync(Guid postId, Guid userId)
+        {
+            if (postId == Guid.Empty)
+                return PostResult.Fail(PostErrors.PostIdEmpty);
+
+            if (userId == Guid.Empty)
+                return PostResult.Fail(PostErrors.InvalidUserId);
+
+            var post = await _postRepository.GetByIdAsync(postId);
+
+            if (post == null)
+                return PostResult.Fail(PostErrors.PostNotFound);
+
+            if (post.SenderId != userId)
+                return PostResult.Fail(PostErrors.NotAllowedToDelete);
+
+            await _postRepository.DeletePostAsync(post);
 
             return PostResult.Ok();
         }

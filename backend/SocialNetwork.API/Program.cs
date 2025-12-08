@@ -1,13 +1,14 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository;
 using SocialNetwork.Repository.Interfaces;
 using SocialNetwork.Repository.Repositories;
 using SocialNetwork.Repository.Services;
-
+using System.Text;
 
 namespace SocialNetwork.API
 {
@@ -19,14 +20,31 @@ namespace SocialNetwork.API
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddOpenApi(options =>
+            {
+                options.AddDocumentTransformer((document, context, cancellationToken) =>
+                {
+                    document.Info = new OpenApiInfo
+                    {
+                        Title = "Social Network API",
+                        Version = "v1",
+                        Description = "API for the Social Network application",
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Your Name",
+                            Email = "your@email.com"
+                        }
+                    };
+                    return Task.CompletedTask;
+                });
 
+                options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+                options.AddOperationTransformer<AuthorizeOperationTransformer>();
+            });
             builder.Services.AddScoped<IPostService, PostService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IFollowsService, FollowService>();
             builder.Services.AddScoped<IFollowRepository, FollowRepository>();
-            builder.Services.AddScoped<IPostService, PostService>();
-            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITimelineService, TimelineService>();
             builder.Services.AddScoped<IPostRepository, PostRepository>();
             builder.Services.AddScoped<IUserRepository, SqliteUserRepository>();
@@ -89,11 +107,14 @@ namespace SocialNetwork.API
 
             builder.Services.AddAuthorization();
             var app = builder.Build();
-
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.MapOpenApi();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/openapi/v1.json", "v1");
+                    options.RoutePrefix = "swagger";
+                });
             }
 
             app.UseHttpsRedirection();

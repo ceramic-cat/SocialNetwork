@@ -1,4 +1,5 @@
 ﻿using SocialNetwork.API.Models;
+using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ public interface IFollowsService
     Task<Result> FollowAsync(Guid follower, Guid followee);
     Task<Result> UnfollowAsync(Guid follower, Guid followee);
     Task<Result<Guid[]>> GetFollowsAsync(Guid follower);
+    Task<Result<bool>> IsFollowingAsync(Guid follower, Guid followee);
 }
 public class FollowService : IFollowsService
 {
@@ -57,6 +59,7 @@ public class FollowService : IFollowsService
         return Result<Guid[]>.Success(follows);
     }
 
+
     public async Task<Result> UnfollowAsync(Guid follower, Guid followee)
     {
         if (false == await _repository.ExistsAsync(follower, followee))
@@ -66,6 +69,16 @@ public class FollowService : IFollowsService
 
         await _repository.DeleteAsync(follower, followee);
         return Result.Success();
+    }
+    public async Task<Result<bool>> IsFollowingAsync(Guid follower, Guid followee)
+    {
+        if (followee == Guid.Empty) { 
+            return Result<bool>.Failure("Empty user");
+        }
+
+        var result = await _repository.ExistsAsync(follower, followee);
+
+        return Result<bool>.Success(result);
     }
 
 }
