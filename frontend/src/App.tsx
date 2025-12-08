@@ -50,6 +50,8 @@ function App() {
           <>
             <Routes>
               <Route path="/" element={<TheFeed />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/users/:id" element={<User />} />
               <Route path="/users/:id/timeline" element={<Timeline />} />
             </Routes>
 
