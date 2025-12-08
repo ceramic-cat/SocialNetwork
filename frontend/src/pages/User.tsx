@@ -21,13 +21,13 @@ export default function User() {
     <>
       {isOwnPage ? (
         <div>
-          <h1 className="text-white">Welcome back {currentUsername}</h1>
+          <h1 className="user-header">Welcome back {currentUsername}</h1>
         </div>
       ) : (
         <div>
           {isLoading ? <Spinner /> : error ? <Alert>{error}</Alert> :
             <>
-              <h1 className="text-primary">Welcome to {username}</h1>
+              <h1 className="user-header">Welcome to {username}</h1>
               <FollowButton userId={userId} />
             </>
           }
