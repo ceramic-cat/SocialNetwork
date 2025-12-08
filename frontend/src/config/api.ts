@@ -12,4 +12,8 @@ export const API = {
   USERS: {
     TIMELINE: (userId: string) => `${BASE_URL}/api/users/${userId}/timeline`,
   },
+  FOLLOW: {
+    FOLLOW: (userId: string) => `${BASE_URL}/api/Follow/${userId}`,
+    GETFOLLOWS: `${BASE_URL}/api/Follow`,
+  },
 };
