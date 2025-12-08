@@ -193,3 +193,15 @@ $enable-negative-margins: true;
   margin-bottom: 0.5rem;
   text-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
 }
+
+.link-unstyled {
+  color: #b8b8ff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #d5d5ff;
+    text-decoration: underline;
+  }
+}

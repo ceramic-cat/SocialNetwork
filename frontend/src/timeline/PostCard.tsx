@@ -1,8 +1,9 @@
 import { Button, Card } from "react-bootstrap";
 import "../../sass/_postCard.scss";
+import type { ReactNode } from "react";
 
 type PostCardProps = {
-  sender: string;
+  sender: ReactNode;
   content: string;
   timestamp: string;
   canDelete?: boolean;
