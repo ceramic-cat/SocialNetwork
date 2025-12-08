@@ -26,10 +26,10 @@ export default function User() {
       ) : (
         <div>
           {isLoading ? <Spinner /> : error ? <Alert>{error}</Alert> :
-            <>
+            <div className='user-container'>
               <h1 className="user-header">Welcome to {username}</h1>
               <FollowButton userId={userId} />
-            </>
+            </div>
           }
         </div>
       )}
