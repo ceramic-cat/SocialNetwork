@@ -146,7 +146,7 @@ public class FollowsServiceTests
             .ReturnsAsync(true);
 
         // Act
-        var result = await _sut.IsFollowing(followerId, followeeId);
+        var result = await _sut.IsFollowingAsync(followerId, followeeId);
 
         // Assert
         Assert.True(result.Data);
@@ -165,7 +165,7 @@ public class FollowsServiceTests
             .ReturnsAsync(false);
 
         // Act
-        var result = await _sut.IsFollowing(followerId, followeeId);
+        var result = await _sut.IsFollowingAsync(followerId, followeeId);
 
         // Assert
         Assert.False(result.Data);
@@ -180,7 +180,7 @@ public class FollowsServiceTests
         var followeeId = Guid.Empty;
 
         // Act
-        var result = await _sut.IsFollowing(followerId, followeeId);
+        var result = await _sut.IsFollowingAsync(followerId, followeeId);
 
         // Assert
         Assert.False(result.IsSuccess);

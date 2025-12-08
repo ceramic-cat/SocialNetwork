@@ -14,7 +14,7 @@ public interface IFollowsService
     Task<Result> FollowAsync(Guid follower, Guid followee);
     Task<Result> UnfollowAsync(Guid follower, Guid followee);
     Task<Result<Guid[]>> GetFollowsAsync(Guid follower);
-    Task<Result<bool>> IsFollowing(Guid follower, Guid followee);
+    Task<Result<bool>> IsFollowingAsync(Guid follower, Guid followee);
 }
 public class FollowService : IFollowsService
 {
@@ -70,7 +70,7 @@ public class FollowService : IFollowsService
         await _repository.DeleteAsync(follower, followee);
         return Result.Success();
     }
-    public async Task<Result<bool>> IsFollowing(Guid follower, Guid followee)
+    public async Task<Result<bool>> IsFollowingAsync(Guid follower, Guid followee)
     {
         if (followee == Guid.Empty) { 
             return Result<bool>.Failure("Empty user");

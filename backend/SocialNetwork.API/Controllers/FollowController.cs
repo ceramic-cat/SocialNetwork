@@ -8,9 +8,17 @@ using System.Security.Claims;
 
 namespace SocialNetwork.API.Controllers;
 
+public interface IFollowController
+{
+    Task<IActionResult> FollowAsync(Guid followeeId);
+    Task<IActionResult> GetFollowsAsync();
+    Task<IActionResult> IsFollowingAsync(Guid followeeId);
+    Task<IActionResult> UnfollowAsync(Guid followeeId);
+}
+
 [Route("api/[controller]")]
 [ApiController]
-public class FollowController : ControllerBase
+public class FollowController : ControllerBase, IFollowController
 {
     private readonly IFollowsService _followService;
 
@@ -20,7 +28,7 @@ public class FollowController : ControllerBase
     }
     [Authorize]
     [HttpPost(":followeeId")]
-    public async Task<IActionResult> Follow(Guid followeeId)
+    public async Task<IActionResult> FollowAsync(Guid followeeId)
     {
         var userIdClaim = User.FindFirst("UserId")?.Value;
 
@@ -42,7 +50,7 @@ public class FollowController : ControllerBase
     }
     [Authorize]
     [HttpDelete(":followeeId")]
-    public async Task<IActionResult> Unfollow(Guid followeeId)
+    public async Task<IActionResult> UnfollowAsync(Guid followeeId)
     {
         var userIdClaim = User.FindFirst("UserId")?.Value;
 
@@ -60,7 +68,7 @@ public class FollowController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetFollows()
+    public async Task<IActionResult> GetFollowsAsync()
     {
         var userIdClaim = User.FindFirst("UserId")?.Value;
 
@@ -77,5 +85,11 @@ public class FollowController : ControllerBase
         }
 
         return BadRequest(result.ErrorMessage);
+    }
+    [Authorize]
+    [HttpGet(":followeeId")]
+    public async Task<IActionResult> IsFollowingAsync(Guid followeeId)
+    {
+        throw new NotImplementedException();
     }
 }
