@@ -90,6 +90,25 @@ public class FollowController : ControllerBase, IFollowController
     [HttpGet(":followeeId")]
     public async Task<IActionResult> IsFollowingAsync(Guid followeeId)
     {
-        throw new NotImplementedException();
+        var userIdClaim = User.FindFirst("UserId")?.Value;
+
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var followerId))
+        {
+            return Unauthorized();
+        }
+
+        if (followeeId == Guid.Empty)
+        {
+            return BadRequest("Empty user");
+        }
+
+        var result = await _followService.IsFollowingAsync(followerId, followeeId);
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
+
+        return BadRequest(result.ErrorMessage);
+
     }
 }
