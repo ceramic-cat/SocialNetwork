@@ -1,72 +1,23 @@
-import { useEffect, useState } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useFeedPosts } from "../hooks/useFeedPosts";
+import { useFollowing } from "../hooks/useFollowing";
 import useCurrentUser from "../hooks/useCurrentUser";
 
-type PostDto = {
-  id: string;
-  senderId: string;
-  senderUsername: string;
-  receiverId: string;
-  content: string;
-  createdAt: string;
-};
-
 export default function TheFeed() {
-  const [posts, setPosts] = useState<PostDto[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [following, setFollowing] = useState<string[]>([]);
+  const { userId, loading: userLoading } = useCurrentUser();
 
-  const { userId, loading: userLoading, isLoggedIn } = useCurrentUser();
-
+  const {
+    posts,
+    loading,
+    error: feedError,
+  } = useFeedPosts(userId, userLoading);
+  const { following, error: followingError } = useFollowing(
+    userId,
+    userLoading
+  );
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!userId || userLoading) return;
-
-    async function fetchFeed() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`http://localhost:5148/api/thefeed/${userId}`);
-        if (res.ok) {
-          const data = await res.json();
-          setPosts(data);
-        } else {
-          setError("Failed to load feed.");
-        }
-      } catch (err) {
-        setError("Network error.");
-      }
-      setLoading(false);
-    }
-    fetchFeed();
-  }, [userId, userLoading]);
-
-  useEffect(() => {
-    if (!userId || userLoading) return;
-
-    async function fetchFollowing() {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-      try {
-        const res = await fetch("http://localhost:5148/api/follow", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setFollowing(data);
-        }
-      } catch {
-        setError("Network error.");
-      }
-    }
-    fetchFollowing();
-  }, [userId, userLoading]);
-  if (userLoading) return <div>Loading user...</div>;
-  if (!isLoggedIn) return <div></div>;
 
   return (
     <Row className="justify-content-center text-center">
@@ -78,8 +29,8 @@ export default function TheFeed() {
       <Col xs={12} md={8} lg={6} className="feed-list-container">
         {loading ? (
           <Col className="alert-info">Loading...</Col>
-        ) : error ? (
-          <Col className="alert-danger">{error}</Col>
+        ) : feedError || followingError ? (
+          <Col className="alert-danger">{feedError || followingError}</Col>
         ) : following.length === 0 ? (
           <Col className="alert-following-info">
             <div>You are not following anyone yet.</div>

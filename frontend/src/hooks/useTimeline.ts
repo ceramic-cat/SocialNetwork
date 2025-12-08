@@ -1,15 +1,6 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { API } from "../config/api";
-
-export type PostDto = {
-  id: string;
-  senderId: string;
-  senderUsername: string;
-  receiverId: string;
-  receiverUsername: string;
-  content: string;
-  createdAt: string;
-};
+import type { PostDto } from "../types/PostDto";
 
 type UseTimelineResult = {
   posts: PostDto[];
