@@ -134,6 +134,59 @@ public class FollowsServiceTests
 
     }
 
+    [Fact]
+    public async Task IsFollowing_ValidUserThatFollowsId_ReturnsTrue()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
+
+        _followRepositoryMock
+            .Setup(r => r.ExistsAsync(followerId, followeeId))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await _sut.IsFollowingAsync(followerId, followeeId);
+
+        // Assert
+        Assert.True(result.Data);
+        Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task IsFollowing_ValidUserDontFollowId_ReturnsFalse()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.NewGuid();
+
+        _followRepositoryMock
+            .Setup(r => r.ExistsAsync(followerId, followeeId))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _sut.IsFollowingAsync(followerId, followeeId);
+
+        // Assert
+        Assert.False(result.Data);
+        Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task IsFollowing_EmptyUser_ReturnsError()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followeeId = Guid.Empty;
+
+        // Act
+        var result = await _sut.IsFollowingAsync(followerId, followeeId);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Contains("Empty user", result.ErrorMessage);
+    }
+
 
 }
 
