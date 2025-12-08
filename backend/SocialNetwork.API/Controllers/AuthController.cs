@@ -81,13 +81,8 @@ namespace SocialNetwork.API.Controllers
             return Ok("Account deleted successfully.");
         }
 
-        [HttpDelete("logout")]
-        public IActionResult Logout()
-        {
-            return Ok("Logout successful.");
-        }
-        
         [HttpDelete("delete-user/{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUserById(Guid id)
         {
             var result = await _authService.DeleteAccountAsync(id);
@@ -97,5 +92,10 @@ namespace SocialNetwork.API.Controllers
             return Ok("User deleted successfully.");
         }
 
+        [HttpDelete("logout")]
+        public IActionResult Logout()
+        {
+            return Ok("Logout successful.");
+        }
     }
 }

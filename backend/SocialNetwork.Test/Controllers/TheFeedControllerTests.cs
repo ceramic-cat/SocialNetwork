@@ -1,5 +1,6 @@
 using SocialNetwork.Repository.Interfaces;
 using SocialNetwork.Entity.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SocialNetwork.Test.Controllers
 {
@@ -8,12 +9,18 @@ namespace SocialNetwork.Test.Controllers
     private readonly Mock<IFollowsService> _followsServiceMock;
     private readonly Mock<IPostRepository> _postRepositoryMock;
     private readonly TheFeedController _controller;
+    private readonly SocialNetworkDbContext _dbContext;
 
     public TheFeedControllerTests()
     {
       _followsServiceMock = new Mock<IFollowsService>();
       _postRepositoryMock = new Mock<IPostRepository>();
-      _controller = new TheFeedController(_followsServiceMock.Object, _postRepositoryMock.Object);
+      var options = new DbContextOptionsBuilder<SocialNetworkDbContext>()
+          .UseInMemoryDatabase(databaseName: "TestDb")
+          .Options;
+      _dbContext = new SocialNetworkDbContext(options);
+
+      _controller = new TheFeedController(_followsServiceMock.Object, _postRepositoryMock.Object, _dbContext);
     }
 
     [Fact]

@@ -7,6 +7,7 @@ export const API = {
     LOGIN: `${BASE_URL}/api/auth/login`,
     REGISTER: `${BASE_URL}/api/auth/register`,
     VALIDATE: `${BASE_URL}/api/auth/validate`,
+    DELETE_ACCOUNT: `${BASE_URL}/api/auth/delete-account`,
   },
   USERS: {
     TIMELINE: (userId: string) => `${BASE_URL}/api/users/${userId}/timeline`,
