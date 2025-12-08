@@ -6,6 +6,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import PostCard from "./PostCard";
 import TimelineStatus from "./TimelineStatus";
 import { useTimeline } from "../hooks/useTimeline";
+import { Link } from "react-router-dom";
 
 export default function Timeline() {
   const { id: userId } = useParams<{ id: string }>();
@@ -46,7 +47,14 @@ export default function Timeline() {
         {posts.map((post) => (
           <PostCard
             key={post.id}
-            sender={post.senderUsername}
+            sender={
+              <Link
+                className="link-unstyled"
+                to={`/users/${post.senderId}/timeline`}
+              >
+                {post.senderUsername}
+              </Link>
+            }
             content={post.content}
             timestamp={new Date(post.createdAt).toLocaleString()}
             canDelete={currentUserId === post.senderId}
