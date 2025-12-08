@@ -77,7 +77,8 @@ namespace SocialNetwork.Test.Services
         [Fact]
         public async Task LoginAsync_ReturnsToken_WhenCredentialsAreValid()
         {
-            var user = new User { Id = Guid.NewGuid(), Username = "user", Password = "Pass123!", Email = "user@example.com" };
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword("Pass123!");
+            var user = new User { Id = Guid.NewGuid(), Username = "user", Password = hashedPassword, Email = "user@example.com" };
             var users = new List<User> { user };
             var service = CreateMockedService(users);
 
@@ -136,7 +137,7 @@ namespace SocialNetwork.Test.Services
             Assert.True(result);
             Assert.Equal("updated", user.Username);
             Assert.Equal("updated@example.com", user.Email);
-            Assert.Equal("newpass", user.Password);
+            Assert.True(BCrypt.Net.BCrypt.Verify("newpass", user.Password));
         }
 
         [Fact]

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BCrypt.Net;
 
 namespace SocialNetwork.Repository.Services
 {
@@ -24,10 +25,12 @@ namespace SocialNetwork.Repository.Services
       if (await _db.Users.AnyAsync(u => u.Username == request.Username || u.Email == request.Email))
         return false;
 
+      var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
       var user = new User
       {
         Username = request.Username,
-        Password = request.Password,
+        Password = hashedPassword,
         Email = request.Email,
         Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
       };
@@ -38,8 +41,8 @@ namespace SocialNetwork.Repository.Services
 
     public async Task<string?> LoginAsync(LoginRequest request)
     {
-      var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == request.Username && u.Password == request.Password);
-      if (user == null)
+      var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+      if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
         return null;
 
       var claims = new[]
@@ -87,8 +90,8 @@ namespace SocialNetwork.Repository.Services
       if (!string.IsNullOrEmpty(request.Email))
         user.Email = request.Email;
 
-      if (!string.IsNullOrEmpty(request.Password))
-        user.Password = request.Password;
+        if (!string.IsNullOrEmpty(request.Password))
+        user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
       _db.Users.Update(user);
       await _db.SaveChangesAsync();

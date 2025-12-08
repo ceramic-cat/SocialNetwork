@@ -13,6 +13,8 @@ export const API = {
   },
   USERS: {
     TIMELINE: (userId: string) => `${BASE_URL}/api/users/${userId}/timeline`,
+    SEARCH: (query: string) =>
+      `${BASE_URL}/api/users/search?query=${encodeURIComponent(query)}`,
   },
   FOLLOW: {
     FOLLOW: (userId: string) => `${BASE_URL}/api/Follow/${userId}`,
