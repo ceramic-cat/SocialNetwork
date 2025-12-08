@@ -8,6 +8,7 @@ export interface UseCreatePostResult {
   success: string | null;
   resetStatus: () => void;
 }
+
 const BASE_URL = "http://localhost:5148";
 const ENDPOINT = `${BASE_URL}/api/posts`;
 
@@ -22,9 +23,19 @@ export function useCreatePost(): UseCreatePostResult {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("token");
+
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const response = await fetch(ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(payload),
       });
 

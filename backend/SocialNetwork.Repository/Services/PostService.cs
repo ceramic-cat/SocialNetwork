@@ -1,4 +1,5 @@
-﻿using SocialNetwork.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialNetwork.Entity;
 using SocialNetwork.Entity.Models;
 using System;
 using System.Threading.Tasks;
@@ -10,13 +11,18 @@ namespace SocialNetwork.Repository.Services
         public bool Success { get; private set; }
         public string? ErrorMessage { get; private set; }
 
+        private PostResult(bool success, string? errorMessage = null)
+        {
+            Success = success;
+            ErrorMessage = errorMessage;
+        }
+
         public static PostResult Fail(string message)
-            => new PostResult { Success = false, ErrorMessage = message };
+            => new PostResult(false, message);
 
         public static PostResult Ok()
-            => new PostResult { Success = true };
+            => new PostResult(true);
     }
-
     public class PostService : IPostService
     {
         private readonly SocialNetworkDbContext _db;
@@ -29,6 +35,15 @@ namespace SocialNetwork.Repository.Services
 
         public async Task<PostResult> CreatePostAsync(Guid senderId, Guid receiverId, string content)
         {
+            if (senderId == Guid.Empty)
+            {
+                return PostResult.Fail("SenderId cannot be empty.");
+            }
+            if (receiverId == Guid.Empty)
+            {
+                return PostResult.Fail("ReceiverId cannot be empty.");
+            }
+
             if (string.IsNullOrWhiteSpace(content))
             {
                 return PostResult.Fail("Content cannot be empty.");
@@ -37,6 +52,18 @@ namespace SocialNetwork.Repository.Services
             if (content.Length > MaxContentLength)
             {
                 return PostResult.Fail($"Content cannot be longer than {MaxContentLength} characters.");
+            }
+
+            var senderExists = await _db.Users.AnyAsync(u => u.Id == senderId);
+            if (!senderExists)
+            {
+                return PostResult.Fail("Sender does not exist.");
+            }
+
+            var receiverExists = await _db.Users.AnyAsync(u => u.Id == receiverId);
+            if (!receiverExists)
+            {
+                return PostResult.Fail("Receiver does not exist.");
             }
 
             var post = new Post
