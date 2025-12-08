@@ -8,6 +8,8 @@ export const API = {
     REGISTER: `${BASE_URL}/api/auth/register`,
     VALIDATE: `${BASE_URL}/api/auth/validate`,
     DELETE_ACCOUNT: `${BASE_URL}/api/auth/delete-account`,
+    GET_USERNAME: (userId: string) =>
+      `${BASE_URL}/api/auth/get-username/${userId}`,
   },
   USERS: {
     TIMELINE: (userId: string) => `${BASE_URL}/api/users/${userId}/timeline`,

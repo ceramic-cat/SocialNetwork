@@ -1,5 +1,5 @@
 import { Button, Spinner } from 'react-bootstrap';
-import { useFollow } from '../hooks/useIsFollowing';
+import { useFollow } from '../hooks/useFollow';
 
 interface FollowButtonProps {
   userId: string;
