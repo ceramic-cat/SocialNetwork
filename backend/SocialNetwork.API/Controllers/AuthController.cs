@@ -98,11 +98,22 @@ namespace SocialNetwork.API.Controllers
             return Ok("Logout successful.");
         }
 
+        /// <summary>
+        /// Get username that belongs to a user id.
+        /// </summary>
+        /// <param name="id">Guid for user</param>
+        /// <returns></returns>
         [HttpGet("get-username/{id}")]
         [Authorize]
         public async Task<IActionResult> GetUsernameById(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _authService.GetUsernameAsync(id);
+            if (result is null)
+            {
+                return NotFound("User not found.");
+            }
+            return Ok(result);
+
         }
     }
 }
