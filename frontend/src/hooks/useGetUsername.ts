@@ -21,12 +21,11 @@ export default function useGetUsername(userId: string | undefined) {
             "Content-Type": "application/json",
           },
         });
-
         if (!result.ok) {
           throw new Error("Failed to load username");
         }
-        const data: string = await result.json();
-        setUsername(data);
+        const data = await result.json();
+        setUsername(data.username);
       } catch (error) {
         setError("Unable to load username");
       } finally {

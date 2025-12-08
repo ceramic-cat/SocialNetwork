@@ -102,7 +102,7 @@ namespace SocialNetwork.API.Controllers
         /// Get username that belongs to a user id.
         /// </summary>
         /// <param name="id">Guid for user</param>
-        /// <returns></returns>
+        /// <returns>returns json with username</returns>
         [HttpGet("get-username/{id}")]
         [Authorize]
         public async Task<IActionResult> GetUsernameById(Guid id)
@@ -112,7 +112,7 @@ namespace SocialNetwork.API.Controllers
             {
                 return NotFound("User not found.");
             }
-            return Ok(result);
+            return Ok(new {username = result});
 
         }
     }

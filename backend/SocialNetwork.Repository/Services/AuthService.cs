@@ -99,7 +99,7 @@ namespace SocialNetwork.Repository.Services
         {
             return await _db.Users
                 .Where(u => u.Id == userId)
-                .Select(u=> u.Username)
+                .Select(u => u.Username)
                 .FirstOrDefaultAsync();
         }
     }

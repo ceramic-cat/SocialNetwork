@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Entity.Models;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 
 namespace SocialNetwork.Test.Controllers
 {
@@ -217,7 +218,9 @@ namespace SocialNetwork.Test.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal("testuser", okResult.Value);
+            var value = okResult.Value;
+            var username = value?.GetType().GetProperty("username")?.GetValue(value);
+            Assert.Equal("testuser", username);
         }
     }
 }
