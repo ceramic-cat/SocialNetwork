@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import useCurrentUser from "../hooks/useCurrentUser";
+import { Link } from "react-router-dom";
 
 type PostDto = {
   id: string;
@@ -64,7 +65,12 @@ export default function TheFeed() {
                 <Row>
                   <Col xs={12} md={10}>
                     <Col className="sender-name mb-2">
-                      {post.senderUsername}
+                      <Link
+                        className="link-unstyled"
+                        to={`/users/${post.senderId}/timeline`}
+                      >
+                        {post.senderUsername}
+                      </Link>
                     </Col>
                     <Col className="post-content mb-2 ">{post.content}</Col>
                     <Col className="post-date mt-2">
