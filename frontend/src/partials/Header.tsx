@@ -35,6 +35,11 @@ export default function Header({
 
           {isLoggedIn && (
             <Nav className="app-header-nav">
+              <Nav.Link as={Link} to="/search" className="app-header-link">
+                <i className="bi bi-search"></i>
+                <span className="d-none d-md-inline ms-1">Search</span>
+              </Nav.Link>
+
               <Nav.Link className="app-header-link" onClick={onCreatePost}>
                 <i className="bi bi-pencil" />
                 <span className="d-none d-md-inline ms-1">Post</span>

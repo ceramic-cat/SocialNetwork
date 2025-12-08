@@ -50,6 +50,9 @@ namespace SocialNetwork.API
             builder.Services.AddScoped<ITimelineService, TimelineService>();
             builder.Services.AddScoped<IPostRepository, PostRepository>();
             builder.Services.AddScoped<IDirectMessageService, DirectMessageService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
 
             builder.Services.AddDbContext<SocialNetworkDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
