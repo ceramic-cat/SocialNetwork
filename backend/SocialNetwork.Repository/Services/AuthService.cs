@@ -95,6 +95,12 @@ namespace SocialNetwork.Repository.Services
       return true;
     }
 
-        public Task<string?> GetUsernameAsync(Guid userId) => throw new NotImplementedException();
+        public async Task<string?> GetUsernameAsync(Guid userId)
+        {
+            return await _db.Users
+                .Where(u => u.Id == userId)
+                .Select(u=> u.Username)
+                .FirstOrDefaultAsync();
+        }
     }
 }
