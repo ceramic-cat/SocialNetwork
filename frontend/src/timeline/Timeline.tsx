@@ -1,60 +1,23 @@
 import type { ReactNode } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import PostCard from "./PostCard";
-import TimelineStatus from "./TimelineStatus";
 import { useParams } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
 import { useDeletePost } from "../hooks/useDeletePost";
 import useCurrentUser from "../hooks/useCurrentUser";
-import { API } from "../config/api";
-
-type PostDto = {
-  id: string;
-  senderId: string;
-  recieverId: string;
-  content: string;
-  createdAt: string;
-};
+import PostCard from "./PostCard";
+import TimelineStatus from "./TimelineStatus";
+import { useTimeline } from "../hooks/useTimeline";
 
 export default function Timeline() {
   const { id: userId } = useParams<{ id: string }>();
-
-  const [posts, setPosts] = useState<PostDto[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+  const { posts, isLoading, error, setPosts } = useTimeline(userId);
   const { userId: currentUserId } = useCurrentUser();
   const { deletePost, loading: deleting, error: deleteError } = useDeletePost();
 
-  useEffect(() => {
-    if (!userId) {
-      setError("No user id provided.");
-      setIsLoading(false);
-      return;
-    }
+  const timelineOwnerName =
+    posts.length > 0 && posts[0].receiverUsername
+      ? posts[0].receiverUsername
+      : "Timeline";
 
-    setIsLoading(true);
-    setError(null);
-
-    fetch(API.USERS.TIMELINE(userId))
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to load timeline");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setPosts(data);
-      })
-      .catch(() => {
-        setError("Could not load timeline.");
-        setPosts([]);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [userId]);
   let content: ReactNode;
 
   async function handleDelete(postId: string) {
@@ -83,7 +46,7 @@ export default function Timeline() {
         {posts.map((post) => (
           <PostCard
             key={post.id}
-            sender={post.senderId}
+            sender={post.senderUsername}
             content={post.content}
             timestamp={new Date(post.createdAt).toLocaleString()}
             canDelete={currentUserId === post.senderId}
@@ -101,7 +64,11 @@ export default function Timeline() {
           {deleteError && (
             <div className="text-danger mb-2 small">{deleteError}</div>
           )}
-          <h2 className="feed-title">{userId} Timeline</h2>
+          <h2 className="feed-title">
+            {posts.length === 0
+              ? "Empty Timeline"
+              : `${timelineOwnerName}'s Timeline`}
+          </h2>
         </div>
       </Col>
       <Col xs={12} md={8} lg={6} className="feed-list-container">

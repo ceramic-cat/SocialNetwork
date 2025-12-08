@@ -19,6 +19,13 @@
     line-height: 1.5;
   }
 
+  .post-footer {
+    margin-top: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .sender {
     color: #b8b8ff;
     font-weight: 600;
