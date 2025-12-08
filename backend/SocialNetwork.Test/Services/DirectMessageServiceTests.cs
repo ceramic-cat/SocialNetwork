@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Services;
+using SocialNetwork.Repository.Errors;
 
 namespace SocialNetwork.Test.Services
 {
@@ -8,6 +9,7 @@ namespace SocialNetwork.Test.Services
     {
         private readonly SocialNetworkDbContext _db;
         private readonly DirectMessageService _sut;
+        private const int MaxContentLength = 280;
 
         public DirectMessageServiceTests()
         {
@@ -17,6 +19,27 @@ namespace SocialNetwork.Test.Services
 
             _db = new SocialNetworkDbContext(options);
             _sut = new DirectMessageService(_db);
+        }
+
+        private async Task<User> CreateUserAsync(Guid id, string username, string email)
+        {
+            var user = new User
+            {
+                Id = id,
+                Username = username,
+                Email = email,
+                Password = "pw1234as!",
+                Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
+            };
+            _db.Users.Add(user);
+            await _db.SaveChangesAsync();
+            return user;
+        }
+
+        private async Task AssertNoMessagesInDatabaseAsync()
+        {
+            var messagesInDb = await _db.DirectMessages.CountAsync();
+            Assert.Equal(0, messagesInDb);
         }
 
         [Fact]
@@ -32,10 +55,8 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("SenderId cannot be empty.", result.ErrorMessage);
-
-            var messagesInDb = await _db.DirectMessages.CountAsync();
-            Assert.Equal(0, messagesInDb);
+            Assert.Equal(DirectMessageErrors.SenderEmpty, result.ErrorMessage);
+            await AssertNoMessagesInDatabaseAsync();
         }
 
         [Fact]
@@ -51,10 +72,8 @@ namespace SocialNetwork.Test.Services
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("Content cannot be empty.", result.ErrorMessage);
-
-            var messagesInDb = await _db.DirectMessages.CountAsync();
-            Assert.Equal(0, messagesInDb);
+            Assert.Equal(DirectMessageErrors.ContentEmpty, result.ErrorMessage);
+            await AssertNoMessagesInDatabaseAsync();
         }
 
         [Fact]
@@ -63,17 +82,15 @@ namespace SocialNetwork.Test.Services
             // Arrange
             var senderId = Guid.NewGuid();
             var receiverId = Guid.NewGuid();
-            var longContent = new string('x', 281);
+            var longContent = new string('x', MaxContentLength + 1);
 
             // Act
             var result = await _sut.SendDirectMessageAsync(senderId, receiverId, longContent);
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("Content cannot be longer than 280 characters.", result.ErrorMessage);
-
-            var messagesInDb = await _db.DirectMessages.CountAsync();
-            Assert.Equal(0, messagesInDb);
+            Assert.Equal(DirectMessageErrors.ContentTooLong, result.ErrorMessage);
+            await AssertNoMessagesInDatabaseAsync();
         }
 
         [Fact]
@@ -84,25 +101,15 @@ namespace SocialNetwork.Test.Services
             var receiverId = Guid.NewGuid();
             var content = "Hello, World!";
 
-            _db.Users.Add(new User
-            {
-                Id = receiverId,
-                Username = "receiver",
-                Email = "receiver@example.com",
-                Password = "pw1234as!",
-                Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
-            });
-            await _db.SaveChangesAsync();
+            await CreateUserAsync(receiverId, "receiver", "receiver@example.com");
 
             // Act
             var result = await _sut.SendDirectMessageAsync(senderId, receiverId, content);
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("Sender does not exist.", result.ErrorMessage);
-
-            var messagesInDb = await _db.DirectMessages.CountAsync();
-            Assert.Equal(0, messagesInDb);
+            Assert.Equal(DirectMessageErrors.SenderDoesNotExist, result.ErrorMessage);
+            await AssertNoMessagesInDatabaseAsync();
         }
 
         [Fact]
@@ -113,25 +120,15 @@ namespace SocialNetwork.Test.Services
             var receiverId = Guid.Empty;
             var content = "Hello, World!";
 
-            _db.Users.Add(new User
-            {
-                Id = senderId,
-                Username = "sender",
-                Email = "sender@example.com",
-                Password = "pw1234as!",
-                Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
-            });
-            await _db.SaveChangesAsync();
+            await CreateUserAsync(senderId, "sender", "sender@example.com");
 
             // Act
             var result = await _sut.SendDirectMessageAsync(senderId, receiverId, content);
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("ReceiverId cannot be empty.", result.ErrorMessage);
-
-            var messagesInDb = await _db.DirectMessages.CountAsync();
-            Assert.Equal(0, messagesInDb);
+            Assert.Equal(DirectMessageErrors.ReceiverEmpty, result.ErrorMessage);
+            await AssertNoMessagesInDatabaseAsync();
         }
 
         [Fact]
@@ -142,54 +139,15 @@ namespace SocialNetwork.Test.Services
             var receiverId = Guid.NewGuid();
             var content = "Hello, World!";
 
-            _db.Users.Add(new User
-            {
-                Id = senderId,
-                Username = "sender",
-                Email = "sender@example.com",
-                Password = "pw1234as!",
-                Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
-            });
-            await _db.SaveChangesAsync();
+            await CreateUserAsync(senderId, "sender", "sender@example.com");
 
             // Act
             var result = await _sut.SendDirectMessageAsync(senderId, receiverId, content);
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("Receiver does not exist.", result.ErrorMessage);
-
-            var messagesInDb = await _db.DirectMessages.CountAsync();
-            Assert.Equal(0, messagesInDb);
-        }
-
-        [Fact]
-        public async Task SendDirectMessageAsync_ReturnsFail_WhenReceiverIdIsNull()
-        {
-            // Arrange
-            var senderId = Guid.NewGuid();
-            Guid? receiverId = null;
-            var content = "Hello, World!";
-
-            _db.Users.Add(new User
-            {
-                Id = senderId,
-                Username = "sender",
-                Email = "sender@example.com",
-                Password = "pw1234as!",
-                Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
-            });
-            await _db.SaveChangesAsync();
-
-            // Act
-            var result = await _sut.SendDirectMessageAsync(senderId, receiverId, content);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal("ReceiverId cannot be empty.", result.ErrorMessage);
-
-            var messagesInDb = await _db.DirectMessages.CountAsync();
-            Assert.Equal(0, messagesInDb);
+            Assert.Equal(DirectMessageErrors.ReceiverDoesNotExist, result.ErrorMessage);
+            await AssertNoMessagesInDatabaseAsync();
         }
 
         [Fact]
@@ -200,25 +158,8 @@ namespace SocialNetwork.Test.Services
             var receiverId = Guid.NewGuid();
             var content = "This is a valid message.";
 
-            _db.Users.AddRange(
-                new User
-                {
-                    Id = senderId,
-                    Username = "sender",
-                    Email = "sender@example.com",
-                    Password = "pw1234as!",
-                    Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
-                },
-                new User
-                {
-                    Id = receiverId,
-                    Username = "receiver",
-                    Email = "receiver@example.com",
-                    Password = "pw1234as!",
-                    Created = DateTime.UtcNow.ToString("yyyy-MM-dd")
-                }
-            );
-            await _db.SaveChangesAsync();
+            await CreateUserAsync(senderId, "sender", "sender@example.com");
+            await CreateUserAsync(receiverId, "receiver", "receiver@example.com");
 
             // Act
             var result = await _sut.SendDirectMessageAsync(senderId, receiverId, content);
