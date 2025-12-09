@@ -16,13 +16,19 @@ export function useTimeline(userId: string | undefined): UseTimelineResult {
 
   useEffect(() => {
     if (!userId) return;
+    const token = localStorage.getItem("token");
 
     const loadTimeline = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        const res = await fetch(API.USERS.TIMELINE(userId));
+        const res = await fetch(API.USERS.TIMELINE(userId), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!res.ok) {
           throw new Error("Failed to load timeline");
