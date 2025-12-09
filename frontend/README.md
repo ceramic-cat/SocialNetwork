@@ -1,73 +1,86 @@
-# React + TypeScript + Vite
+# MySpace– README
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A compact overview of the Social Network application built with **ASP.NET Core**, **Entity Framework Core**, and **React**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Architecture
 
-## React Compiler
+The backend is structured using a clean layered design:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Controllers** → Handle HTTP requests and return responses.
+- **Services** → Contain business logic and validation.
+- **Repositories** → Access the database using EF Core.
+- **Error Classes** → Centralize error messages for consistency.
+- **Entity**
+- **Frontend (React)** → Communicates with the API via fetch. Styling with bootstrap and sass.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### **Authentication**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- JWT-based login & registration
+- Profile editing
+- Account deletion
+- Secure password hashing using BCrypt
+- Token validation endpoint
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Features
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- User registration & login (JWT-based)
+- Create and delete posts
+- User timelines with sender usernames
+- Follow / Unfollow system
+- Username search (case-insensitive)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Testing
+
+## Code coverage:
+
+- **Repository tests**
+- **Service tests**
+- **Controller tests**
+
+---
+
+## Clean Code
+
+- The architecture is structured with clear separation of concerns (controllers → services → repositories), making the system easier to navigate and extend.
+
+- Reusable error constants eliminate magic strings and ensure consistent error handling across the API.
+
+- Meaningful naming and small, focused methods improve readability and reduce cognitive load.
+
+- Independent layers and low coupling make the application easier to test and maintain as it expands.
+
+## Running the Project
+
+### Backend
+
+dotnet run
+
+### Frontend
+
+npm install
+npm run dev
+
+---
+
+## Known Limitations
+
+- No brute-force protection or rate limiting
+- No refresh tokens
+- No pagination in timeline or search results
+- No tests in frontend
+- No cashning or SignalR
+- Some pages requires manual refresh
+
+---
+
+## Summary
+
+This project demonstrates clean architecture, clear separation of concerns, reusable error handling, and a fully tested API connected to a React frontend designed with a galactic theme.
