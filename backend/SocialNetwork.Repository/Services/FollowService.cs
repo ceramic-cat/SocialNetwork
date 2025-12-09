@@ -15,6 +15,7 @@ public interface IFollowsService
     Task<Result> UnfollowAsync(Guid follower, Guid followee);
     Task<Result<Guid[]>> GetFollowsAsync(Guid follower);
     Task<Result<bool>> IsFollowingAsync(Guid follower, Guid followee);
+    Task<Result<FollowedUserDto[]>> GetFollowsWithUserInfoAsync(Guid follower);
 }
 public class FollowService : IFollowsService
 {
@@ -81,5 +82,6 @@ public class FollowService : IFollowsService
         return Result<bool>.Success(result);
     }
 
+    public Task<Result<FollowedUserDto[]>> GetFollowsWithUserInfoAsync(Guid follower) => throw new NotImplementedException();
 }
 
