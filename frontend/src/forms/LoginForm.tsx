@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
 import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -14,6 +15,7 @@ export default function LoginForm({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login, loading, error, resetError } = useAuth();
+  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -22,6 +24,7 @@ export default function LoginForm({
     const success = await login({ username, password });
     if (success) {
       onSuccess();
+      navigate("/");
     }
   }
 
