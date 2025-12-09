@@ -31,12 +31,12 @@ export default function SearchPage() {
       />
 
       {loading && (
-        <div className="mt-3">
+        <div className="mt-3 text-center">
           <Spinner animation="border" size="sm" /> Searching...
         </div>
       )}
 
-      {error && <div className="text-danger mt-3">{error}</div>}
+      {error && <div className="text-danger mt-3 text-center">{error}</div>}
 
       <ListGroup className="mt-3">
         {results.map((u) => (
@@ -51,7 +51,7 @@ export default function SearchPage() {
         ))}
 
         {!loading && results.length === 0 && query.length >= 2 && (
-          <div className="text-muted mt-3">No users found.</div>
+          <div className="text-muted mt-3 text-center">No users found.</div>
         )}
       </ListGroup>
     </div>
