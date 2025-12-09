@@ -8,5 +8,6 @@ namespace SocialNetwork.Repository.Services
         Task<string?> LoginAsync(LoginRequest request);
         Task<bool> DeleteAccountAsync(Guid userId);
         Task<bool> EditProfileAsync(Guid userId, EditProfileRequest request);
+        Task<string?> GetUsernameAsync(Guid userId);
     }
 }

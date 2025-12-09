@@ -34,7 +34,7 @@ public class FollowController : ControllerBase, IFollowController
     /// </summary>
     /// <param name="followeeId">User guid to follow</param>
     [Authorize]
-    [HttpPost(":followeeId")]
+    [HttpPost("{followeeId}")]
     public async Task<IActionResult> FollowAsync(Guid followeeId)
     {
         var userIdClaim = User.FindFirst("UserId")?.Value;
@@ -60,7 +60,7 @@ public class FollowController : ControllerBase, IFollowController
     /// </summary>
     /// <param name="followeeId">User guid to unfollow</param>
     [Authorize]
-    [HttpDelete(":followeeId")]
+    [HttpDelete("{followeeId}")]
     public async Task<IActionResult> UnfollowAsync(Guid followeeId)
     {
         var userIdClaim = User.FindFirst("UserId")?.Value;
@@ -107,7 +107,7 @@ public class FollowController : ControllerBase, IFollowController
     /// <param name="followeeId">User id to check if logged in user follows.</param>
     /// <returns>Returns boolean</returns>
     [Authorize]
-    [HttpGet(":followeeId")]
+    [HttpGet("{followeeId}")]
     public async Task<IActionResult> IsFollowingAsync(Guid followeeId)
     {
         var userIdClaim = User.FindFirst("UserId")?.Value;

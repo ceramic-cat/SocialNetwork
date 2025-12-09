@@ -52,7 +52,7 @@ export default function Header({
 
               <Nav.Link
                 as={Link}
-                to={userId ? `/users/${userId}/timeline` : "#"}
+                to={userId ? `/users/${userId}` : "#"}
                 className="app-header-link"
               >
                 <i className="bi bi-person" />

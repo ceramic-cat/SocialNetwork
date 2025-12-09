@@ -50,7 +50,7 @@ export default function Timeline() {
             sender={
               <Link
                 className="link-unstyled"
-                to={`/users/${post.senderId}/timeline`}
+                to={`/users/${post.senderId}`}
               >
                 {post.senderUsername}
               </Link>
