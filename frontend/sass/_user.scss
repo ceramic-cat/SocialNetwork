@@ -8,6 +8,93 @@
   margin-bottom: 1.5rem;
   margin-top: 5rem;
   text-align: center;
-  background-color: #23234a;
   padding: 1rem;
+}
+
+.accordion-user .accordion-item {
+  background: linear-gradient(135deg, #2a2a3d 0%, #3e1d4b 50%, #7373ff 100%);
+  border: 1px solid #8a4dc7;
+  box-shadow: 0 0 12px rgba(138, 77, 199, 0.5);
+  margin-bottom: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.accordion-user .accordion-button {
+  background: linear-gradient(135deg, #363650 0%, #5b2ca7 100%);
+  color: #e0d4f7;
+  font-weight: 500;
+}
+
+.accordion-user .accordion-button:not(.collapsed) {
+  background: linear-gradient(175deg, #363650 0%, #5b2ca7 100%);
+  color: #ffffff;
+  box-shadow: inset 0 -1px 0 rgba(138, 77, 199, 0.4);
+}
+
+.accordion-user .accordion-button:focus {
+  border-color: #9b5dca;
+  box-shadow: 0 0 0 0.25rem rgba(138, 77, 199, 0.35);
+}
+
+.accordion-user .accordion-button::after {
+  filter: brightness(0) invert(1);
+}
+
+.accordion-user .accordion-body {
+  background: linear-gradient(180deg, #28283d 0%, #1f1f30 100%);
+  color: #d4c8eb;
+}
+
+.accordion-user .accordion-item:hover {
+  box-shadow: 0 0 20px rgba(138, 77, 199, 0.7), 0 0 30px rgba(100, 60, 180, 0.3);
+}
+/* ListGroup Links */
+.accordion-user .list-group {
+  background: transparent;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.accordion-user .list-group-item {
+  background-color: #363650;
+  border: 1px solid rgba(91, 44, 167, 0.4);
+  color: #e0d4f7;
+  transition: all 0.2s ease;
+}
+
+.accordion-user .list-group-item-action {
+  cursor: pointer;
+}
+
+.accordion-user .list-group-item-action:hover {
+  background-color: #5b2ca7;
+  color: #ffffff;
+  transform: translateX(4px);
+  box-shadow: 0 0 12px rgba(91, 44, 167, 0.6);
+}
+
+.accordion-user .list-group-item-action:focus {
+  background-color: #5b2ca7;
+  color: #ffffff;
+  box-shadow: 0 0 0 0.2rem rgba(91, 44, 167, 0.5);
+}
+
+.accordion-user .list-group-item-action:active {
+  background-color: #4a2490;
+  color: #ffffff;
+}
+
+/* Subtle indicator that items are clickable */
+.accordion-user .list-group-item-action::after {
+  content: "→";
+  float: right;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.accordion-user .list-group-item-action:hover::after {
+  opacity: 1;
+  transform: translateX(4px);
 }

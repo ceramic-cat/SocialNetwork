@@ -15,7 +15,7 @@ export default function SearchPage() {
   }
 
   function goToProfile(id: string) {
-    navigate(`/users/${id}/timeline`);
+    navigate(`/users/${id}`);
   }
 
   return (
