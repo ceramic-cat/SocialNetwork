@@ -67,4 +67,16 @@ public class FollowRepository : IFollowRepository
             )
             .ToArrayAsync();
     }
+    public async Task<FollowerUserDto[]> GetFollowersWithUserInfoAsync(Guid followeeId)
+    {
+        return await _db.Follows
+            .Where(f => f.FolloweeId == followeeId)
+            .Join(
+                _db.Users,
+                f => f.FollowerId,
+                u => u.Id,
+                (f, u) => new FollowerUserDto { Id = u.Id, Username = u.Username }
+            )
+            .ToArrayAsync();
+    }
 }
