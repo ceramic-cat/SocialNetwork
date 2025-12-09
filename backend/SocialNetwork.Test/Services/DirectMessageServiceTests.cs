@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Entity.Models;
+using SocialNetwork.Repository.Repositories;
 using SocialNetwork.Repository.Services;
 using SocialNetwork.Repository.Errors;
 
@@ -18,7 +19,8 @@ namespace SocialNetwork.Test.Services
                    .Options;
 
             _db = new SocialNetworkDbContext(options);
-            _sut = new DirectMessageService(_db);
+            var directMessageRepository = new DirectMessageRepository(_db);
+            _sut = new DirectMessageService(_db, directMessageRepository);
         }
 
         private async Task<User> CreateUserAsync(Guid id, string username, string email)

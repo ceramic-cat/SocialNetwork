@@ -19,7 +19,7 @@ export default function EditProfileForm({ onSuccess }: EditProfileFormProps) {
     useEditProfile(() => {
       setEditingField(null);
       setPassword("");
-      if (onSuccess) onSuccess();
+      if (!error && success && onSuccess) onSuccess();
     });
 
   async function handleSubmit(e?: React.FormEvent) {

@@ -15,6 +15,11 @@ public interface IFollowsService
     Task<Result> UnfollowAsync(Guid follower, Guid followee);
     Task<Result<Guid[]>> GetFollowsAsync(Guid follower);
     Task<Result<bool>> IsFollowingAsync(Guid follower, Guid followee);
+    Task<Result<FollowedUserDto[]>> GetFollowsWithUserInfoAsync(Guid follower);
+    Task<Result<FollowerUserDto[]>> GetFollowersWithUserInfoAsync(Guid follower);
+    Task<int> GetFollowersCountAsync(Guid userId);
+    Task<int> GetFollowingCountAsync(Guid userId);
+
 }
 public class FollowService : IFollowsService
 {
@@ -81,5 +86,36 @@ public class FollowService : IFollowsService
         return Result<bool>.Success(result);
     }
 
+    public async Task<Result<FollowedUserDto[]>> GetFollowsWithUserInfoAsync(Guid follower)
+    {
+        if (follower == Guid.Empty)
+        {
+            return Result<FollowedUserDto[]>.Failure("Empty user");
+        }
+
+        var follows = await _repository.GetFollowsWithUserInfoAsync(follower);
+        return Result<FollowedUserDto[]>.Success(follows);
+    }
+
+    public async Task<Result<FollowerUserDto[]>> GetFollowersWithUserInfoAsync(Guid followee)
+    {
+        if (followee == Guid.Empty)
+        {
+            return Result<FollowerUserDto[]>.Failure("Empty user");
+        }
+
+        var followers = await _repository.GetFollowersWithUserInfoAsync(followee);
+        return Result<FollowerUserDto[]>.Success(followers);
+    }
+    public async Task<int> GetFollowersCountAsync(Guid userId)
+    {
+        var followers = await _repository.GetFollowersWithUserInfoAsync(userId);
+        return followers.Length;
+    }
+    public async Task<int> GetFollowingCountAsync(Guid userId)
+    {
+        var following = await _repository.GetFollowsWithUserInfoAsync(userId);
+        return following.Length;
+    }
 }
 

@@ -187,6 +187,117 @@ public class FollowsServiceTests
         Assert.Contains("Empty user", result.ErrorMessage);
     }
 
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_ValidUser_ReturnsSuccess()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followedUsers = new[]
+        {
+        new FollowedUserDto { Id = Guid.NewGuid(), Username = "alice" },
+        new FollowedUserDto { Id = Guid.NewGuid(), Username = "bob" }
+    };
+
+        _followRepositoryMock
+            .Setup(r => r.GetFollowsWithUserInfoAsync(followerId))
+            .ReturnsAsync(followedUsers);
+
+        // Act
+        var result = await _sut.GetFollowsWithUserInfoAsync(followerId);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Data.Length);
+    }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_ValidUser_ReturnsCorrectUsernames()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+        var followedUsers = new[]
+        {
+        new FollowedUserDto { Id = Guid.NewGuid(), Username = "alice" },
+        new FollowedUserDto { Id = Guid.NewGuid(), Username = "bob" }
+    };
+
+        _followRepositoryMock
+            .Setup(r => r.GetFollowsWithUserInfoAsync(followerId))
+            .ReturnsAsync(followedUsers);
+
+        // Act
+        var result = await _sut.GetFollowsWithUserInfoAsync(followerId);
+
+        // Assert
+        Assert.Contains(result.Data, u => u.Username == "alice");
+        Assert.Contains(result.Data, u => u.Username == "bob");
+    }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_EmptyGuid_ReturnsFailure()
+    {
+        // Arrange
+        var followerId = Guid.Empty;
+
+        // Act
+        var result = await _sut.GetFollowsWithUserInfoAsync(followerId);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Contains("Empty", result.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_EmptyGuid_DoesNotCallRepository()
+    {
+        // Arrange
+        var followerId = Guid.Empty;
+
+        // Act
+        await _sut.GetFollowsWithUserInfoAsync(followerId);
+
+        // Assert
+        _followRepositoryMock.Verify(
+            r => r.GetFollowsWithUserInfoAsync(It.IsAny<Guid>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_UserFollowsNobody_ReturnsEmptyArraySuccess()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+
+        _followRepositoryMock
+            .Setup(r => r.GetFollowsWithUserInfoAsync(followerId))
+            .ReturnsAsync(Array.Empty<FollowedUserDto>());
+
+        // Act
+        var result = await _sut.GetFollowsWithUserInfoAsync(followerId);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Data);
+    }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_CallsRepositoryWithCorrectId()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+
+        _followRepositoryMock
+            .Setup(r => r.GetFollowsWithUserInfoAsync(followerId))
+            .ReturnsAsync(Array.Empty<FollowedUserDto>());
+
+        // Act
+        await _sut.GetFollowsWithUserInfoAsync(followerId);
+
+        // Assert
+        _followRepositoryMock.Verify(
+            r => r.GetFollowsWithUserInfoAsync(followerId),
+            Times.Once);
+    }
 
 }
 

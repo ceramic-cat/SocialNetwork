@@ -156,4 +156,89 @@ public class FollowRepositoryTests : IDisposable
         Assert.Contains(followee1, result);
         Assert.DoesNotContain(followee2, result);
     }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_ReturnsUserIdsAndUsernames()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+
+        var alice = new User {Id = Guid.NewGuid(), Username = "alice", Email = "", Created = "", Password = "" };
+        var bob = new User {Id = Guid.NewGuid(), Username = "bob", Email = "", Created = "", Password = "" };
+
+        _db.Users.AddRange(alice, bob);
+        _db.Follows.AddRange(
+            new Follow { FollowerId = followerId, FolloweeId = alice.Id },
+            new Follow { FollowerId = followerId, FolloweeId = bob.Id }
+        );
+        await _db.SaveChangesAsync();
+
+        // Act
+        var result = await _repository.GetFollowsWithUserInfoAsync(followerId);
+
+        // Assert
+        Assert.Equal(2, result.Length);
+        Assert.Contains(result, r => r.Id == alice.Id && r.Username == "alice");
+        Assert.Contains(result, r => r.Id == bob.Id && r.Username == "bob");
+    }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_WhenUserFollowsNobody_ReturnsEmptyArray()
+    {
+        // Arrange
+        var followerId = Guid.NewGuid();
+
+        // Act
+        var result = await _repository.GetFollowsWithUserInfoAsync(followerId);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_OnlyReturnsFolloweesForSpecifiedUser()
+    {
+        // Arrange
+        var user1 = Guid.NewGuid();
+        var user2 = Guid.NewGuid();
+
+        var alice = new User { Id = Guid.NewGuid(), Username = "alice" , Email = "", Created="", Password=""};
+        var bob = new User { Id = Guid.NewGuid(), Username = "bob", Email = "", Created = "", Password = "" };
+
+        _db.Users.AddRange(alice, bob);
+        _db.Follows.AddRange(
+            new Follow { FollowerId = user1, FolloweeId = alice.Id },
+            new Follow { FollowerId = user2, FolloweeId = bob.Id }
+        );
+        await _db.SaveChangesAsync();
+
+        // Act
+        var result = await _repository.GetFollowsWithUserInfoAsync(user1);
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal("alice", result[0].Username);
+        Assert.DoesNotContain(result, r => r.Username == "bob");
+    }
+
+    [Fact]
+    public async Task GetFollowsWithUserInfoAsync_DoesNotIncludeFollower()
+    {
+        // Arrange
+        var follower = new User {Id = Guid.NewGuid(), Username = "follower", Email = "", Created = "", Password = "" };
+        var followee = new User {Id = Guid.NewGuid(), Username = "followee", Email = "", Created = "", Password = "" };
+
+        _db.Users.AddRange(follower, followee);
+        _db.Follows.Add(new Follow { FollowerId = follower.Id, FolloweeId = followee.Id });
+        await _db.SaveChangesAsync();
+
+        // Act
+        var result = await _repository.GetFollowsWithUserInfoAsync(follower.Id);
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal("followee", result[0].Username);
+        Assert.DoesNotContain(result, r => r.Username == "follower");
+    }
+
 }

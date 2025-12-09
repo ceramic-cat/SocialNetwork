@@ -1,12 +1,15 @@
-import { Button, Spinner } from 'react-bootstrap';
-import { useFollow } from '../hooks/useFollow';
+import { Button, Spinner } from "react-bootstrap";
+import { useFollow } from "../hooks/useFollow";
 
 interface FollowButtonProps {
   userId: string;
 }
 
 export default function FollowButton({ userId }: FollowButtonProps) {
-  const { error, isLoading, isFollowing, isUpdating, toggleFollow } = useFollow(userId, false);
+  const { error, isLoading, isFollowing, isUpdating, toggleFollow } = useFollow(
+    userId,
+    false
+  );
 
   return (
     <>
@@ -14,8 +17,15 @@ export default function FollowButton({ userId }: FollowButtonProps) {
       <Button
         disabled={isLoading || isUpdating}
         onClick={toggleFollow}
+        variant={"secondary"}
       >
-        {isLoading || isUpdating ? <Spinner size="sm" /> : isFollowing ? 'Unfollow' : 'Follow'}
+        {isLoading || isUpdating ? (
+          <Spinner size="sm" />
+        ) : isFollowing ? (
+          "Unfollow"
+        ) : (
+          "Follow"
+        )}
       </Button>
     </>
   );
