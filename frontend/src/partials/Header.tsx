@@ -28,7 +28,7 @@ export default function Header({
           <Navbar.Brand
             as={Link}
             to="/"
-            className="text-warning app-header-brand"
+            className="text-primary app-header-brand audiowide fs-1 mx-5"
           >
             MySpace
           </Navbar.Brand>

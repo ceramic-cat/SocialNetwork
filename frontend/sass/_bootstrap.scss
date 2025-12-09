@@ -19,6 +19,14 @@ $enable-negative-margins: true;
 //import icon
 @import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+
+.audiowide {
+  font-family: "Audiowide", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .form-label {
   color: #b8b8ff !important;
   font-weight: 500;
