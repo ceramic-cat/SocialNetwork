@@ -19,7 +19,7 @@ The backend is structured using a clean layered design:
 
 ### **Authentication**
 
-- JWT-based login & registration
+- JWT-based authentication
 - Profile editing
 - Account deletion
 - Secure password hashing using BCrypt
@@ -61,6 +61,7 @@ The backend is structured using a clean layered design:
 
 ### Backend
 
+dotnet user-secrets set "Jwt:Key" "{secret-key-available-on-request}"
 dotnet run
 
 ### Frontend
