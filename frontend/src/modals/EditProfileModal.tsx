@@ -11,7 +11,7 @@ export default function EditProfileModal({
   onHide,
 }: EditProfileModalProps) {
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} centered className="edit-profile-modal">
       <Modal.Header closeButton>
         <Modal.Title>Edit Profile</Modal.Title>
       </Modal.Header>

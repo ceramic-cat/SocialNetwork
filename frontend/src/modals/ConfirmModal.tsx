@@ -22,9 +22,9 @@ export default function ConfirmModal({
   loading = false,
 }: ConfirmModalProps) {
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} centered className="confirm-modal">
       <Modal.Header closeButton>
-        <Modal.Title>{title}</Modal.Title>
+        <Modal.Title className="">{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p>{message}</p>

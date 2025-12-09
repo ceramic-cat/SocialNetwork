@@ -7,6 +7,7 @@ import AuthModal from "./modals/AuthModal";
 import CreatePostModal from "./modals/CreatePostModal";
 import User from "./pages/User";
 import SearchPage from "./pages/Search";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const {
@@ -51,6 +52,7 @@ function App() {
               <Route path="/" element={<TheFeed />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/users/:id" element={<User />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
 
             {userId && username && (

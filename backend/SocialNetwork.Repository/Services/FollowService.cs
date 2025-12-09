@@ -1,5 +1,6 @@
 ﻿using SocialNetwork.API.Models;
 using SocialNetwork.Entity.Models;
+using SocialNetwork.Repository.Errors;
 using SocialNetwork.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -34,12 +35,12 @@ public class FollowService : IFollowsService
     {
         if (follower == followee)
         {
-            return Result.Failure("You can't follow yourself");
+            return Result.Failure(FollowErrors.CannotFollowSelf);
         }
 
         if (await _repository.ExistsAsync(follower, followee))
         {
-            return Result.Failure("Already following this user");
+            return Result.Failure(FollowErrors.AlreadyFollowing);
         }
 
         try
@@ -57,7 +58,7 @@ public class FollowService : IFollowsService
     {
         if (follower == Guid.Empty)
         {
-            return Result<Guid[]>.Failure("Empty user");
+            return Result<Guid[]>.Failure(FollowErrors.EmptyUser);
         }
 
         var follows = await _repository.GetFollowsAsync(follower);
@@ -69,7 +70,7 @@ public class FollowService : IFollowsService
     {
         if (false == await _repository.ExistsAsync(follower, followee))
         {
-            return Result.Failure("Unable to unfollow that user");
+            return Result.Failure(FollowErrors.UnableToUnfollow);
         }
 
         await _repository.DeleteAsync(follower, followee);
@@ -78,7 +79,7 @@ public class FollowService : IFollowsService
     public async Task<Result<bool>> IsFollowingAsync(Guid follower, Guid followee)
     {
         if (followee == Guid.Empty) { 
-            return Result<bool>.Failure("Empty user");
+            return Result<bool>.Failure(FollowErrors.EmptyUser);
         }
 
         var result = await _repository.ExistsAsync(follower, followee);
@@ -90,7 +91,7 @@ public class FollowService : IFollowsService
     {
         if (follower == Guid.Empty)
         {
-            return Result<FollowedUserDto[]>.Failure("Empty user");
+            return Result<FollowedUserDto[]>.Failure(FollowErrors.EmptyUser);
         }
 
         var follows = await _repository.GetFollowsWithUserInfoAsync(follower);
