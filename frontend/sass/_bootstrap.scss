@@ -230,3 +230,22 @@ $enable-negative-margins: true;
     text-decoration: underline;
   }
 }
+
+.create-post-textarea {
+  &::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+    height: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #8a2be2 0%, #b8b8ff 100%);
+    border-radius: 8px;
+    border: 2px solid #23234a;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #b8b8ff 0%, #8a2be2 100%);
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
