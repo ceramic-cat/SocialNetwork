@@ -12,8 +12,7 @@
 
 .follow-item {
   margin: 0.2rem auto;
-  width: 300px;
-
+  max-width: 300px;
   transition: background-color 0.2s ease, transform 0.2s ease;
   font-weight: 600;
   font-size: 1.1rem;

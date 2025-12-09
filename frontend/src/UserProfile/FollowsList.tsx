@@ -10,7 +10,7 @@ export default function FollowsList({}: Props) {
   const followsEmpty = follows.length === 0 ? true : false;
 
   return (
-    <div className="container  text-light scrollable-list custom-scroll">
+    <div className="container text-light scrollable-list custom-scroll">
       <h4 className="text-white ">All the accounts you follow</h4>
       {isLoading ? (
         <Spinner className="align-center" />
