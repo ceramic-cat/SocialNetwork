@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
 import { useAuth } from "../hooks/useAuth";
+import FeedbackAlert from "../alerts/FeedbackAlert";
 
 interface RegisterFormProps {
   onSuccess: () => void;
@@ -23,6 +24,14 @@ export default function RegisterForm({
     resetError();
     setValidationError("");
 
+    if (!username || !email || !password || !confirmPassword) {
+      setValidationError("All fields are required.");
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setValidationError("Please enter a valid email address.");
+      return;
+    }
     if (password !== confirmPassword) {
       setValidationError("Passwords do not match");
       return;
@@ -36,11 +45,12 @@ export default function RegisterForm({
     }
   }
 
-  const displayError = validationError || error;
-
   return (
-    <Form onSubmit={handleSubmit}>
-      {displayError && <Alert variant="danger">{displayError}</Alert>}
+    <Form onSubmit={handleSubmit} noValidate>
+      <FeedbackAlert
+        error={validationError || error}
+        className="alert-form-danger"
+      />
 
       <Form.Group className="mb-3">
         <Form.Label>Username</Form.Label>

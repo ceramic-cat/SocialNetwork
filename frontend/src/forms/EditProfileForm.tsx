@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
 import { useEditProfile } from "../hooks/useEditProfile";
-import ProfileAlert from "../alerts/ProfileAlert";
+import ProfileAlert from "../alerts/FeedbackAlert";
 
 interface EditProfileFormProps {
   onSuccess?: () => void;
