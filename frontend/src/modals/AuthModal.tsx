@@ -48,7 +48,7 @@ export default function AuthModal({
 
           <Modal.Header className="auth-modal-header">
             <div className="modal-title">
-              <h3 className="title">Social Network</h3>
+              <h3 className="title audiowide">MySpace</h3>
               <p className="subtitle">Creativity and social connection</p>
             </div>
             <ButtonGroup className="auth-tab-group">

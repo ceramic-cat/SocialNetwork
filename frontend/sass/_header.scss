@@ -1,19 +1,40 @@
-.app-header-nav {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
+/* Mobile hamburger button */
+.app-header-toggle {
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.app-header-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Mobile offcanvas */
+.app-header-offcanvas {
+  width: 200px !important;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 30, 45, 0.95) 0%,
+    rgba(20, 20, 35, 0.85) 100%
+  );
+  backdrop-filter: blur(10px);
 }
 
 /* Base style for header links */
 .app-header-link {
   position: relative;
   font-weight: 500;
-  padding: 0.45rem 0.9rem !important;
+  padding: 0.45rem 0.9rem;
   border-radius: 12px;
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: rgba(255, 255, 255, 0.85);
   transition: all 0.18s ease;
 }
 
@@ -22,9 +43,8 @@
   background: rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(14px) saturate(160%);
   -webkit-backdrop-filter: blur(14px) saturate(160%);
-
   transform: translateY(-1px);
-  color: #fff !important;
+  color: #fff;
 }
 
 .app-header-link:hover::before {
@@ -46,6 +66,7 @@
   font-size: 20px;
   transition: transform 0.18s ease, filter 0.18s ease;
 }
+
 .app-header-link:hover i {
   transform: translateY(-1px) scale(1.12);
   filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
