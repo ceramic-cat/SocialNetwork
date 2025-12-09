@@ -129,6 +129,12 @@ public class FollowController : ControllerBase, IFollowController
         }
 
         return BadRequest(result.ErrorMessage);
+    }
 
+    [Authorize]
+    [HttpGet("info")]
+    public async Task<IActionResult> GetFollowsInfo()
+    {
+        throw new NotImplementedException();
     }
 }
