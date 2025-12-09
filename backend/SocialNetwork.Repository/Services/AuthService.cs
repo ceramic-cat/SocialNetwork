@@ -97,7 +97,13 @@ namespace SocialNetwork.Repository.Services
       await _db.SaveChangesAsync();
       return true;
     }
-    
-    
-  }
+
+        public async Task<string?> GetUsernameAsync(Guid userId)
+        {
+            return await _db.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.Username)
+                .FirstOrDefaultAsync();
+        }
+    }
 }

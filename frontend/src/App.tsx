@@ -6,6 +6,7 @@ import Header from "./partials/Header";
 import useCurrentUser from "./hooks/useCurrentUser";
 import AuthModal from "./modals/AuthModal";
 import CreatePostModal from "./modals/CreatePostModal";
+import User from "./pages/User";
 import SearchPage from "./pages/Search";
 
 function App() {
@@ -49,8 +50,9 @@ function App() {
           <>
             <Routes>
               <Route path="/" element={<TheFeed />} />
-              <Route path="/users/:id/timeline" element={<Timeline />} />
               <Route path="/search" element={<SearchPage />} />
+              <Route path="/users/:id" element={<User />} />
+              <Route path="/users/:id/timeline" element={<Timeline />} />
             </Routes>
 
             {userId && username && (
