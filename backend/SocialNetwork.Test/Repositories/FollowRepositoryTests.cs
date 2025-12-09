@@ -163,8 +163,8 @@ public class FollowRepositoryTests : IDisposable
         // Arrange
         var followerId = Guid.NewGuid();
 
-        var alice = new User { Id = Guid.NewGuid(), Username = "alice" };
-        var bob = new User { Id = Guid.NewGuid(), Username = "bob" };
+        var alice = new User {Id = Guid.NewGuid(), Username = "alice", Email = "", Created = "", Password = "" };
+        var bob = new User {Id = Guid.NewGuid(), Username = "bob", Email = "", Created = "", Password = "" };
 
         _db.Users.AddRange(alice, bob);
         _db.Follows.AddRange(
@@ -202,8 +202,8 @@ public class FollowRepositoryTests : IDisposable
         var user1 = Guid.NewGuid();
         var user2 = Guid.NewGuid();
 
-        var alice = new User { Id = Guid.NewGuid(), Username = "alice" };
-        var bob = new User { Id = Guid.NewGuid(), Username = "bob" };
+        var alice = new User { Id = Guid.NewGuid(), Username = "alice" , Email = "", Created="", Password=""};
+        var bob = new User { Id = Guid.NewGuid(), Username = "bob", Email = "", Created = "", Password = "" };
 
         _db.Users.AddRange(alice, bob);
         _db.Follows.AddRange(
@@ -225,8 +225,8 @@ public class FollowRepositoryTests : IDisposable
     public async Task GetFollowsWithUserInfoAsync_DoesNotIncludeFollower()
     {
         // Arrange
-        var follower = new User { Id = Guid.NewGuid(), Username = "follower" };
-        var followee = new User { Id = Guid.NewGuid(), Username = "followee" };
+        var follower = new User {Id = Guid.NewGuid(), Username = "follower", Email = "", Created = "", Password = "" };
+        var followee = new User {Id = Guid.NewGuid(), Username = "followee", Email = "", Created = "", Password = "" };
 
         _db.Users.AddRange(follower, followee);
         _db.Follows.Add(new Follow { FollowerId = follower.Id, FolloweeId = followee.Id });

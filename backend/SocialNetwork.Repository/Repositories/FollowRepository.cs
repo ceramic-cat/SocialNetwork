@@ -55,5 +55,16 @@ public class FollowRepository : IFollowRepository
             .ToArrayAsync();
     }
 
-    public Task<FollowedUserDto[]> GetFollowsWithUserInfoAsync(Guid followerId) => throw new NotImplementedException();
+    public async Task<FollowedUserDto[]> GetFollowsWithUserInfoAsync(Guid followerId)
+    {
+        return await _db.Follows
+            .Where(f => f.FollowerId == followerId)
+            .Join(
+                _db.Users,
+                f => f.FolloweeId,
+                u => u.Id,
+                (f, u) => new FollowedUserDto { Id = u.Id, Username = u.Username }
+            )
+            .ToArrayAsync();
+    }
 }
