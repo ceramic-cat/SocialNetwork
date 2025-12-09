@@ -98,7 +98,7 @@ export default function CreatePostForm({
               rows={4}
               value={content}
               onChange={handleContentChange}
-              className="rounded-3 create-post-textarea"
+              className="rounded-3 custom-scroll"
               isInvalid={!!validationError}
             />
           </Form.Group>

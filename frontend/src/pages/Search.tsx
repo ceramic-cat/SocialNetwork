@@ -19,7 +19,7 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="container py-4 text-light">
+    <div className="container py-4 text-light ">
       <h3 className="mb-3 feed-title">Search users</h3>
 
       <Form.Control
@@ -27,7 +27,7 @@ export default function SearchPage() {
         placeholder="Search by username..."
         value={query}
         onChange={handleChange}
-        className="bg-dark text-light"
+        className="bg-dark text-light search-input"
       />
 
       {loading && (
@@ -44,7 +44,7 @@ export default function SearchPage() {
             key={u.id}
             action
             onClick={() => goToProfile(u.id)}
-            className="bg-transparent text-light border-secondary"
+            className="bg-transparent text-light search-user"
           >
             <i className="bi bi-person me-2"></i> {u.username}
           </ListGroup.Item>

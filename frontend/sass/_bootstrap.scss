@@ -259,3 +259,13 @@ $enable-negative-margins: true;
     background: transparent;
   }
 }
+
+.search-input {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.search-user {
+  @extend .search-input;
+  max-width: 300px;
+}
