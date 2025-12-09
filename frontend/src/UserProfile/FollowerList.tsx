@@ -8,8 +8,8 @@ export default function FollowersList() {
   const followersEmpty = followers.length === 0;
 
   return (
-    <div className="container py-4 text-light">
-      <h4 className="text-white pt-4">All your followers</h4>
+    <div className="container text-light scrollable-list custom-scroll">
+      <h4 className="text-white">All your followers</h4>
       {isLoading ? (
         <Spinner className="align-center" />
       ) : error ? (
@@ -23,7 +23,7 @@ export default function FollowersList() {
               key={follower.id}
               action
               onClick={() => navigate(`/users/${follower.id}`)}
-              className="bg-transparent text-light border-secondary"
+              className="bg-transparent text-light follow-item"
             >
               {follower.username}
             </ListGroup.Item>

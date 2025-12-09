@@ -26,7 +26,7 @@ export default function TheFeed() {
       <Col xs={12}>
         <h2 className="feed-title">Your Feed</h2>
       </Col>
-      <Col xs={12} md={8} lg={6} className="feed-list-container">
+      <Col xs={12} md={8} lg={6} className="feed-list-container custom-scroll">
         {loading ? (
           <Col className="alert-info">Loading...</Col>
         ) : feedError || followingError ? (

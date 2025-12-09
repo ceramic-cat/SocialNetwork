@@ -5,17 +5,29 @@
 }
 
 .user-container {
-  margin-bottom: 1.5rem;
-  margin-top: 5rem;
+  margin-top: 1rem;
   text-align: center;
   padding: 1rem;
+}
+
+.follow-item {
+  margin: 0.2rem auto;
+  width: 300px;
+
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  font-weight: 600;
+  font-size: 1.1rem;
+  background: linear-gradient(90deg, #8a2be2 0%, #b8b8ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .accordion-user .accordion-item {
   background: linear-gradient(135deg, #2a2a3d 0%, #3e1d4b 50%, #7373ff 100%);
   border: 1px solid #8a4dc7;
   box-shadow: 0 0 12px rgba(138, 77, 199, 0.5);
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   border-radius: 6px;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
@@ -92,6 +104,8 @@
   float: right;
   opacity: 0;
   transition: opacity 0.2s ease, transform 0.2s ease;
+  color: #b8b8ff;
+  -webkit-text-fill-color: initial;
 }
 
 .accordion-user .list-group-item-action:hover::after {
@@ -103,8 +117,6 @@
   background: linear-gradient(135deg, #23234a 0%, #2d1b3d 100%);
   border: 1.5px solid #8a4dc7;
   border-radius: 10px;
-  padding: 1rem 2.5rem;
-  margin: 1.5rem auto 0 auto;
   box-shadow: 0 4px 18px rgba(138, 43, 226, 0.13);
   display: flex;
   gap: 2.5rem;
@@ -124,4 +136,20 @@
   font-size: 1rem;
   text-shadow: 0 0 8px rgba(138, 43, 226, 0.18);
   letter-spacing: 0.5px;
+}
+
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 8px;
+
+  @media (max-width: 768px) {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  @media (max-width: 768px) {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }

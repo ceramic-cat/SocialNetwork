@@ -74,7 +74,7 @@ export default function Timeline() {
           </h2>
         </div>
       </Col>
-      <Col xs={12} md={8} lg={6} className="feed-list-container">
+      <Col xs={12} md={8} lg={6} className="feed-list-container custom-scroll">
         <div className="timeline-content">{content}</div>
       </Col>
     </Row>

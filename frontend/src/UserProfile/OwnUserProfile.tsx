@@ -14,7 +14,7 @@ export default function OwnUserProfile({ username }: OwnUserProfileProps) {
           <h1 className="user-header">Welcome back {username}</h1>
         </Col>
       </Row>
-      <Row className="justify-content-center mt-4">
+      <Row className="justify-content-center mt-3">
         <Col xs={12} md={5} lg={4}>
           <Accordion className="accordion-user">
             <Accordion.Item eventKey="0">
