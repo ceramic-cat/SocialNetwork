@@ -82,6 +82,15 @@ public class FollowService : IFollowsService
         return Result<bool>.Success(result);
     }
 
-    public Task<Result<FollowedUserDto[]>> GetFollowsWithUserInfoAsync(Guid follower) => throw new NotImplementedException();
+    public async Task<Result<FollowedUserDto[]>> GetFollowsWithUserInfoAsync(Guid follower)
+    {
+        if (follower == Guid.Empty)
+        {
+            return Result<FollowedUserDto[]>.Failure("Empty user");
+        }
+
+        var follows = await _repository.GetFollowsWithUserInfoAsync(follower);
+        return Result<FollowedUserDto[]>.Success(follows);
+    }
 }
 
