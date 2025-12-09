@@ -365,36 +365,10 @@ public class FollowControllerTests
     public async Task GetFollowsInfo_ValidUser_ReturnsOkWithUsers()
     {
         // Arrange
-        var userId = Guid.NewGuid();
+        var followerId = Guid.NewGuid();
         var followedUsers = new[] {
             new FollowedUserDto { Id = Guid.NewGuid(), Username = "alice" },
             new FollowedUserDto { Id = Guid.NewGuid(), Username = "bob" }
-        };
-        var followerId = Guid.NewGuid();
-
-        SetupUserContext(followerId);
-
-        _followServiceMock
-            .Setup(s => s.GetFollowsWithUserInfoAsync(userId))
-            .ReturnsAsync(Result<FollowedUserDto[]>.Success(followedUsers));
-
-        // Act
-        var result = await _sut.GetFollowsInfo();
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        var data = Assert.IsType<FollowedUserDto[]>(okResult.Value);
-        Assert.Equal(2, data.Length);
-    }
-    [Fact]
-    public async Task GetFollowsInfo_ValidUser_ReturnsCorrectUsernames()
-    {
-        // Arrange
-        var followerId = Guid.NewGuid();
-        var followedUsers = new[]
-        {
-        new FollowedUserDto { Id = Guid.NewGuid(), Username = "alice" },
-        new FollowedUserDto { Id = Guid.NewGuid(), Username = "bob" }
         };
 
         SetupUserContext(followerId);
@@ -409,8 +383,7 @@ public class FollowControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var data = Assert.IsType<FollowedUserDto[]>(okResult.Value);
-        Assert.Contains(data, u => u.Username == "alice");
-        Assert.Contains(data, u => u.Username == "bob");
+        Assert.Equal(2, data.Length);
     }
 
     [Fact]

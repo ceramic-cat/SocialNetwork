@@ -135,6 +135,20 @@ public class FollowController : ControllerBase, IFollowController
     [HttpGet("info")]
     public async Task<IActionResult> GetFollowsInfo()
     {
-        throw new NotImplementedException();
+        var userIdClaim = User.FindFirst("UserId")?.Value;
+
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _followService.GetFollowsWithUserInfoAsync(userId);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
+
+        return BadRequest(result.ErrorMessage);
     }
 }
