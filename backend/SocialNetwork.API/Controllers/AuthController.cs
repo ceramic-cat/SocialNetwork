@@ -82,17 +82,6 @@ namespace SocialNetwork.API.Controllers
             return Ok("Account deleted successfully.");
         }
 
-        [HttpDelete("delete-user/{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteUserById(Guid id)
-        {
-            var result = await _authService.DeleteAccountAsync(id);
-            if (!result)
-                return NotFound(AuthErrors.CouldNotDeleteUser);
-
-            return Ok("User deleted successfully.");
-        }
-
         [HttpDelete("logout")]
         public IActionResult Logout()
         {

@@ -1,33 +1,31 @@
-import { useGetFollowsInfo } from "../hooks/useGetFollowsInfo";
+import { useGetFollowersInfo } from "../hooks/useGetFollowersInfo";
 import { Alert, ListGroup, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-type Props = {};
-
-export default function FollowsList({}: Props) {
-  const { isLoading, error, follows } = useGetFollowsInfo();
+export default function FollowersList() {
+  const { isLoading, error, followers } = useGetFollowersInfo();
   const navigate = useNavigate();
-  const followsEmpty = follows.length === 0 ? true : false;
+  const followersEmpty = followers.length === 0;
 
   return (
     <div className="container text-light scrollable-list custom-scroll">
-      <h4 className="text-white ">All the accounts you follow</h4>
+      <h4 className="text-white">All your followers</h4>
       {isLoading ? (
         <Spinner className="align-center" />
       ) : error ? (
         <Alert>{error}</Alert>
-      ) : followsEmpty ? (
-        <p>You follow no other users.</p>
+      ) : followersEmpty ? (
+        <p>You have no followers.</p>
       ) : (
         <ListGroup>
-          {follows.map((follows) => (
+          {followers.map((follower) => (
             <ListGroup.Item
-              key={follows.id}
+              key={follower.id}
               action
-              onClick={() => navigate(`/users/${follows.id}`)}
+              onClick={() => navigate(`/users/${follower.id}`)}
               className="bg-transparent text-light follow-item"
             >
-              {follows.username}
+              {follower.username}
             </ListGroup.Item>
           ))}
         </ListGroup>

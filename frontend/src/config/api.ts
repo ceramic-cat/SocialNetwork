@@ -20,5 +20,7 @@ export const API = {
     FOLLOW: (userId: string) => `${BASE_URL}/api/Follow/${userId}`,
     GETFOLLOWS: `${BASE_URL}/api/Follow`,
     GETFOLLOWSINFO: `${BASE_URL}/api/Follow/info`,
+    GETFOLLOWERSINFO: `${BASE_URL}/api/Follow/follower-info`,
+    GETUSERSTATS: (userId: string) => `${BASE_URL}/api/Follow/stats/${userId}`,
   },
 };

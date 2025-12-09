@@ -10,4 +10,7 @@ public interface IFollowRepository
     Task DeleteAsync(Guid followerId, Guid followeeId);
     Task<Guid[]> GetFollowsAsync(Guid follower);
     Task<FollowedUserDto[]> GetFollowsWithUserInfoAsync(Guid followerId);
+    Task<FollowerUserDto[]> GetFollowersWithUserInfoAsync(Guid followeeId);
+    Task<int> GetFollowersCountAsync(Guid userId);
+    Task<int> GetFollowingCountAsync(Guid userId);
 }

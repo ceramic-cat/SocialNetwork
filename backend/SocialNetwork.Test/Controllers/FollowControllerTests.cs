@@ -442,7 +442,118 @@ public class FollowControllerTests
         Assert.Empty(data);
     }
 
+    [Fact]
+    public async Task GetFollowersInfo_ValidUser_ReturnsOkWithFollowers()
+    {
+        var userId = Guid.NewGuid();
+        var followers = new[]
+        {
+        new FollowerUserDto { Id = Guid.NewGuid(), Username = "alice" },
+        new FollowerUserDto { Id = Guid.NewGuid(), Username = "bob" }
+    };
 
+        _followServiceMock
+            .Setup(m => m.GetFollowersWithUserInfoAsync(userId))
+            .ReturnsAsync(Result<FollowerUserDto[]>.Success(followers));
+
+        SetupUserContext(userId);
+
+        var result = await _sut.GetFollowersInfo();
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedFollowers = Assert.IsType<FollowerUserDto[]>(okResult.Value);
+        Assert.Equal(2, returnedFollowers.Length);
+        Assert.Contains(returnedFollowers, f => f.Username == "alice");
+        Assert.Contains(returnedFollowers, f => f.Username == "bob");
+    }
+
+
+    [Fact]
+    public async Task GetFollowersInfo_UserHasNoFollowers_ReturnsEmptyArray()
+    {
+        var userId = Guid.NewGuid();
+        _followServiceMock
+            .Setup(m => m.GetFollowersWithUserInfoAsync(userId))
+            .ReturnsAsync(Result<FollowerUserDto[]>.Success(Array.Empty<FollowerUserDto>()));
+
+        SetupUserContext(userId);
+
+        var result = await _sut.GetFollowersInfo();
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedFollowers = Assert.IsType<FollowerUserDto[]>(okResult.Value);
+        Assert.Empty(returnedFollowers);
+    }
+
+
+    [Fact]
+    public async Task GetFollowersInfo_NoToken_ReturnsUnauthorized()
+    {
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext()
+        };
+
+        var result = await _sut.GetFollowersInfo();
+
+        Assert.IsType<UnauthorizedResult>(result);
+    }
+
+
+    [Fact]
+    public async Task GetFollowersInfo_InvalidGuidInToken_ReturnsUnauthorized()
+    {
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext
+            {
+                User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                {
+                new Claim("UserId", "not-a-valid-guid")
+            }, "TestAuth"))
+            }
+        };
+
+        var result = await _sut.GetFollowersInfo();
+
+        Assert.IsType<UnauthorizedResult>(result);
+    }
+    
+    [Fact]
+    public async Task GetUserFollowStats_ValidUser_ReturnsOkWithStats()
+    {
+        var userId = Guid.NewGuid();
+        SetupUserContext(userId);
+
+        _followServiceMock
+            .Setup(s => s.GetFollowersCountAsync(userId))
+            .ReturnsAsync(5);
+        _followServiceMock
+            .Setup(s => s.GetFollowingCountAsync(userId))
+            .ReturnsAsync(3);
+
+        var result = await _sut.GetUserFollowStats(userId);
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var value = okResult.Value;
+        Assert.NotNull(value);
+
+        var followers = (int)value.GetType().GetProperty("followers")!.GetValue(value, null)!;
+        var following = (int)value.GetType().GetProperty("following")!.GetValue(value, null)!;
+
+        Assert.Equal(5, followers);
+        Assert.Equal(3, following);
+    }
+
+
+    [Fact]
+    public async Task GetUserFollowStats_EmptyGuid_ReturnsBadRequest()
+    {
+        var result = await _sut.GetUserFollowStats(Guid.Empty);
+
+
+        Assert.IsType<BadRequestObjectResult>(result);
+    }
 }
 
 

@@ -155,4 +155,42 @@ public class FollowController : ControllerBase, IFollowController
 
         return BadRequest(result.ErrorMessage);
     }
+
+    /// <summary>
+    /// Get all followers of logged in user with usernames.
+    /// </summary>
+    /// <returns>Returns array of id and usernames. If no followers returns empty array.</returns>
+    [Authorize]
+    [HttpGet("follower-info")]
+    public async Task<IActionResult> GetFollowersInfo()
+    {
+        var userIdClaim = User.FindFirst("UserId")?.Value;
+
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _followService.GetFollowersWithUserInfoAsync(userId);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
+
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [Authorize]
+    [HttpGet("stats/{userId}")]
+    public async Task<IActionResult> GetUserFollowStats(Guid userId)
+    {
+        if (userId == Guid.Empty)
+            return BadRequest("Empty user");
+
+        var followersCount = await _followService.GetFollowersCountAsync(userId);
+        var followingCount = await _followService.GetFollowingCountAsync(userId);
+
+        return Ok(new { followers = followersCount, following = followingCount });
+    }
 }

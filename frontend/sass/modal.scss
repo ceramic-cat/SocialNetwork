@@ -1,0 +1,21 @@
+.confirm-modal,
+.edit-profile-modal {
+  .modal-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+    text-align: center;
+  }
+
+  .modal-title {
+    color: #fff;
+    text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+  }
+
+  .modal-body {
+    color: #d4c8eb;
+    text-align: center;
+  }
+  .modal-footer {
+    border-top: 1px solid rgba(138, 43, 226, 0.2);
+  }
+}
