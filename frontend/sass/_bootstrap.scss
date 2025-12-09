@@ -168,6 +168,23 @@ $enable-negative-margins: true;
   border: 1px solid rgba(255, 107, 107, 0.3) !important;
   border-radius: 10px !important;
   color: #ff6b6b !important;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.alert-info {
+  background: rgba(138, 43, 226, 0.1) !important;
+  border: 1px solid rgba(138, 43, 226, 0.3) !important;
+  border-radius: 10px !important;
+  color: #b8b8ff !important;
+  max-width: 200px;
+  margin: 0 auto;
+  padding: 0.8rem 1rem;
+}
+
+.alert-following-info {
+  @extend .alert-info;
+  max-width: 350px;
 }
 
 .page-background {

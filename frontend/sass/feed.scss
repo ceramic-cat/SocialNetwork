@@ -13,7 +13,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  margin-top: 8rem;
+  margin-top: 3rem;
   text-align: center;
   text-shadow: 0 0 16px rgba(138, 43, 226, 0.3);
 }
@@ -22,6 +22,25 @@
   max-height: 70vh;
   overflow-y: auto;
   padding-right: 8px;
+  padding-top: 8px;
+  padding-bottom: 2.5rem;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+    height: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #8a2be2 0%, #b8b8ff 100%);
+    border-radius: 8px;
+    border: 2px solid #23234a;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #b8b8ff 0%, #8a2be2 100%);
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 }
 
 .feed-post {
@@ -36,6 +55,30 @@
   position: relative;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
+}
+.new-badge {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: #9343df;
+  color: #fff;
+  padding: 0.2em 0.7em;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  z-index: 2;
+  animation: float-badge 3s infinite ease-in-out;
+}
+
+@keyframes float-badge {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .feed-post:hover {
@@ -65,9 +108,15 @@
 }
 
 .feed-post .post-date {
-  font-size: 0.9rem;
+  position: absolute;
+  font-size: 0.7rem;
   color: #b8b8ff;
   opacity: 0.8;
+  right: 1rem;
+}
+
+.bi-clock-history {
+  margin-right: 4px;
 }
 
 .feed-space-animation {
