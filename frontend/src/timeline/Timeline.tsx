@@ -48,10 +48,7 @@ export default function Timeline() {
           <PostCard
             key={post.id}
             sender={
-              <Link
-                className="link-unstyled"
-                to={`/users/${post.senderId}`}
-              >
+              <Link className="link-unstyled" to={`/users/${post.senderId}`}>
                 {post.senderUsername}
               </Link>
             }
@@ -73,9 +70,7 @@ export default function Timeline() {
             <div className="text-danger mb-2 small">{deleteError}</div>
           )}
           <h2 className="feed-title">
-            {posts.length === 0
-              ? "Empty Timeline"
-              : `${timelineOwnerName}'s Timeline`}
+            {posts.length === 0 ? "Empty Timeline" : `Timeline`}
           </h2>
         </div>
       </Col>
