@@ -37,7 +37,7 @@ namespace SocialNetwork.Test.Controllers
             var result = await _authController.Register(request);
 
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Could not register.", badRequest.Value);
+            Assert.Equal(AuthErrors.RegisterFailed, badRequest.Value);
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace SocialNetwork.Test.Controllers
             var result = await _authController.Login(request);
 
             var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.Equal("Invalid credentials.", unauthorized.Value);
+            Assert.Equal(AuthErrors.InvalidCredentials, unauthorized.Value);
         }
 
          [Fact]
@@ -107,7 +107,7 @@ namespace SocialNetwork.Test.Controllers
             var result = await _authController.EditProfile(request);
 
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Could not update profile.", badRequest.Value);
+            Assert.Equal(AuthErrors.CouldNotUpdateProfile, badRequest.Value);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace SocialNetwork.Test.Controllers
             var result = await _authController.DeleteAccount();
 
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Could not delete account.", badRequest.Value);
+            Assert.Equal(AuthErrors.CouldNotDeleteAccount, badRequest.Value);
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace SocialNetwork.Test.Controllers
             var result = await _authController.DeleteUserById(userId);
 
             var notFound = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("User not found or could not be deleted.", notFound.Value);
+            Assert.Equal(AuthErrors.CouldNotDeleteUser, notFound.Value);
         }
 
         [Fact]
@@ -188,7 +188,7 @@ namespace SocialNetwork.Test.Controllers
 
             // Assert
             var notFound = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("User not found.", notFound.Value);
+            Assert.Equal(AuthErrors.UserNotFound, notFound.Value);
         }
 
         [Fact]
@@ -203,7 +203,7 @@ namespace SocialNetwork.Test.Controllers
 
             // Assert
             var notFound = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("User not found.", notFound.Value);
+            Assert.Equal(AuthErrors.UserNotFound, notFound.Value);
         }
 
         [Fact]

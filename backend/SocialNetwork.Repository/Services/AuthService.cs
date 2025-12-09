@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BCrypt.Net;
+using SocialNetwork.Repository.Errors;
 
 namespace SocialNetwork.Repository.Services
 {
@@ -52,7 +53,7 @@ namespace SocialNetwork.Repository.Services
             new Claim("UserId", user.Id.ToString())
         };
 
-      var jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("JWT key is not configured");
+      var jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException(AuthErrors.InvalidJwtKey);
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
       var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

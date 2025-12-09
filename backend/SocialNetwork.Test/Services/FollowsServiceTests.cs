@@ -37,7 +37,7 @@ public class FollowsServiceTests
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Contains(result.ErrorMessage, "Already following this user");
+        Assert.Contains(result.ErrorMessage, FollowErrors.AlreadyFollowing);
     }
 
 
@@ -52,7 +52,7 @@ public class FollowsServiceTests
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Contains(result.ErrorMessage, "You can't follow yourself");
+        Assert.Contains(result.ErrorMessage, FollowErrors.CannotFollowSelf);
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class FollowsServiceTests
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Contains(result.ErrorMessage, "Unable to unfollow that user");
+        Assert.Contains(result.ErrorMessage,FollowErrors.UnableToUnfollow);
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class FollowsServiceTests
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Contains(result.ErrorMessage, "Empty user");
+        Assert.Contains(result.ErrorMessage, FollowErrors.EmptyUser);
         _followRepositoryMock.Verify(r => r.GetFollowsAsync(It.IsAny<Guid>()), Times.Never);
     }
 
@@ -184,7 +184,7 @@ public class FollowsServiceTests
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Contains("Empty user", result.ErrorMessage);
+        Assert.Contains(FollowErrors.EmptyUser, result.ErrorMessage);
     }
 
     [Fact]
