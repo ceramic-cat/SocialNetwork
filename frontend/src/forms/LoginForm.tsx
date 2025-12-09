@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
 import { useAuth } from "../hooks/useAuth";
+import FeedbackAlert from "../alerts/FeedbackAlert";
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -13,11 +14,18 @@ export default function LoginForm({
 }: LoginFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [validationError, setValidationError] = useState("");
   const { login, loading, error, resetError } = useAuth();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     resetError();
+    setValidationError("");
+
+    if (!username || !password) {
+      setValidationError("Both fields are required.");
+      return;
+    }
 
     const success = await login({ username, password });
     if (success) {
@@ -26,11 +34,16 @@ export default function LoginForm({
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      {showRegistrationSuccess && (
-        <div className="text-success mb-3">Registration successful!</div>
-      )}
-      {error && <Alert variant="danger">{error}</Alert>}
+    <Form onSubmit={handleSubmit} noValidate>
+      <FeedbackAlert
+        error={validationError || error}
+        className="alert-form-danger"
+      />
+      <FeedbackAlert
+        success={
+          showRegistrationSuccess ? "Registration successful!" : undefined
+        }
+      />
 
       <Form.Group className="mb-3">
         <Form.Label>Username</Form.Label>

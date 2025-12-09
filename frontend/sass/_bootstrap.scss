@@ -152,7 +152,7 @@ $enable-negative-margins: true;
   transform: translateY(0);
 }
 
-.text-success {
+.alert-success {
   color: #4ecdc4 !important;
   text-align: center;
   font-weight: 600;
@@ -169,6 +169,14 @@ $enable-negative-margins: true;
   color: #ff6b6b !important;
   max-width: 300px;
   margin: 0 auto;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.alert-form-danger {
+  @extend .alert-danger;
+  max-width: 450px;
 }
 
 .alert-info {
