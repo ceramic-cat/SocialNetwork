@@ -54,4 +54,6 @@ public class FollowRepository : IFollowRepository
             .Select(f => f.FolloweeId)
             .ToArrayAsync();
     }
+
+    public Task<FollowedUserDto[]> GetFollowsWithUserInfoAsync(Guid followerId) => throw new NotImplementedException();
 }
