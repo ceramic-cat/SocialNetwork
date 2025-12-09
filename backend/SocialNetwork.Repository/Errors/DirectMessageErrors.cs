@@ -2,6 +2,7 @@ namespace SocialNetwork.Repository.Errors
 {
     public static class DirectMessageErrors
     {
+        public const string InvalidUserId = "Invalid or missing user id.";
         public const string SenderEmpty = "Sender ID cannot be empty.";
         public const string ReceiverEmpty = "Receiver ID cannot be empty.";
         public const string ContentEmpty = "Content cannot be empty.";

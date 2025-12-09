@@ -2,17 +2,20 @@ using Microsoft.EntityFrameworkCore;
 using SocialNetwork.API.Models;
 using SocialNetwork.Entity.Models;
 using SocialNetwork.Repository.Errors;
+using SocialNetwork.Repository.Interfaces;
 
 namespace SocialNetwork.Repository.Services;
 
 public class DirectMessageService : IDirectMessageService
 {
     private readonly SocialNetworkDbContext _db;
+    private readonly IDirectMessageRepository _directMessageRepository;
     private const int MaxContentLength = 280;
 
-    public DirectMessageService(SocialNetworkDbContext db)
+    public DirectMessageService(SocialNetworkDbContext db, IDirectMessageRepository directMessageRepository)
     {
         _db = db;
+        _directMessageRepository = directMessageRepository;
     }
 
     public async Task<Result> SendDirectMessageAsync(Guid senderId, Guid receiverId, string content)
@@ -90,8 +93,7 @@ public class DirectMessageService : IDirectMessageService
             CreatedAt = DateTime.UtcNow
         };
 
-        _db.DirectMessages.Add(directMessage);
-        await _db.SaveChangesAsync();
+        await _directMessageRepository.AddAsync(directMessage);
     }
 }
 
