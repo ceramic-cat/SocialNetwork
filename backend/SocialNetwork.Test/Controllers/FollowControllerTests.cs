@@ -518,7 +518,42 @@ public class FollowControllerTests
 
         Assert.IsType<UnauthorizedResult>(result);
     }
+    
+    [Fact]
+    public async Task GetUserFollowStats_ValidUser_ReturnsOkWithStats()
+    {
+        var userId = Guid.NewGuid();
+        SetupUserContext(userId);
 
+        _followServiceMock
+            .Setup(s => s.GetFollowersCountAsync(userId))
+            .ReturnsAsync(5);
+        _followServiceMock
+            .Setup(s => s.GetFollowingCountAsync(userId))
+            .ReturnsAsync(3);
+
+        var result = await _sut.GetUserFollowStats(userId);
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var value = okResult.Value;
+        Assert.NotNull(value);
+
+        var followers = (int)value.GetType().GetProperty("followers")!.GetValue(value, null)!;
+        var following = (int)value.GetType().GetProperty("following")!.GetValue(value, null)!;
+
+        Assert.Equal(5, followers);
+        Assert.Equal(3, following);
+    }
+
+
+    [Fact]
+    public async Task GetUserFollowStats_EmptyGuid_ReturnsBadRequest()
+    {
+        var result = await _sut.GetUserFollowStats(Guid.Empty);
+
+
+        Assert.IsType<BadRequestObjectResult>(result);
+    }
 }
 
 
