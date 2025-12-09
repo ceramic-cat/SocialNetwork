@@ -1,5 +1,5 @@
-import { Alert, Spinner, Tab, Tabs } from "react-bootstrap";
-import { useGetFollows } from "../hooks/useGetFollows";
+import { Accordion, Col, Container, Row } from "react-bootstrap";
+import FollowsList from "./FollowsList";
 
 interface OwnUserProfileProps {
   username: string | null
@@ -8,28 +8,24 @@ interface OwnUserProfileProps {
 
 export default function OwnUserProfile({ username }: OwnUserProfileProps) {
 
-  const { isLoading, error, follows } = useGetFollows();
-
-
   return (
-    <div className='user-container'>
-      <h1 className="user-header">Welcome back {username}</h1>
-      <Tabs defaultActiveKey="general">
-        <Tab eventKey="general" title="General">
-          <p className='text-white'>Information maybe?</p>
-        </Tab>
-        <Tab eventKey="follows" title="Follows">
-          <h4 className='text-white pt-4'>All the accounts you follow</h4>
-          {isLoading ?
-            <Spinner /> :
-            error ?
-              <Alert>{error}</Alert> :
-              <p className="text-primary">Everything you follow</p>}
+    <Container className="user-container">
+      <Row className="justify-content-center">
+        <Col xs={12} md={8} lg={6}>
+          <h1 className="user-header">Welcome back {username}</h1>
+          <Accordion className="accordion-user">
+            <Accordion.Item eventKey="0">
+              <Accordion.Header>
+                Your follows
+              </Accordion.Header>
+              <Accordion.Body>
 
-
-        </Tab>
-      </Tabs>
-
-    </div>
+                <FollowsList />
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+        </Col>
+      </Row>
+    </Container >
   )
 }
