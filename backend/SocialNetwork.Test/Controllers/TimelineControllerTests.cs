@@ -52,5 +52,26 @@ namespace SocialNetwork.Test.Controllers
 
         }
 
+        [Fact]
+        public async Task GetTimeline_ReturnsEmptyList_WhenServiceReturnsEmptyList()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+
+            _timelineServiceMock
+                .Setup(s => s.GetPostsByUserIdAsync(userId))
+                .ReturnsAsync(new List<Post>());
+
+            // Act
+            var result = await _sut.GetTimeline(userId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(200, okResult.StatusCode);
+
+            var dtos = Assert.IsType<List<PostDto>>(okResult.Value);
+            Assert.Empty(dtos); 
+        }
+
     }
 }
