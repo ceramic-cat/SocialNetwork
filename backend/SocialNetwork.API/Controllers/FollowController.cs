@@ -180,4 +180,17 @@ public class FollowController : ControllerBase, IFollowController
 
         return BadRequest(result.ErrorMessage);
     }
+
+    [Authorize]
+    [HttpGet("stats/{userId}")]
+    public async Task<IActionResult> GetUserFollowStats(Guid userId)
+    {
+        if (userId == Guid.Empty)
+            return BadRequest("Empty user");
+
+        var followersCount = await _followService.GetFollowersCountAsync(userId);
+        var followingCount = await _followService.GetFollowingCountAsync(userId);
+
+        return Ok(new { followers = followersCount, following = followingCount });
+    }
 }

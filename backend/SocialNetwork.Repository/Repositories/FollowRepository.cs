@@ -79,4 +79,14 @@ public class FollowRepository : IFollowRepository
             )
             .ToArrayAsync();
     }
+    public async Task<int> GetFollowersCountAsync(Guid userId)
+    {
+        return await _db.Follows
+            .CountAsync(f => f.FolloweeId == userId);
+    }
+    public async Task<int> GetFollowingCountAsync(Guid userId)
+    {
+        return await _db.Follows
+            .CountAsync(f => f.FollowerId == userId);
+    }
 }

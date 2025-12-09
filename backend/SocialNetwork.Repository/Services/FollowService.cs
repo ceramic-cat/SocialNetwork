@@ -17,6 +17,9 @@ public interface IFollowsService
     Task<Result<bool>> IsFollowingAsync(Guid follower, Guid followee);
     Task<Result<FollowedUserDto[]>> GetFollowsWithUserInfoAsync(Guid follower);
     Task<Result<FollowerUserDto[]>> GetFollowersWithUserInfoAsync(Guid follower);
+    Task<int> GetFollowersCountAsync(Guid userId);
+    Task<int> GetFollowingCountAsync(Guid userId);
+
 }
 public class FollowService : IFollowsService
 {
@@ -103,6 +106,16 @@ public class FollowService : IFollowsService
 
         var followers = await _repository.GetFollowersWithUserInfoAsync(followee);
         return Result<FollowerUserDto[]>.Success(followers);
+    }
+    public async Task<int> GetFollowersCountAsync(Guid userId)
+    {
+        var followers = await _repository.GetFollowersWithUserInfoAsync(userId);
+        return followers.Length;
+    }
+    public async Task<int> GetFollowingCountAsync(Guid userId)
+    {
+        var following = await _repository.GetFollowsWithUserInfoAsync(userId);
+        return following.Length;
     }
 }
 
