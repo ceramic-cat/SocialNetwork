@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SocialNetwork.Entity.Models;
+using SocialNetwork.Repository.Repositories;
+
 namespace SocialNetwork.Test.Repositories;
 
 public class DirectMessageRepositoryTests
