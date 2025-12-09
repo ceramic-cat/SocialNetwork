@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.API.Models;
 using SocialNetwork.Entity.Models;
@@ -8,6 +9,7 @@ namespace SocialNetwork.API.Controllers
 {
     [ApiController]
     [Route("api/users/{userId:guid}/timeline")]
+    [Authorize]
 
     public class TimelineController : ControllerBase
     {

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Repository.Services;
 using SocialNetwork.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetwork.Repository.Errors;
 
 namespace SocialNetwork.API.Controllers
 {
@@ -21,7 +22,7 @@ namespace SocialNetwork.API.Controllers
         {
             var result = await _authService.RegisterAsync(request);
             if (!result)
-                return BadRequest("Could not register.");
+                return BadRequest(AuthErrors.RegisterFailed);
             return Ok("Registration successful.");
         }
 
@@ -30,7 +31,7 @@ namespace SocialNetwork.API.Controllers
         {
             var token = await _authService.LoginAsync(request);
             if (token == null)
-                return Unauthorized("Invalid credentials.");
+                return Unauthorized(AuthErrors.InvalidCredentials);
             return Ok(new LoginResponse { Token = token });
         }
 
@@ -57,11 +58,11 @@ namespace SocialNetwork.API.Controllers
         {
             var userId = User.FindFirst("UserId")?.Value;
             if (userId == null)
-                return Unauthorized("User not found.");
+                return Unauthorized(AuthErrors.UserNotFound);
 
             var result = await _authService.EditProfileAsync(Guid.Parse(userId), request);
             if (!result)
-                return BadRequest("Could not update profile.");
+                return BadRequest(AuthErrors.CouldNotUpdateProfile);
 
             return Ok("Profile updated successfully.");
         }
@@ -76,7 +77,7 @@ namespace SocialNetwork.API.Controllers
 
             var result = await _authService.DeleteAccountAsync(Guid.Parse(userId));
             if (!result)
-                return BadRequest("Could not delete account.");
+                return BadRequest(AuthErrors.CouldNotDeleteAccount);
 
             return Ok("Account deleted successfully.");
         }
@@ -99,7 +100,7 @@ namespace SocialNetwork.API.Controllers
             var result = await _authService.GetUsernameAsync(id);
             if (result is null)
             {
-                return NotFound("User not found.");
+                return NotFound(AuthErrors.UserNotFound);
             }
             return Ok(new {username = result});
 
