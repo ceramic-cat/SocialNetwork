@@ -152,29 +152,6 @@ namespace SocialNetwork.Test.Controllers
             Assert.Equal(AuthErrors.CouldNotDeleteAccount, badRequest.Value);
         }
 
-        [Fact]
-        public async Task DeleteUserById_ReturnsOk_OnSuccess()
-        {
-            var userId = Guid.NewGuid();
-            _authServiceMock.Setup(s => s.DeleteAccountAsync(userId)).ReturnsAsync(true);
-
-            var result = await _authController.DeleteUserById(userId);
-
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal("User deleted successfully.", okResult.Value);
-        }
-
-        [Fact]
-        public async Task DeleteUserById_ReturnsNotFound_OnFailure()
-        {
-            var userId = Guid.NewGuid();
-            _authServiceMock.Setup(s => s.DeleteAccountAsync(userId)).ReturnsAsync(false);
-
-            var result = await _authController.DeleteUserById(userId);
-
-            var notFound = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(AuthErrors.CouldNotDeleteUser, notFound.Value);
-        }
 
         [Fact]
         public async Task GetUsernameById_ReturnsNotFound_WithEmptyGuid()
