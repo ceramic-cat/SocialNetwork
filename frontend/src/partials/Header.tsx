@@ -51,7 +51,7 @@ export default function Header({
                 </Nav.Link>
 
                 <Nav.Link className="app-header-link" onClick={onSendMessage}>
-                  <i className="bi bi-chat" />
+                  <i className="bi bi-envelope" />
                   <span className="d-none d-md-inline ms-1">Message</span>
                 </Nav.Link>
 
@@ -106,7 +106,7 @@ export default function Header({
                     </Nav.Link>
 
                     <Nav.Link className="app-header-link" onClick={() => { onSendMessage(); handleClose(); }}>
-                      <i className="bi bi-chat me-2" />
+                      <i className="bi bi-envelope me-2" />
                       <span>Message</span>
                     </Nav.Link>
 

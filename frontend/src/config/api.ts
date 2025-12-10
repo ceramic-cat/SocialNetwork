@@ -23,4 +23,5 @@ export const API = {
     GETFOLLOWERSINFO: `${BASE_URL}/api/Follow/follower-info`,
     GETUSERSTATS: (userId: string) => `${BASE_URL}/api/Follow/stats/${userId}`,
   },
+  DIRECT_MESSAGES: `${BASE_URL}/api/dm`,
 };
