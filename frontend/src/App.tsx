@@ -5,6 +5,7 @@ import Header from "./partials/Header";
 import useCurrentUser from "./hooks/useCurrentUser";
 import AuthModal from "./modals/AuthModal";
 import CreatePostModal from "./modals/CreatePostModal";
+import DirectMessageModal from "./modals/DirectMessageModal";
 import User from "./pages/User";
 import SearchPage from "./pages/Search";
 import NotFound from "./pages/NotFound";
@@ -20,7 +21,8 @@ function App() {
   } = useCurrentUser();
 
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [showMessageModal, setShowMessageModal] = useState(false); // when we have a message modal
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [messageReceiverId, setMessageReceiverId] = useState<string | undefined>(undefined);
 
   if (loading) {
     return (
@@ -38,7 +40,10 @@ function App() {
           username={username}
           userId={userId}
           onCreatePost={() => setShowCreatePost(true)}
-          onSendMessage={() => setShowMessageModal(true)}
+          onSendMessage={() => {
+            setMessageReceiverId(undefined);
+            setShowMessageModal(true);
+          }}
           onLogout={handleLogout}
         />
       )}
@@ -51,17 +56,37 @@ function App() {
             <Routes>
               <Route path="/" element={<TheFeed />} />
               <Route path="/search" element={<SearchPage />} />
-              <Route path="/users/:id" element={<User />} />
+              <Route 
+                path="/users/:id" 
+                element={
+                  <User 
+                    onSendMessage={(receiverId) => {
+                      setMessageReceiverId(receiverId);
+                      setShowMessageModal(true);
+                    }}
+                  />
+                } 
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
 
             {userId && username && (
-              <CreatePostModal
-                senderId={userId}
-                senderName={username}
-                show={showCreatePost}
-                onClose={() => setShowCreatePost(false)}
-              />
+              <>
+                <CreatePostModal
+                  senderId={userId}
+                  senderName={username}
+                  show={showCreatePost}
+                  onClose={() => setShowCreatePost(false)}
+                />
+                <DirectMessageModal
+                  show={showMessageModal}
+                  onClose={() => {
+                    setShowMessageModal(false);
+                    setMessageReceiverId(undefined);
+                  }}
+                  receiverId={messageReceiverId}
+                />
+              </>
             )}
           </>
         )}

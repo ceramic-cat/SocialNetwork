@@ -5,7 +5,11 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import OwnUserProfile from "../UserProfile/OwnUserProfile";
 import OtherUserProfile from "../UserProfile/OtherUserProfile";
 
-export default function User() {
+type UserProps = {
+  onSendMessage?: (receiverId: string) => void;
+};
+
+export default function User({ onSendMessage }: UserProps) {
   const { id: userId } = useParams<{ id: string }>();
   const { userId: currentUserId, username: currentUsername } = useCurrentUser();
 
@@ -18,7 +22,7 @@ export default function User() {
       {isOwnPage ? (
         <OwnUserProfile username={currentUsername} />
       ) : (
-        <OtherUserProfile userId={userId} />
+        <OtherUserProfile userId={userId} onSendMessage={onSendMessage} />
       )}
       <Timeline />
     </Container>

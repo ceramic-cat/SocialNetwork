@@ -1,13 +1,17 @@
-import { Alert, Spinner } from "react-bootstrap";
+import { Alert, Spinner, Button } from "react-bootstrap";
 import FollowButton from "../partials/FollowButton";
 import useGetUsername from "../hooks/useGetUsername";
 import { useGetUserFollowStats } from "../hooks/useGetUserFollowStats";
 
 type OtherUserProfileProps = {
   userId: string;
+  onSendMessage?: (receiverId: string) => void;
 };
 
-export default function OtherUserProfile({ userId }: OtherUserProfileProps) {
+export default function OtherUserProfile({
+  userId,
+  onSendMessage,
+}: OtherUserProfileProps) {
   const { error, isLoading, username } = useGetUsername(userId);
   const {
     stats,
@@ -23,8 +27,23 @@ export default function OtherUserProfile({ userId }: OtherUserProfileProps) {
         <Alert>{error}</Alert>
       ) : (
         <div className="user-container">
-          <h1 className="user-header">Welcome to {username}</h1>
-          <FollowButton userId={userId} />
+          <div className="d-flex align-items-center justify-content-center gap-2 mb-3">
+            <h1 className="user-header mb-0">Welcome to {username}</h1>
+            {onSendMessage && (
+              <Button
+                variant="secondary"
+                onClick={() => onSendMessage(userId)}
+                className="p-2"
+                title="Send message"
+                style={{ minWidth: "auto" }}
+              >
+                <i className="bi bi-chat-left-text" />
+              </Button>
+            )}
+          </div>
+          <div className="d-flex justify-content-center mb-3">
+            <FollowButton userId={userId} />
+          </div>
           {statsLoading ? (
             <Spinner />
           ) : statsError ? (
