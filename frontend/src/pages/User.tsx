@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import useCurrentUser from "../hooks/useCurrentUser";
 import OwnUserProfile from "../UserProfile/OwnUserProfile";
 import OtherUserProfile from "../UserProfile/OtherUserProfile";
+import "../../sass/timeline.scss";
 
 type UserProps = {
   onSendMessage?: (receiverId: string) => void;
@@ -18,7 +19,7 @@ export default function User({ onSendMessage }: UserProps) {
   if (!userId) return <div>User not found</div>;
 
   return (
-    <Container fluid className="px-0">
+    <Container fluid className="px-0 user-page">
       {isOwnPage ? (
         <OwnUserProfile username={currentUsername} />
       ) : (
