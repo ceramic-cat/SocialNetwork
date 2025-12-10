@@ -14,11 +14,6 @@ export default function Timeline() {
   const { userId: currentUserId } = useCurrentUser();
   const { deletePost, loading: deleting, error: deleteError } = useDeletePost();
 
-  const timelineOwnerName =
-    posts.length > 0 && posts[0].receiverUsername
-      ? posts[0].receiverUsername
-      : "Timeline";
-
   let content: ReactNode;
 
   async function handleDelete(postId: string) {
