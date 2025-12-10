@@ -61,13 +61,15 @@ The backend is structured using a clean layered design:
 
 ### Backend
 
-dotnet user-secrets set "Jwt:Key" "{secret-key-available-on-request}"
-dotnet run
+`dotnet user-secrets set "Jwt:Key" "{secret-key-available-on-request}"`
+
+`dotnet run`
 
 ### Frontend
 
-npm install
-npm run dev
+`npm install`
+
+`npm run dev`
 
 ---
 
