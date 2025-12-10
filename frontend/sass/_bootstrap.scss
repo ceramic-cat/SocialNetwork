@@ -11,7 +11,7 @@ $enable-negative-margins: true;
 
 // Import bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
-
+@import "./timeline.scss";
 @import "./feed.scss";
 @import "./authmodal.scss";
 @import "./user";
@@ -268,4 +268,14 @@ $enable-negative-margins: true;
 .search-user {
   @extend .search-input;
   max-width: 300px;
+}
+
+.user-page {
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.user-page::-webkit-scrollbar {
+  display: none;
 }
