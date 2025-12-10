@@ -179,6 +179,127 @@ namespace SocialNetwork.Test.Services
             var messagesInDb = await _db.DirectMessages.CountAsync();
             Assert.Equal(1, messagesInDb);
         }
+
+        [Fact]
+        public async Task GetMessagesByUserIdAsync_ReturnsMessagesForUser()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var otherUserId = Guid.NewGuid();
+
+            await CreateUserAsync(userId, "user", "user@example.com");
+            await CreateUserAsync(otherUserId, "other", "other@example.com");
+
+            var message1 = new DirectMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = userId,
+                ReceiverId = otherUserId,
+                Content = "Message from user",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-10)
+            };
+
+            var message2 = new DirectMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = otherUserId,
+                ReceiverId = userId,
+                Content = "Message to user",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _db.DirectMessages.AddRange(message1, message2);
+            await _db.SaveChangesAsync();
+
+            // Act
+            var result = await _sut.GetMessagesByUserIdAsync(userId);
+
+            // Assert
+            Assert.Equal(2, result.Count);
+            Assert.All(result, msg => 
+                Assert.True(msg.SenderId == userId || msg.ReceiverId == userId));
+        }
+
+        [Fact]
+        public async Task GetMessagesByUserIdAsync_ReturnsEmptyList_WhenUserHasNoMessages()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var otherUserId = Guid.NewGuid();
+            var thirdUserId = Guid.NewGuid();
+
+            await CreateUserAsync(userId, "user", "user@example.com");
+            await CreateUserAsync(otherUserId, "other", "other@example.com");
+            await CreateUserAsync(thirdUserId, "third", "third@example.com");
+
+            var message = new DirectMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = otherUserId,
+                ReceiverId = thirdUserId,
+                Content = "Message not for user",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _db.DirectMessages.Add(message);
+            await _db.SaveChangesAsync();
+
+            // Act
+            var result = await _sut.GetMessagesByUserIdAsync(userId);
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetMessagesByUserIdAsync_ReturnsMessagesOrderedByCreatedAtDescending()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var otherUserId = Guid.NewGuid();
+
+            await CreateUserAsync(userId, "user", "user@example.com");
+            await CreateUserAsync(otherUserId, "other", "other@example.com");
+
+            var message1 = new DirectMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = userId,
+                ReceiverId = otherUserId,
+                Content = "Oldest message",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-10)
+            };
+
+            var message2 = new DirectMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = otherUserId,
+                ReceiverId = userId,
+                Content = "Newest message",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var message3 = new DirectMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = userId,
+                ReceiverId = otherUserId,
+                Content = "Middle message",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-5)
+            };
+
+            _db.DirectMessages.AddRange(message1, message2, message3);
+            await _db.SaveChangesAsync();
+
+            // Act
+            var result = await _sut.GetMessagesByUserIdAsync(userId);
+
+            // Assert
+            Assert.Equal(3, result.Count);
+            Assert.Equal("Newest message", result[0].Content);
+            Assert.Equal("Middle message", result[1].Content);
+            Assert.Equal("Oldest message", result[2].Content);
+        }
     }
 }
 

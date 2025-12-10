@@ -18,5 +18,12 @@ public class DirectMessageRepository : IDirectMessageRepository
         _db.DirectMessages.Add(directMessage);
         await _db.SaveChangesAsync();
     }
+
+    public async Task<List<DirectMessage>> GetByUserIdAsync(Guid userId)
+    {
+        return await _db.DirectMessages
+            .Where(dm => dm.SenderId == userId || dm.ReceiverId == userId)
+            .ToListAsync();
+    }
 }
 

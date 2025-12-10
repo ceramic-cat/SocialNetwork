@@ -6,20 +6,20 @@ using SocialNetwork.Repository.Interfaces;
 
 namespace SocialNetwork.Repository.Services;
 
-public class DirectMessageService : IDirectMessageService
-{
+    public class DirectMessageService : IDirectMessageService
+    {
     private readonly SocialNetworkDbContext _db;
     private readonly IDirectMessageRepository _directMessageRepository;
     private const int MaxContentLength = 280;
 
     public DirectMessageService(SocialNetworkDbContext db, IDirectMessageRepository directMessageRepository)
-    {
+        {
         _db = db;
         _directMessageRepository = directMessageRepository;
-    }
+        }
 
     public async Task<Result> SendDirectMessageAsync(Guid senderId, Guid receiverId, string content)
-    {
+        {
         var validationResult = ValidateInputs(senderId, receiverId, content);
         if (validationResult != null)
         {
@@ -28,7 +28,7 @@ public class DirectMessageService : IDirectMessageService
 
         var usersExistResult = await ValidateUsersExistAsync(senderId, receiverId);
         if (usersExistResult != null)
-        {
+            {
             return usersExistResult;
         }
 
@@ -41,7 +41,7 @@ public class DirectMessageService : IDirectMessageService
         if (senderId == Guid.Empty)
         {
             return Result.Failure(DirectMessageErrors.SenderEmpty);
-        }
+            }
 
         if (receiverId == Guid.Empty)
         {
@@ -49,12 +49,12 @@ public class DirectMessageService : IDirectMessageService
         }
 
         if (string.IsNullOrWhiteSpace(content))
-        {
+            {
             return Result.Failure(DirectMessageErrors.ContentEmpty);
-        }
+            }
 
         if (content.Length > MaxContentLength)
-        {
+            {
             return Result.Failure(DirectMessageErrors.ContentTooLong);
         }
 
@@ -77,23 +77,32 @@ public class DirectMessageService : IDirectMessageService
         if (!existingUserIds.Contains(receiverId))
         {
             return Result.Failure(DirectMessageErrors.ReceiverDoesNotExist);
-        }
+            }
 
         return null;
     }
 
     private async Task SaveDirectMessageAsync(Guid senderId, Guid receiverId, string content)
     {
-        var directMessage = new DirectMessage
-        {
+            var directMessage = new DirectMessage
+            {
             Id = Guid.NewGuid(),
-            SenderId = senderId,
-            ReceiverId = receiverId,
+                SenderId = senderId,
+                ReceiverId = receiverId,
             Content = content,
-            CreatedAt = DateTime.UtcNow
-        };
+                CreatedAt = DateTime.UtcNow
+            };
 
         await _directMessageRepository.AddAsync(directMessage);
+    }
+
+    public async Task<List<DirectMessage>> GetMessagesByUserIdAsync(Guid userId)
+    {
+        var messages = await _directMessageRepository.GetByUserIdAsync(userId);
+
+        return messages
+            .OrderByDescending(m => m.CreatedAt)
+            .ToList();
     }
 }
 

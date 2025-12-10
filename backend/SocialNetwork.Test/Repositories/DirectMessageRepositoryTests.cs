@@ -92,4 +92,80 @@ public class DirectMessageRepositoryTests
         Assert.Equal(senderId, savedMessage2.SenderId);
         Assert.Equal(receiverId, savedMessage2.ReceiverId);
     }
+
+    [Fact]
+    public async Task GetByUserIdAsync_ReturnsOnlyMessagesForUser()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var otherUserId = Guid.NewGuid();
+        var thirdUserId = Guid.NewGuid();
+
+        var message1 = new DirectMessage
+        {
+            Id = Guid.NewGuid(),
+            SenderId = userId,
+            ReceiverId = otherUserId,
+            Content = "Message from user",
+            CreatedAt = DateTime.UtcNow.AddMinutes(-10)
+        };
+
+        var message2 = new DirectMessage
+        {
+            Id = Guid.NewGuid(),
+            SenderId = otherUserId,
+            ReceiverId = userId,
+            Content = "Message to user",
+            CreatedAt = DateTime.UtcNow.AddMinutes(-5)
+        };
+
+        var message3 = new DirectMessage
+        {
+            Id = Guid.NewGuid(),
+            SenderId = otherUserId,
+            ReceiverId = thirdUserId,
+            Content = "Message not for user",
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _db.DirectMessages.AddRange(message1, message2, message3);
+        await _db.SaveChangesAsync();
+
+        // Act
+        var result = await _sut.GetByUserIdAsync(userId);
+
+        // Assert
+        Assert.Equal(2, result.Count);
+        Assert.All(result, msg => 
+            Assert.True(msg.SenderId == userId || msg.ReceiverId == userId));
+        Assert.DoesNotContain(result, msg => msg.Id == message3.Id);
+    }
+
+
+    [Fact]
+    public async Task GetByUserIdAsync_ReturnsEmptyList_WhenUserHasNoMessages()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var otherUserId = Guid.NewGuid();
+        var thirdUserId = Guid.NewGuid();
+
+        var message = new DirectMessage
+        {
+            Id = Guid.NewGuid(),
+            SenderId = otherUserId,
+            ReceiverId = thirdUserId,
+            Content = "Message not for user",
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _db.DirectMessages.Add(message);
+        await _db.SaveChangesAsync();
+
+        // Act
+        var result = await _sut.GetByUserIdAsync(userId);
+
+        // Assert
+        Assert.Empty(result);
+    }
 }
